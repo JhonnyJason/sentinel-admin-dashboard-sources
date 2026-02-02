@@ -1,2 +1,10 @@
 //- authframe structure
 #authframe
+
+    #authframe-inaccessible.centered-box 
+        h2 Zugang ist nicht gestattet!
+
+    #authframe-pin-request.centered-box
+        label Bitte PIN eingeben: 
+        input#pin-input(type="text" placeholder="9999" autocomplete="off")
+        button#accept-pin-button.click-button Okay

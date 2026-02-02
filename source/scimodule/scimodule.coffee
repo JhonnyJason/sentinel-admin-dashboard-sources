@@ -13,7 +13,7 @@ import {
 
 ############################################################
 import { urlAccessManager, urlDatahub } from "./configmodule.js"
-import { getAuthCode } from "./authmodule.js"
+# import { getAuthCode } from "./authmodule.js"
 import { defaultSymbols } from "./defaultsymbols.js"
 
 ############################################################
@@ -29,6 +29,7 @@ urlUpdatePasword = urlAccessManager+"/updatePassword"
 urlDeleteAccount = urlAccessManager+"/deleteAccount"
 
 urlGetData = urlDatahub+"/getEODHLCData"
+urlRegisterAdmin = urlAccessManager+"/registerAdmin"
 
 #endregion
 
@@ -73,6 +74,10 @@ validateGetSymbolOptionsArgs = createValidator({
 })
 #endregion
 
+
+############################################################
+waitMS = (ms) -> await new Promise(((rslv) -> setTimeout((() -> rslv()), ms)))
+
 ############################################################
 request  = (url, args) ->
     log "request"
@@ -106,12 +111,18 @@ export register = (email) ->
     log "register"
     # throw new Error("Error on Purpose!") ## TODO remove
     # return ## TODO remove
-    
+
     err = validateEmail(email)
     if err then throw new Error("Invalid Email!")
     await request(urlRegister, email)
     return
 
+############################################################
+export registerAdmin = (payload) ->
+    log "registerAdmin"
+    await waitMS(3000)
+    # await request(urlRegisterAdmin, payload)
+    return
 
 ############################################################
 export login = (email, passwordSH) ->

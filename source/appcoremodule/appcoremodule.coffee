@@ -34,6 +34,21 @@ export initialize = ->
     currentVersion.textContent = appVersion
     return
 
+
+############################################################
+handleOTCInURL =  ->
+    log "handleOTCInURL"
+    urlParams = new URLSearchParams(window.location.search)
+    otc = urlParams.get("otc")
+    if otc
+        log "OTC found in URL"
+        auth.setOTC(otc)
+        # Clear OTC from URL to prevent re-use on refresh
+        history.replaceState(null, "", window.location.pathname)
+        return true
+    
+    return false
+
 ############################################################
 setNavState = (navState) ->
     log "setNavState"
@@ -41,14 +56,18 @@ setNavState = (navState) ->
     modifier = navState.modifier
     context = navState.context
 
-    if !auth.isAuthenticated() and baseState != "auth"
-        log "not authenticated!"
-        return triggers.toAuth()
-
-    if auth.isAuthenticated() and baseState == "auth"
+    hasOTC = handleOTCInURL()
+    if hasOTC and baseState != "auth" then return triggers.toAuth()
+    
+    authState = auth.getAuthenticationState()
+    if authState == "keyUnlocked" and baseState == "auth"
         log "already authenticated, redirecting to default"
         return triggers.toForexscore()
 
+    if authState != "keyUnlocked" and baseState != "auth"
+        log "not authenticated!"
+        return triggers.toAuth()
+    
     if baseState == "RootState" then baseState = defaultBaseState
 
     setAppState(baseState, modifier, context)

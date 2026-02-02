@@ -8,6 +8,11 @@ import { createLogFunctions } from "thingy-debug"
 import * as nav from "navhandler"
 
 ############################################################
+export toHome = ->
+    log "toHome"
+    return nav.toRoot(true)
+
+############################################################
 export toAuth = ->
     log "toAuth"
     return nav.toBase("auth")

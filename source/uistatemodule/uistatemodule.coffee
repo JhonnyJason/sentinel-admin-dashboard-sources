@@ -41,7 +41,7 @@ applyBaseState["usermanagement"] = ->
 applyBaseState["auth"] = ->
     content.hide()
     sideNav.hide()
-    authFrame.show()
+    authFrame.setState()
     header.className = ""
     return
 

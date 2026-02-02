@@ -7,6 +7,8 @@ import * as currencytrendframemodule from "./currencytrendframemodule.js"
 import * as datamodule from "./datamodule.js"
 import * as debugmodule from "./debugmodule.js"
 import * as forexscoreframemodule from "./forexscoreframemodule.js"
+import * as messageboxmodule from "./messageboxmodule.js"
+import * as qrreadermodule from "./qrreadermodule.js"
 import * as scimodule from "./scimodule.js"
 import * as sidenavmodule from "./sidenavmodule.js"
 import * as uistatemodule from "./uistatemodule.js"
@@ -23,6 +25,8 @@ Modules = {
     datamodule,
     debugmodule,
     forexscoreframemodule,
+    messageboxmodule,
+    qrreadermodule,
     scimodule,
     sidenavmodule,
     uistatemodule,

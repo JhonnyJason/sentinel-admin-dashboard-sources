@@ -1,3 +1,9 @@
 [submodule "source/buttonstylemodule"]
 	path = source/buttonstylemodule
 	url = git@github.com:JhonnyJason/pwa-sources-buttonstylemodule.git
+[submodule "source/qrreadermodule"]
+	path = source/qrreadermodule
+	url = git@github.com:JhonnyJason/pwa-sources-qrreadermodule.git
+[submodule "source/messageboxmodule"]
+	path = source/messageboxmodule
+	url = git@github.com:JhonnyJason/pwa-sources-messageboxmodule.git

@@ -5,6 +5,7 @@ domconnect.initialize()
 ############################################################
 import { appLoaded } from "navhandler"
 global.allModules = Modules
+
 ############################################################
 cfg = Modules.configmodule
 

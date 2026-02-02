@@ -6,7 +6,7 @@ import { createLogFunctions } from "thingy-debug"
 
 ############################################################
 import * as cfg from "./configmodule.js"
-import { getAuthCode } from "./authmodule.js"
+# import { getAuthCode } from "./authmodule.js"
 # TODO: datamodule needs rework - currently unused for admin
 
 ############################################################
@@ -34,21 +34,21 @@ createSocket = ->
 ############################################################
 export heartbeat = ->
     log "heartbeat"
-    if !socket? then return createSocket()
+    # if !socket? then return createSocket()
     
-    if socket.readyState == WebSocket.OPEN
-        socket.send("getAllData #{getAuthCode()}")
-        return
+    # if socket.readyState == WebSocket.OPEN
+    #     socket.send("getAllData #{getAuthCode()}")
+    #     return
 
-    if socket.readyState == WebSocket.socketClosed
-        destroySocket()
-        return
+    # if socket.readyState == WebSocket.socketClosed
+    #     destroySocket()
+    #     return
     return
 
 ############################################################
 socketOpened = (evnt) ->
     log "socketOpened"
-    socket.send("getAllData #{getAuthCode()}")
+    # socket.send("getAllData #{getAuthCode()}")
     return
 
 receiveData = (evnt) ->
