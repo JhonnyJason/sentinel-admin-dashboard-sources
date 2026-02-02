@@ -13,7 +13,7 @@ import {
 
 ############################################################
 import { urlAccessManager, urlDatahub } from "./configmodule.js"
-import { getAuthCode } from "./accountmodule.js"
+import { getAuthCode } from "./authmodule.js"
 import { defaultSymbols } from "./defaultsymbols.js"
 
 ############################################################

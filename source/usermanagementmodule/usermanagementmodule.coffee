@@ -1,7 +1,7 @@
 ############################################################
 #region debug
 import { createLogFunctions } from "thingy-debug"
-{log, olog} = createLogFunctions("trafficlightframemodule")
+{log, olog} = createLogFunctions("usermanagementmodule")
 #endregion
 
 ############################################################

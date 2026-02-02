@@ -6,8 +6,8 @@ import { createLogFunctions } from "thingy-debug"
 
 ############################################################
 import * as cfg from "./configmodule.js"
-import * as summary from "./summaryframemodule.js"
-import { getAuthCode } from "./accountmodule.js"
+import { getAuthCode } from "./authmodule.js"
+# TODO: datamodule needs rework - currently unused for admin
 
 ############################################################
 socket = null
@@ -54,11 +54,9 @@ socketOpened = (evnt) ->
 receiveData = (evnt) ->
     log "receiveData"
     try
-        # log evnt.data
         data = JSON.parse(evnt.data)
-        # olog data
-        summary.updateData(data)
-        ## Update other parts
+        # TODO: handle received data for admin dashboard
+        olog data
     catch err then console.error(err)
     return
 

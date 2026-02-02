@@ -8,16 +8,16 @@ import { createLogFunctions } from "thingy-debug"
 import * as nav from "navhandler"
 import * as triggers from "./navtriggers.js"
 import * as uiState from "./uistatemodule.js"
-import * as account from "./accountmodule.js"
+import * as auth from "./authmodule.js"
 
 ############################################################
 import { appVersion } from "./configmodule.js"
 
 ############################################################
-defaultBaseState = "summary"
+defaultBaseState = "forexscore"
 
 ############################################################
-appBaseState = "summary"
+appBaseState = "forexscore"
 appUIMod = "none"
 appContext = {}
 
@@ -30,39 +30,9 @@ currentVersion = document.getElementById("current-version")
 ############################################################
 export initialize = ->
     log "initialize"
-    # nav.initialize(setNavState, setNavState, true)
     nav.initialize(setNavState, setNavState)
-
     currentVersion.textContent = appVersion
-    
-    ## Do we nbeed a serviceworker?
-    if serviceWorker?
-        serviceWorker.register("serviceworker.js", {scope: "/"})
-        if serviceWorker.controller?
-            serviceWorker.controller.postMessage("App is version: #{appVersion}!")
-        serviceWorker.addEventListener("message", onServiceWorkerMessage)
-        serviceWorker.addEventListener("controllerchange", onServiceWorkerSwitch)
-    
     return
-
-
-# loadAppWithNavState = (navState) ->
-#     log "loadAppWithNavState"
-#     baseState = navState.base
-#     modifier = navState.modifier
-#     context = navState.context
-
-#     # S.save("navState", navState)
-
-#     # urlCode = getCodeFromURL()
-#     # await startUp()
-
-#     # if urlCode? then return nav.toMod("codeverification")
-
-#     # setUIState(baseState, modifier, context)
-    
-#     # if appBaseState == "no-code" then triggers.addCode()
-#     return
 
 ############################################################
 setNavState = (navState) ->
@@ -71,18 +41,17 @@ setNavState = (navState) ->
     modifier = navState.modifier
     context = navState.context
 
-    if !account.accountExists() and baseState != "noaccount"
-        log "no accountData existed!"
-        return triggers.toNoAccount()
-    
-    if account.accountExists() and baseState == "noaccount"
-        log "account existed on State 'noaccount'!"
-        return triggers.toSummary()
-    
+    if !auth.isAuthenticated() and baseState != "auth"
+        log "not authenticated!"
+        return triggers.toAuth()
+
+    if auth.isAuthenticated() and baseState == "auth"
+        log "already authenticated, redirecting to default"
+        return triggers.toForexscore()
+
     if baseState == "RootState" then baseState = defaultBaseState
 
     setAppState(baseState, modifier, context)
-    # S.save("navState", navState)    
     return
 
 setAppState = (base, mod, ctx) ->

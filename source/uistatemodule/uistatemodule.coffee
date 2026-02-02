@@ -8,8 +8,7 @@ import { createLogFunctions } from "thingy-debug"
 #region imported UI modules
 import * as content from "./contentmodule.js"
 import * as sideNav from "./sidenavmodule.js"
-import * as noAccount from "./noaccountmodule.js"
-import * as dataModule from "./datamodule.js"
+import * as authFrame from "./authframemodule.js"
 
 #endregion
 
@@ -25,65 +24,26 @@ currentContext = null
 ############################################################
 #region Base State Application Functions
 
-applyBaseState["summary"] = ->
-    dataModule.heartbeat()
-    content.setSummaryState()
-    sideNav.setSummaryState()
-    noAccount.hide()
+applyBaseState["forexscore"] = ->
+    content.setForexscoreState()
+    sideNav.setForexscoreState()
+    authFrame.hide()
     header.className = "logged-in"
     return
 
-applyBaseState["currencytrend"] = ->
-    dataModule.heartbeat()
-    content.setCurrencytrendState()
-    sideNav.setCurrencytrendState()
-    noAccount.hide()
+applyBaseState["usermanagement"] = ->
+    content.setUsermanagementState()
+    sideNav.setUsermanagementState()
+    authFrame.hide()
     header.className = "logged-in"
     return
 
-applyBaseState["seasonality"] = ->
-    # dataModule.heartbeat()
-    content.setSeasonalityState()
-    sideNav.setSeasonalityState()
-    noAccount.hide()
-    header.className = "logged-in"
-    return
-
-applyBaseState["eventscreener"] = ->
-    content.setEventscreenerState()
-    sideNav.setEventscreenerState()
-    noAccount.hide()
-    header.className = "logged-in"
-    return
-
-applyBaseState["forexscreener"] = ->
-    content.setForexscreenerState()
-    sideNav.setForexscreenerState()
-    noAccount.hide()
-    header.className = "logged-in"
-    return
-
-applyBaseState["trafficlight"] = ->
-    content.setTrafficlightState()
-    sideNav.setTrafficlightState()
-    noAccount.hide()
-    header.className = "logged-in"
-    return
-
-applyBaseState["account"] = ->
-    content.setAccountState()
-    sideNav.setAccountState()
-    noAccount.hide()
-    header.className = "logged-in"
-    return
-
-applyBaseState["noaccount"] = ->
+applyBaseState["auth"] = ->
     content.hide()
     sideNav.hide()
-    noAccount.show()
+    authFrame.show()
     header.className = ""
     return
-
 
 #endregion
 

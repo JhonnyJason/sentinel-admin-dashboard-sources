@@ -1,7 +1,7 @@
 ############################################################
 #region debug
 import { createLogFunctions } from "thingy-debug"
-{log, olog} = createLogFunctions("forexscreenerframemodule")
+{log, olog} = createLogFunctions("forexscoremodule")
 #endregion
 
 ############################################################

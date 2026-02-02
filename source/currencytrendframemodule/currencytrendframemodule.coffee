@@ -7,7 +7,7 @@ import { createLogFunctions } from "thingy-debug"
 ############################################################
 import M from "mustache"
 
-currencyPairTemplate = document.getElementById("currency-pair-template").innerHTML
+# currencyPairTemplate = document.getElementById("currency-pair-template").innerHTML
 # alert currencyPairTemplate
 
 ############################################################
@@ -43,22 +43,22 @@ ypWeights = {
 
 ############################################################
 export initialize = ->
-    log "initialize"
-    for lblB,base of aA
-        for lblQ,quote of aA when lblB != lblQ
-            pair = new CurrencyPair(base, quote)
-            allCurrencyPairs[pair.short] = pair
+    # log "initialize"
+    # for lblB,base of aA
+    #     for lblQ,quote of aA when lblB != lblQ
+    #         pair = new CurrencyPair(base, quote)
+    #         allCurrencyPairs[pair.short] = pair
     
-    for label in cfg.shownCurrencyPairLabels
-        shownCurrencyPairs.push(allCurrencyPairs[label])
+    # for label in cfg.shownCurrencyPairLabels
+    #     shownCurrencyPairs.push(allCurrencyPairs[label])
 
-    # setInterval(renderFrame, cfg.uiRerenderMS)
-    renderFrame()
+    # # setInterval(renderFrame, cfg.uiRerenderMS)
+    # renderFrame()
 
-    # result = scoreHelper.getInterestScore(2.5, 15.0)
-    # log result
-    # scoreHelper.getInflationScore(5.500001, 14)
-    # scoreHelper.getColorForScore(25)
+    # # result = scoreHelper.getInterestScore(2.5, 15.0)
+    # # log result
+    # # scoreHelper.getInflationScore(5.500001, 14)
+    # # scoreHelper.getColorForScore(25)
     return
 
 ############################################################
