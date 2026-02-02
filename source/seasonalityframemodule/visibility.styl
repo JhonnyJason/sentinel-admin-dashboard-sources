@@ -1,0 +1,43 @@
+// Here we want to manage all the states that lead to visibility of certain elements
+// Every conditionally visible element is set to `display: none` in their place
+// Here the conditions under which they become visible is being managed
+
+//==================================================================
+#cursor-indicator.shown
+    display flex
+
+#reset-time-axis-button.shown
+    display block
+
+//==================================================================
+.chart-active
+    #seasonality-chart
+        opacity: 1
+        pointer-events: all
+        z-index auto
+
+    #close-chart-button
+        display block
+    
+.chart-inactive
+    #chart-instructions
+        display block
+
+
+//==================================================================
+.backtesting
+    #backtesting-details-container
+        display block
+    #backtesting-summary-tab
+        display block
+    #components-backtesting-tabs
+        button
+            display block
+
+//==================================================================
+.analysing
+    #chart-components-tab
+        display block
+    #components-backtesting-tabs
+        button
+            display block

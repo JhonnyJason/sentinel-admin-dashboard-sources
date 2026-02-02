@@ -1,0 +1,284 @@
+// seasonalityframe styles
+@import "uplot-chart.styl"
+@import "chart-components.styl"
+@import "chart-instructions.styl"
+@import "backtesting-details.styl"
+@import "backtesting-summary.styl"
+@import "visibility.styl"
+
+#seasonalityframe
+    width 100%
+    height "calc(100vh - %s)" % header-height
+    overflow-y auto
+    scrollbar-gutter stable
+    padding 20px 10px 20px 20px
+    box-sizing: border-box
+    
+    .select-wrapper
+        display block
+        position relative
+
+    .select-wrapper::after
+        content ""
+        display block
+        position absolute
+        top 50%
+        right 9px
+        z-index 200
+        width 12px
+        height 8px
+        transform translateY(-4px)
+        background-color cd-dark-blue
+        clip-path polygon(100% 0%, 0 0%, 50% 100%)
+
+
+    select
+        z-index 1
+        padding: 10px
+        padding-right 25px
+        border-radius: 3px
+        border solid 1px cd-dark-blue
+        font-size 12pt
+        background: #fff
+        cursor: pointer
+        transition: box-shadow 0.2s
+        appearance none
+
+    select:focus
+        outline: none
+        box-shadow: 0 0 3px 0 cd-dark-blue
+        border solid 1px cd-dark-blue
+
+    // Combobox styles
+    .combobox-wrapper
+        position relative
+        display inline-block
+        min-width 280px
+
+    #symbol-input
+        width 100%
+        padding 10px
+        padding-right 25px
+        border-radius 3px
+        border solid 1px cd-dark-blue
+        font-size 12pt
+        background #fff
+        box-sizing border-box
+        transition box-shadow 0.2s
+
+    #symbol-input:focus
+        outline none
+        box-shadow 0 0 3px 0 cd-dark-blue
+
+    #symbol-input::placeholder
+        color #999
+
+    .combobox-dropdown
+        position absolute
+        top 100%
+        left 0
+        right 0
+        max-height 300px
+        overflow-y auto
+        background #fff
+        border solid 1px cd-dark-blue
+        border-top none
+        border-radius 0 0 3px 3px
+        z-index 1000
+        display none
+        box-shadow 0 4px 8px rgba(0,0,0,0.15)
+
+    .combobox-dropdown.visible
+        display block
+
+    .combobox-option
+        padding 8px 10px
+        cursor pointer
+        display flex
+        gap 10px
+        align-items center
+        border-bottom solid 1px #eee
+
+    .combobox-option:last-child
+        border-bottom none
+
+    .combobox-option:hover,
+    .combobox-option.highlighted
+        background-color alpha(cd-dark-blue, 0.1)
+
+    .combobox-option.highlighted
+        background-color alpha(cd-dark-blue, 0.15)
+
+    .option-symbol
+        font-weight bold
+        min-width 60px
+        color cd-dark-blue
+
+    .option-name
+        color #666
+        font-size 11pt
+        white-space nowrap
+        overflow hidden
+        text-overflow ellipsis
+
+    .combobox-empty
+        padding 12px 10px
+        color #999
+        font-style italic
+        text-align center
+
+
+#selection-row
+    display: flex
+    justify-content: flex-end
+    align-items: center
+    gap 10px
+
+#selected-symbol
+    margin-left auto    
+    margin-right 20px
+    font-size: 16pt
+    font-weight: bold
+    line-height 40px
+
+#close-chart-button
+    display none
+    height 30px
+    width 30px
+    border-radius 10px
+    svg
+        color cd-dark-blue
+        height inherit
+        width inherit
+
+#close-chart-button.click-button::after
+    background-color #000
+
+#chart-row
+    margin-top 20px
+    display flex
+    gap 5px
+
+#chart-container
+    position relative
+    background-color cd-dark-blue
+    // background-color #999
+    width 100%
+    box-sizing: border-box
+    // padding 15px
+    height 500px
+    // color white
+    border-radius: 3px
+
+#cursor-indicator
+    position absolute
+    top 10px
+    left 10px
+    background-color #fff
+    border-radius 2px
+    display: none // should turn to flex in visibility.styl
+    align-items: center
+    padding 5px 10px 5px 3px
+    gap 3px
+    svg
+        position relative
+        width 20px
+        height 20px
+
+#reset-time-axis-button
+    position absolute
+    bottom 10px
+    right 10px
+    display none
+    color white
+    height 30px
+    width 30px
+    // transition transform 0.2s ease-out
+    svg
+        height inherit
+        width inherit
+
+#reset-time-axis-button:hover
+    animation nudge-right 0.4s ease-in-out
+
+@keyframes nudge-right
+    0%
+        transform translateX(3px)
+    50%
+        transform translateX(-2px)
+    100%
+        transform translateX(0)
+
+
+#seasonality-chart
+    position absolute
+    top 0
+    left 0
+    height 100%
+    width 100%
+    overflow: visible
+    opacity: 0
+    pointer-events: none
+    z-index -1
+
+#chart-side-container
+    position relative
+    // background-color cd-dark-blue
+    // background-color #999
+    width 30%
+    box-sizing: border-box
+    // padding 15px
+    height 500px
+    // color white
+    border-radius: 3px
+    opacity 0.5
+
+#components-backtesting-tabs
+    background-color cd-dark-blue
+    border-radius: 3px 3px 0 0
+    height 50px
+    display flex
+    button
+        width 50%
+        display none
+        background-color #ddd
+        transition: background-color 0.3s
+        color #fff
+        font-size 12pt
+        padding 15px
+        border-radius: 3px 3px 0 0
+        box-sizing: border-box
+        white-space: nowrap
+        overflow: hidden
+        text-overflow: ellipsis
+        cursor pointer
+        
+#tab-content-container
+    height 450px
+    background-color cd-dark-blue
+    border-radius: 0 0 3px 3px
+    padding 10px 0
+    box-sizing: border-box
+
+.backtesting
+    #backtesting-button
+        background-color cd-dark-blue
+        width 100%
+    #chart-side-container
+        opacity: 1.0
+    #tab-content-container
+        border-radius: 0 3px 3px 3px
+    #components-backtesting-tabs
+        background-color transparent
+
+
+.analysing
+    #components-button
+        background-color cd-dark-blue
+        width 100%
+    #chart-side-container
+        opacity 1.0
+    #tab-content-container
+        border-radius: 3px 0 3px 3px
+    #components-backtesting-tabs
+        background-color transparent
