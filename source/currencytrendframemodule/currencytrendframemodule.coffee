@@ -20,21 +20,21 @@ allCurrencyPairs = {}
 shownCurrencyPairs = []
 
 ############################################################
-nWeights = {
+stWeights = {
     i: 6
     l: 9
     g: 3
     c: 13
 }
 
-n6Weights = {
+mlWeights = {
     i: 7
     l: 11
     g: 5
     c: 7
 }
 
-ypWeights = {
+ltWeights = {
     i: 10
     l: 6
     g: 9
@@ -160,7 +160,7 @@ class CurrencyPair
                     cotScore
                 }
             ## Top Level combination of individual scores already implemented :-)
-            { i, l, g, c } = nWeights
+            { i, l, g, c } = stWeights
             fullScore = i * infScore + l * mrrScore + g * gdpScore + c * cotScore
 
             if fullScore > 30 then fullScore = 30
