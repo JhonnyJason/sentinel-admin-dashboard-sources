@@ -1,0 +1,40 @@
+.combobox-dropdown
+    position absolute
+    top 100%
+    left 0
+    right 0
+    max-height 300px
+    overflow-y auto
+    background #fff
+    border solid 1px cd-dark-blue
+    border-top none
+    border-radius 0 0 3px 3px
+    z-index 1000
+    display none
+    box-shadow 0 4px 8px rgba(0,0,0,0.15)
+
+.combobox-dropdown.visible
+    display block
+
+.combobox-option
+    padding 10px
+    cursor pointer
+    font-weight bold
+    color cd-dark-blue
+    border-bottom solid 1px #eee
+
+.combobox-option:last-child
+    border-bottom none
+
+.combobox-option:hover,
+.combobox-option.highlighted
+    background-color alpha(cd-dark-blue, 0.1)
+
+.combobox-option.highlighted
+    background-color alpha(cd-dark-blue, 0.15)
+
+.combobox-empty
+    padding 12px 10px
+    color #999
+    font-style italic
+    text-align center

@@ -13,6 +13,7 @@ import {
 import { sha256, createKeyPair, createPublicKey, createSignature, createSymKey } from "secret-manager-crypto-utils"
 import { hexToBytes, bytesToHex } from "thingy-byte-utils"
 import { ThingyCryptoNode } from "thingy-crypto-node"
+import * as validStamp from "validatabletimestamp"
 
 ############################################################
 import { pwdSalt } from "./configmodule.js"
@@ -38,7 +39,8 @@ keyInfo = null
 
 ############################################################
 cryptoNode = null  # In-memory only, never persisted
-
+setReady = null
+isReady = new Promise(((rslv) -> setReady = rslv ))
 
 ############################################################
 export initialize = ->
@@ -75,6 +77,19 @@ export getAuthenticationState = ->
     if cryptoNode then return "keyUnlocked"
     if keyInfo then return "keyLocked"
     return "inaccessible"
+
+export getAuthorizationMessage = ->
+    log "getAuthorizationPayload"
+    await isReady
+    payload = {}
+    payload.randomHex = createSymKey()
+    payload.timestamp = validStamp.create()
+    payload.publicKey = cryptoNode.publicKeyHex
+    payload.signature = ""
+    payloadString = JSON.stringify(payload)
+    sig = await cryptoNode.sign(payloadString)
+    payloadString.replace("signature:\"\"", "signature:\"#{sig}\"")
+    return payloadString
 
 ############################################################
 # Called by authframemodule when user confirms PIN during key setup
@@ -120,8 +135,9 @@ export createNewCredentials = (pin) ->
         # Step 8: Keep unlocked key in memory
         cryptoNode = new ThingyCryptoNode({secretKeyHex, publicKeyHex})
         otcValue = null  # Clear OTC after successful setup
-
         log "credentials created successfully"
+        setReady()
+        
         triggers.toHome()
     catch err
         msgBox.error("createNewCredentials failed: #{err.message}")
@@ -151,13 +167,14 @@ export unlockKey = ->
             if testHash == keyInfo.targetHash
                 cryptoNode = new ThingyCryptoNode({secretKeyHex, publicKeyHex})
                 log "key validated successfully"
+                setReady()
             else
                 validationAttempts--
                 msgBox.error("Wrong QR code - #{validationAttempts} attempts left")
 
-        unless cryptoNode?
-            throw new Error("Key unlock failed")
-
+        throw new Error("Key unlock failed") unless cryptoNode?
+        
+        
         log "key unlocked successfully"
         triggers.toHome()
     catch err
