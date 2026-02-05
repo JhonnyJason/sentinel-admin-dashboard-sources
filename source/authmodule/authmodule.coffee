@@ -43,8 +43,13 @@ setReady = null
 isReady = new Promise(((rslv) -> setReady = rslv ))
 
 ############################################################
-export initialize = ->
+noKey = false
+
+############################################################
+export initialize = (cfg) ->
     log "initialize"
+    noKey = (cfg.noKeys == true)
+
     logoutButton.addEventListener("click", logoutClicked)
     keyInfo = JSON.parse(localStorage.getItem(KEY_INFO_KEY))
     err = validateKeyInfoObj(keyInfo)
@@ -73,6 +78,8 @@ export setOTC = (otc) ->
 ############################################################
 # Returns: "keySetup" | "keyLocked" | "keyUnlocked" | "inaccessible"
 export getAuthenticationState = ->
+    if noKey then return "keyUnlocked"
+
     if otcValue then return "keySetup"
     if cryptoNode then return "keyUnlocked"
     if keyInfo then return "keyLocked"
@@ -80,6 +87,8 @@ export getAuthenticationState = ->
 
 export getAuthorizationMessage = ->
     log "getAuthorizationPayload"
+    if noKey then return ""
+
     await isReady
     payload = {}
     payload.randomHex = createSymKey()

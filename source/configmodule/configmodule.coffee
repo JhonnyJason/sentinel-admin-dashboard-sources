@@ -3,6 +3,10 @@ export appVersion = "v0.0.1"
 export heartbeatMS = 6_000 # ~12s
 
 ############################################################
+export noNetwork = true
+export noKeys = true
+
+############################################################
 export urlAccessManager = "https://sentinel-access-manager.dotv.ee"
 export urlWebsocketBackend = "https://sentinel-backend.dotv.ee"
 export urlDatahub = "https://sentinel-datahub.dotv.ee"

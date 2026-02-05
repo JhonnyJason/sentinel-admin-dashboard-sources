@@ -131,7 +131,7 @@ createOriginalUpdateListener = (key) -> ->
     return unless live? and original?
 
     # Only sync if user hasn't modified this area
-    return if live.isModified
+    return if live.isModified()
 
     # Sync original data to live clone (triggers live's listeners → UI update)
     live.updateData(original.copyData())
@@ -147,8 +147,8 @@ onAreaUpdate = (areaKey) ->
     original = originalAreas[areaKey]
     return unless live? and original? 
 
-    # Compare live data to original, set isModified
-    live.isModified = not dataEquals(live.data, original.data)
+    # recognize what is modified agains the original data
+    live.setModifiedAgainst(original)
 
     # Trigger recalculation
     scoringModel.recalculate()

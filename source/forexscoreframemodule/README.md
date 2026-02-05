@@ -1,15 +1,9 @@
 # forexscoreframemodule
 
-Container module for the ForexScore Playground feature. Handles navigation frame, pair selection, and version management.
+Container module for the ForexScore Playground feature. This is the top layer navigation frame and contains: version management, pair selection and the playground.
 
 ## Structure
-
-```pug
-#forexscoreframe
-    → forexscoreversion
-    → focuspairselection
-    → forexscoreplayground
-```
+See `./forexscoreframe.pug`
 
 ## Migration Notice
 

@@ -18,11 +18,15 @@ socketAuthorized = false
 
 ############################################################
 socket = null
+noNetwork = false
 
 ############################################################
-export initialize = ->
+export initialize = (cfg) ->
     log "initialize"
-    createSocket()
+    noNetwork = cfg.noNetwork == true
+    if noNetwork then return
+
+    createSocket() 
     return
 
 createSocket = ->
@@ -41,6 +45,9 @@ createSocket = ->
 ############################################################
 export heartbeat = ->
     log "heartbeat"
+    if noNetwork and !dataReceived then loadMockData()
+    if noNetwork then return
+
     if !socket? then return createSocket()
 
     if socket.readyState == WebSocket.OPEN

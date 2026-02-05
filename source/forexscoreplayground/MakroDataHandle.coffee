@@ -78,12 +78,17 @@ export class MakroDataHandle
     refreshUI: =>
         d = @area.data # direct access is faster than calling functions
         @inflInput.value = d.infl
+        @inflInput.classList.toggle("modified", @area.modified.infl)
         @mrrInput.value = d.mrr
+        @mrrInput.classList.toggle("modified", @area.modified.mrr)
         @gdpgInput.value = d.gdpg
+        @gdpgInput.classList.toggle("modified", @area.modified.gdpg)
         @cot6Input.value = d.cot6
+        @cot6Input.classList.toggle("modified", @area.modified.cot6)
         @cot36Input.value = d.cot36
+        @cot36Input.classList.toggle("modified", @area.modified.cot36)
 
-        @resetButton.classList.toggle("visible", @area.isModified)
+        @resetButton.classList.toggle("visible", @area.isModified())
         return
     
     addResetListener: (fun) => 

@@ -8,7 +8,10 @@ export class EconomicArea
         @iconHref = o.iconHref
 
         @updateListeners = []
-        @isModified = false
+        
+        @modified = {
+
+        }
 
         @data = {
             infl: NaN
@@ -31,6 +34,9 @@ export class EconomicArea
             gdpg: @gdpgScore
             cot: @cotScore
         }
+
+    ########################################################
+    isModified: => @modified.infl || @modified.mrr || @modified.gdpg || @modified.cot6 || @modified.cot36
 
     ########################################################
     getInfl: => @data.infl
@@ -75,6 +81,14 @@ export class EconomicArea
         newArea.updateData(data)
         return newArea
 
+    ########################################################
+    setModifiedAgainst: (other) =>
+        @modified.infl = other.data.infl != @data.infl
+        @modified.mrr = other.data.mrr != @data.mrr
+        @modified.gdpg = other.data.gdpg != @data.gdpg
+        @modified.cot36 = other.data.cot36 != @data.cot36
+        @modified.cot6 = other.data.cot6 != @data.cot6
+        return
 
     ########################################################
     updateData: (d) =>
