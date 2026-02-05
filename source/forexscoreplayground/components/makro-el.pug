@@ -1,0 +1,20 @@
+//- TODO: create class to set the respective data into the structure
+//- <div class="area-flag"><svg><use href="#{data.iconHref}"></use></svg></div>
+//- <div class="area-title">#{data.title}</div>
+//- <div class="area-currency">#{data.currencyShort}</div>
+
+//- resetBtn.dataset.role = role
+//- resetBtn.addEventListener("click", -> resetArea(role))
+
+//- also take care of data rows...
+
+.area-top 
+    .area-flag: svg: use.icon-use 
+    .area-title
+    .area-currency
+.infl-data.data-row: include makro-data-row.pug 
+.mrr-data.data-row: include makro-data-row.pug 
+.gdpg-data.data-row: include makro-data-row.pug
+.cot6-data.data-row: include makro-data-row.pug 
+.cot36-data.data-row: include makro-data-row.pug
+.reset-button Reset

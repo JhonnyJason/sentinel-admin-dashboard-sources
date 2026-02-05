@@ -1,0 +1,42 @@
+//- forexscoreplayground structure
+//- Main grid: 3 columns x 5 rows
+#playground-grid
+    //- Row 1: Area data + Results
+    #base-area.economic-area.grid-cell
+        include components/makro-el.pug
+    #quote-area.economic-area.grid-cell
+        include components/makro-el.pug
+    #results-area.grid-cell
+        include components/result-el.pug
+
+    //- Row 2: Inflation normalization + diff
+    #infl-norm-base.norm-cell.grid-cell
+        include components/quadnorm-el.pug
+    #infl-norm-quote.norm-cell.grid-cell
+        include components/quadnorm-el.pug
+    #infl-diff.diff-cell.grid-cell
+        include components/cubdiff-el.pug
+
+    //- Row 3: Interest (MRR) normalization + diff
+    #mrr-norm-base.norm-cell.grid-cell
+        include components/linnorm-el.pug
+    #mrr-norm-quote.norm-cell.grid-cell
+        include components/linnorm-el.pug
+    #mrr-diff.diff-cell.grid-cell
+        include components/cubdiff-el.pug
+
+    //- Row 4: GDP normalization + diff
+    #gdpg-norm-base.norm-cell.grid-cell
+        include components/quadnorm-el.pug
+    #gdpg-norm-quote.norm-cell.grid-cell
+        include components/quadnorm-el.pug
+    #gdpg-diff.diff-cell.grid-cell
+        include components/cubdiff-el.pug
+
+    //- Row 5: COT normalization + diff
+    #cot-norm-base.norm-cell.grid-cell
+        include components/cotnorm-el.pug
+    #cot-norm-quote.norm-cell.grid-cell
+        include components/cotnorm-el.pug
+    #cot-diff.diff-cell.grid-cell
+        include components/cubdiff-el.pug

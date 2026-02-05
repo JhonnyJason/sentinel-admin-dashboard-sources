@@ -307,7 +307,7 @@ Normalized
 
 #### Quadratic Coefficient Derivation
 
-Same approach as inflation:
+Same approach as infl:
 
 ```
 f(x) = k × (x - zeroLow)(x - zeroHigh)

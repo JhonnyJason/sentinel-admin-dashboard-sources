@@ -1,0 +1,24 @@
+//- Quadratic normalization cell (Inflation, GDP)
+//- Handle: QuadNormHandle
+.cell-header
+.norm-content
+    .param-row
+        span.param-label Höchstwert bei
+        span.param-value-wrap
+            input.param-input.peak-input(type="number" step="0.1")
+            span.param-unit %
+    .param-row
+        span.param-label Flachheit
+        input.param-input.steepness-input(type="number" step="0.1" min="0.1")
+    .param-row.feedback-row
+        span.param-label Nullwerte
+        span.param-display.zero-range
+            span.zero-low --
+            |  % und
+            span.zero-high --
+            |  %
+    .norm-equation
+        span.eq-label n(
+        span.raw-value --
+        span.eq-label ) =
+        span.norm-result --

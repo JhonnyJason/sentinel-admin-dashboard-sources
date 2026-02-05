@@ -1,0 +1,103 @@
+.result-box
+    flex 1
+    padding 12px 0
+    text-align center
+    display flex
+    flex-direction column
+    border-top solid 1px #ddd
+
+    .result-label
+        font-size 10pt
+        color #555
+        font-weight bold
+        margin-bottom 5px
+
+    .scoring-result
+        display flex
+        align-items: center
+        padding 0 40px
+
+    .inner-frame
+        background-color #eeeeee99
+        padding 20px
+
+    .trend-text
+        margin-left 20px
+        font-size 14pt
+        font-weight bold
+
+    .result-score
+        font-size 22pt
+        font-weight bold
+
+    .result-equation
+        padding 0 3px
+        display flex
+        align-items center
+        justify-content space-between
+        margin-bottom 5px
+        font-size 10pt
+
+    .eq-term
+        display inline-flex
+        align-items center
+        gap 2px
+
+    // Editable weight inputs (no background = editable)
+    .weight-input
+        width 28px
+        border none
+        background transparent
+        font-weight bold
+        text-align center
+        font-size 13pt
+        font-family inherit
+        padding 0
+        color cd-dark-blue
+
+        &::-webkit-inner-spin-button
+        &::-webkit-outer-spin-button
+            -webkit-appearance none
+            margin 0
+        &[type="number"]
+            -moz-appearance textfield
+
+        &:focus
+            outline none
+
+    .eq-mult
+        color #888
+
+    // Score constants: colored background = readonly (not editable)
+    // Color indicates which indicator the value comes from
+    .eq-score
+        font-weight bold
+        padding 2px 4px
+        border-radius 3px
+
+    .eq-term.infl .eq-score
+        background alpha($infl-color, 0.2)
+        color darken($infl-color, 20%)
+
+    .eq-term.mrr .eq-score
+        background alpha($mrr-color, 0.2)
+        color darken($mrr-color, 20%)
+
+    .eq-term.gdpg .eq-score
+        background alpha($gdp-color, 0.2)
+        color darken($gdp-color, 20%)
+
+    .eq-term.cot .eq-score
+        background alpha($cot-color, 0.2)
+        color darken($cot-color, 20%)
+
+    .eq-op
+        color #888
+        font-weight bold
+
+    .eq-result
+        font-weight bold
+        color cd-dark-blue
+        padding 2px 6px
+        background alpha(cd-dark-blue, 0.1)
+        border-radius 3px

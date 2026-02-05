@@ -1,3 +1,38 @@
+// focuspairselection styles
+#selection-row
+    display flex
+    align-items center
+    gap 20px
+
+#selected-pair
+    font-size 16pt
+    font-weight bold
+    color cd-dark-blue
+
+// Combobox wrapper
+.combobox-wrapper
+    position relative
+    display inline-block
+    min-width 200px
+
+#pair-input
+    width 100%
+    padding 10px
+    border-radius 3px
+    border solid 1px cd-dark-blue
+    font-size 12pt
+    background #fff
+    box-sizing border-box
+    transition box-shadow 0.2s
+
+#pair-input:focus
+    outline none
+    box-shadow 0 0 3px 0 cd-dark-blue
+
+#pair-input::placeholder
+    color #999
+
+// Combobox dropdown
 .combobox-dropdown
     position absolute
     top 100%

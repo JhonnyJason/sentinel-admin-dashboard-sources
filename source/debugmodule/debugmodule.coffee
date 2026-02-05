@@ -3,13 +3,13 @@ import { addModulesToDebug } from "thingy-debug"
 ############################################################
 export modulesToDebug = {
 
-    authmodule: true
-    authframemodule: true
+    # authmodule: true
+    # authframemodule: true
     # appcoremodule: true
     # backtesting: true
     # chartfun: true
     # comboboxfun: true
-    # datamodule: true
+    datamodule: true
     # datacache: true
     # economicareasmodule: true
     # fouriermodule: true

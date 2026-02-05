@@ -17,138 +17,43 @@ resultsAreaEl = null
 
 # Normalization cell references
 normCells = {
-    inf: { base: null, quote: null, diff: null }
+    infl: { base: null, quote: null, diff: null }
     mrr: { base: null, quote: null, diff: null }
-    gdp: { base: null, quote: null, diff: null }
+    gdpg: { base: null, quote: null, diff: null }
     cot: { base: null, quote: null, diff: null }
 }
 
 # Results display references (cached for direct updates)
-# Structure per horizon: { scoreEl, trendEl, resultEl, scoringResultEl, scores: {inf, mrr, gdp, cot}, weights: {i, l, g, c} }
-resultEls = { st: null, mlt: null, lt: null }
+# Structure per horizon: { scoreEl, trendEl, resultEl, scoringResultEl, scores: {infl, mrr, gdp, cot}, weights: {i, l, g, c} }
+resultEls = { st: null, ml: null, lt: null }
 
 ############################################################
 currentPair = null
 
 # Working data: cloned from real, modified by user inputs
-# Structure: { base: {hicp, mrr, gdpg, cotIndex6, cotIndex36}, quote: {...} }
+# Structure: { base: {infl, mrr, gdpg, cot6, cot36}, quote: {...} }
 workingData = { base: null, quote: null }
 
 # Real data snapshot (for comparison and reset)
 realData = { base: null, quote: null }
 
 # Working params: cloned from area params, modified by user inputs
-# Structure per role: { inflation: {a,b,c}, interest: {a,b}, gdp: {a,b,c}, cot: {f} }
+# Structure per role: { infl: {a,b,c}, mrr: {a,b}, gdpg: {a,b,c}, cot: {f} }
 workingParams = { base: null, quote: null }
 
 # Cached DOM refs for norm cells (for live updates without re-rendering)
-# Structure: { inf: { base: {elements...}, quote: {elements...} }, gdp: {...} }
+# Structure: { infl: { base: {elements...}, quote: {elements...} }, gdpg: {...} }
 normCellEls = {
-    inf: { base: null, quote: null }
-    gdp: { base: null, quote: null }
+    infl: { base: null, quote: null }
+    gdpg: { base: null, quote: null }
 }
-
-############################################################
-export initialize = ->
-    log "initialize"
-    # Row 1: Area displays + results
-    baseAreaEl = document.getElementById("base-area")
-    quoteAreaEl = document.getElementById("quote-area")
-    resultsAreaEl = document.getElementById("results-area")
-
-    # Rows 2-5: Normalization and diff cells
-    normCells.inf.base = document.getElementById("inf-norm-base")
-    normCells.inf.quote = document.getElementById("inf-norm-quote")
-    normCells.inf.diff = document.getElementById("inf-diff")
-
-    normCells.mrr.base = document.getElementById("mrr-norm-base")
-    normCells.mrr.quote = document.getElementById("mrr-norm-quote")
-    normCells.mrr.diff = document.getElementById("mrr-diff")
-
-    normCells.gdp.base = document.getElementById("gdp-norm-base")
-    normCells.gdp.quote = document.getElementById("gdp-norm-quote")
-    normCells.gdp.diff = document.getElementById("gdp-diff")
-
-    normCells.cot.base = document.getElementById("cot-norm-base")
-    normCells.cot.quote = document.getElementById("cot-norm-quote")
-    normCells.cot.diff = document.getElementById("cot-diff")
-
-    # Cache result elements for direct updates
-    cacheResultElements()
-
-    # Initialize weight inputs with current values and attach handlers
-    initializeWeightInputs()
-
-    # Initialize with placeholder content
-    initializePlaceholders()
-    return
-
-############################################################
-# Cache result display elements for each horizon
-cacheResultElements = ->
-    for horizon in ["st", "mlt", "lt"]
-        box = document.getElementById("result-#{horizon}")
-        continue unless box
-
-        resultEls[horizon] = {
-            scoringResultEl: box.querySelector(".scoring-result")
-            scoreEl: box.querySelector(".result-score")
-            trendEl: box.querySelector(".trend-text")
-            resultEl: box.querySelector(".eq-result")
-            # Score constants (colored backgrounds = readonly)
-            scores: {
-                inf: box.querySelector(".eq-term.inf .eq-score")
-                mrr: box.querySelector(".eq-term.mrr .eq-score")
-                gdp: box.querySelector(".eq-term.gdp .eq-score")
-                cot: box.querySelector(".eq-term.cot .eq-score")
-            }
-            # Weight inputs (editable)
-            weights: {
-                i: box.querySelector(".weight-input[data-indicator='i']")
-                l: box.querySelector(".weight-input[data-indicator='l']")
-                g: box.querySelector(".weight-input[data-indicator='g']")
-                c: box.querySelector(".weight-input[data-indicator='c']")
-            }
-        }
-    return
-
-############################################################
-# Initialize weight inputs with current values and attach handlers
-initializeWeightInputs = ->
-    allWeights = scoring.getWeights()
-
-    for horizon in ["st", "mlt", "lt"]
-        els = resultEls[horizon]
-        continue unless els?
-
-        horizonWeights = allWeights[horizon]
-        for indicator in ["i", "l", "g", "c"]
-            input = els.weights[indicator]
-            continue unless input?
-            input.value = horizonWeights[indicator]
-            input.addEventListener("input", handleWeightChange)
-    return
-
-############################################################
-# Handle weight input changes
-handleWeightChange = (event) ->
-    input = event.target
-    horizon = input.dataset.horizon
-    indicator = input.dataset.indicator
-    value = parseInt(input.value, 10)
-
-    return if isNaN(value)
-
-    scoring.setWeight(horizon, indicator, value)
-    recalculateScore()
-    return
 
 ############################################################
 # Initialize cells with placeholder content
 initializePlaceholders = ->
-    # Quadratic cells (inf, gdp) - render structure now, populate on pair select
-    for key in ["inf", "gdp"]
-        label = if key == "inf" then "Inflation" else "GDP"
+    # Quadratic cells (infl, gdp) - render structure now, populate on pair select
+    for key in ["infl", "gdp"]
+        label = if key == "infl" then "Inflation" else "GDP"
         for role in ["base", "quote"]
             renderQuadraticNormCell(normCells[key][role], key, role, label)
         # Diff cells - placeholder for now (Step 4d)
@@ -252,7 +157,7 @@ handleQuadraticParamChange = (event) ->
     return if isNaN(peak) or isNaN(steepness) or steepness <= 0
 
     # Convert to a,b,c coefficients
-    paramKey = if indicator == "inf" then "inflation" else "gdp"
+    paramKey = if indicator == "infl" then "inflation" else "gdp"
     defaultWidth = scoring.defaultWidths[paramKey]
     coeffs = scoring.peakSteepnessToCoeffs(peak, steepness, defaultWidth)
 
@@ -348,23 +253,23 @@ recalculateScore = ->
 ############################################################
 # Clone only the editable data fields from an area
 cloneAreaData = (area) ->
-    data = area.getData()
+    data = area.copyData()
     return {
-        hicp: data.hicp
+        infl: data.infl
         mrr: data.mrr
         gdpg: data.gdpg
-        cotIndex6: data.cotIndex6
-        cotIndex36: data.cotIndex36
+        cot6: data.cot6
+        cot36: data.cot36
     }
 
 ############################################################
 # Clone area params (deep copy)
 cloneAreaParams = (area) ->
-    params = area.getParams()
+    params = area.copyParams()
     return {
-        inflation: { ...params.inflation }
-        interest: { ...params.interest }
-        gdp: { ...params.gdp }
+        infl: { ...params.inflation }
+        mrr: { ...params.interest }
+        gdpg: { ...params.gdpg }
         cot: { ...params.cot }
     }
 
@@ -373,9 +278,9 @@ cloneAreaParams = (area) ->
 populateQuadraticCells = (role) ->
     return unless workingParams[role]? and workingData[role]?
 
-    for indicator in ["inf", "gdp"]
-        paramKey = if indicator == "inf" then "inflation" else "gdp"
-        dataKey = if indicator == "inf" then "hicp" else "gdpg"
+    for indicator in ["infl", "gdp"]
+        paramKey = if indicator == "infl" then "inflation" else "gdp"
+        dataKey = if indicator == "infl" then "infl" else "gdpg"
 
         els = normCellEls[indicator]?[role]
         continue unless els?
@@ -406,7 +311,7 @@ populateQuadraticCells = (role) ->
 # Combine area info and data for rendering
 getAreaRenderData = (area) ->
     info = area.getInfo()
-    data = area.getData()
+    data = area.copyData()
     return { ...info, ...data }
 
 ############################################################
@@ -427,18 +332,10 @@ renderArea = (container, data, role) ->
     container.appendChild(topEl)
 
     # Data rows with editable inputs
-    addDataRow(container, "Inflation", "hicp", "%", role)
+    addDataRow(container, "Inflation", "infl", "%", role)
     addDataRow(container, "Leitzins", "mrr", "%", role)
     addDataRow(container, "GDP Wachstum", "gdpg", "%", role)
     addCotRow(container, "COT Index", role)
-
-    # Reset button (hidden until modified)
-    resetBtn = document.createElement("button")
-    resetBtn.className = "reset-button"
-    resetBtn.textContent = "Reset"
-    resetBtn.dataset.role = role
-    resetBtn.addEventListener("click", -> resetArea(role))
-    container.appendChild(resetBtn)
 
     return
 
@@ -491,9 +388,9 @@ addCotRow = (container, label, role) ->
     input6.min = "0"
     input6.max = "100"
     input6.className = "data-input cot-input"
-    input6.dataset.field = "cotIndex6"
+    input6.dataset.field = "cot6"
     input6.dataset.role = role
-    input6.value = Math.round(workingData[role]?.cotIndex6 ? 0)
+    input6.value = Math.round(workingData[role]?.cot6 ? 0)
     input6.addEventListener("input", handleInputChange)
 
     sep = document.createElement("span")
@@ -506,9 +403,9 @@ addCotRow = (container, label, role) ->
     input36.min = "0"
     input36.max = "100"
     input36.className = "data-input cot-input"
-    input36.dataset.field = "cotIndex36"
+    input36.dataset.field = "cot36"
     input36.dataset.role = role
-    input36.value = Math.round(workingData[role]?.cotIndex36 ? 0)
+    input36.value = Math.round(workingData[role]?.cot36 ? 0)
     input36.addEventListener("input", handleInputChange)
 
     pct1 = document.createElement("span")
@@ -567,7 +464,7 @@ updateResetButtonVisibility = (role) ->
 isAreaModified = (role) ->
     return false unless realData[role]? and workingData[role]?
 
-    for field in ["hicp", "mrr", "gdpg", "cotIndex6", "cotIndex36"]
+    for field in ["infl", "mrr", "gdpg", "cot6", "cot36"]
         if Math.abs(realData[role][field] - workingData[role][field]) > 0.001
             return true
     return false
@@ -650,10 +547,10 @@ getTrendText = (score) ->
 # Render results by updating cached elements (no DOM replacement)
 renderResults = (result) ->
     { scores } = result
-    { st, mlt, lt } = result.final
+    { st, ml, lt } = result.final
 
     updateResultBox("st", st, scores)
-    updateResultBox("mlt", mlt, scores)
+    updateResultBox("ml", ml, scores)
     updateResultBox("lt", lt, scores)
 
     # Update quadratic norm cell results (Inf, GDP)
@@ -663,8 +560,8 @@ renderResults = (result) ->
 ############################################################
 # Update normalized results in quadratic cells
 updateQuadraticNormResults = (result) ->
-    for indicator in ["inf", "gdp"]
-        normKey = if indicator == "inf" then "infNorm" else "gdpNorm"
+    for indicator in ["infl", "gdp"]
+        normKey = if indicator == "infl" then "infNorm" else "gdpNorm"
 
         for role in ["base", "quote"]
             els = normCellEls[indicator]?[role]
@@ -677,7 +574,7 @@ updateQuadraticNormResults = (result) ->
                 els.normResult.textContent = "--"
 
         # Also update raw values (in case data changed)
-        dataKey = if indicator == "inf" then "hicp" else "gdpg"
+        dataKey = if indicator == "infl" then "infl" else "gdpg"
         for role in ["base", "quote"]
             els = normCellEls[indicator]?[role]
             continue unless els?
@@ -702,9 +599,9 @@ updateResultBox = (horizon, finalScore, scores) ->
     els.trendEl.textContent = trendText
 
     # Update score constants (colored backgrounds indicate readonly)
-    els.scores.inf.textContent = scores.inf.toFixed(2)
+    els.scores.infl.textContent = scores.infl.toFixed(2)
     els.scores.mrr.textContent = scores.mrr.toFixed(2)
-    els.scores.gdp.textContent = scores.gdp.toFixed(2)
+    els.scores.gdpg.textContent = scores.gdpg.toFixed(2)
     els.scores.cot.textContent = scores.cot.toFixed(2)
 
     # Update equation result (unrounded)

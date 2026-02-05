@@ -4,25 +4,25 @@ template#economic-area-template
             .flag: svg: use(href="{{{icon-href}}}")
             .title {{{title}}}
         .inflation-rate
-            p.label Inflation: 
+            p.label infl: 
             p.value {{{inflation}}}
             .click-button.info-button: svg: use(href="#svg-info-icon")
         .refinancing-rate
             p.label Leitzins: 
             p.value {{{policyRate}}}
             .click-button.info-button: svg: use(href="#svg-info-icon")
-        .gdp-growth
+        .gdpg-growth
             p.label GDP Wachstum: 
             p.value {{{gdpg}}}
             .click-button.info-button: svg: use(href="#svg-info-icon")
         .cot-index-6 
             p.label COT Index (6m): 
-            p.value {{{cotIndex6}}}
+            p.value {{{cot6}}}
             .click-button.info-button: svg: use(href="#svg-info-icon")
 
         .cot-index-36
             p.label COT Index (36m): 
-            p.value {{{cotIndex36}}}
+            p.value {{{cot36}}}
             .click-button.info-button: svg: use(href="#svg-info-icon")
 
         .info-display 

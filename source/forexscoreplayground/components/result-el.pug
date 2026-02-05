@@ -1,0 +1,15 @@
+//- Each result box: label, colored score, equation breakdown
+//- Equation structure: weight × score + weight × score + ... = result
+//- Design: colored background = readonly constant (indicates origin)
+//-         no background = editable input field
+.result-box#result-st
+    .result-label Short-Term
+    include result-inner.pug 
+
+.result-box#result-ml
+    .result-label Mid/Long-Term
+    include result-inner.pug 
+
+.result-box#result-lt
+    .result-label Long-Term
+    include result-inner.pug

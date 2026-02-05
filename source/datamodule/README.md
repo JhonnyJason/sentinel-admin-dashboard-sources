@@ -18,14 +18,14 @@ Extended to include parameters alongside makro data.
 ```json
 {
   "eurozone": {
-    "hicp": 2.1,
-    "hicpMeta": { "dataSet": "...", "source": "ECB", "date": "2024-01" },
+    "infl": 2.1,
+    "inflMeta": { "dataSet": "...", "source": "ECB", "date": "2024-01" },
     "mrr": 4.5,
     "mrrMeta": { "dataSet": "...", "source": "ECB", "date": "2024-01-15" },
     "gdpg": 0.8,
     "gdpgMeta": { "dataSet": "...", "source": "Eurostat", "date": "2024-Q4" },
-    "cotIndex6": 45.2,
-    "cotIndex36": 62.1,
+    "cot6": 45.2,
+    "cot36": 62.1,
     "params": {
       "inflation": { "a": 1.667, "b": 0.667, "c": -0.083 },
       "interest": { "a": -2.5, "b": 1.0 },
@@ -85,8 +85,8 @@ Makro values changed (new data from sources).
   "type": "areaData",
   "key": "eurozone",
   "data": {
-    "hicp": 2.2,
-    "hicpMeta": { "dataSet": "...", "source": "ECB", "date": "2024-02" }
+    "infl": 2.2,
+    "inflMeta": { "dataSet": "...", "source": "ECB", "date": "2024-02" }
   }
 }
 ```

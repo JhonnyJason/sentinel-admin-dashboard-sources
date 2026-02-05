@@ -8,16 +8,16 @@ import { createLogFunctions } from "thingy-debug"
 # Weight sets for different time horizons (mutable)
 weights = {
     st: { i: 6, l: 9, g: 3, c: 13 }
-    mlt: { i: 7, l: 11, g: 5, c: 7 }
+    ml: { i: 7, l: 11, g: 5, c: 7 }
     lt: { i: 10, l: 6, g: 9, c: 5 }
 }
 
 ############################################################
 # Diff curve parameters (global)
 diffParams = {
-    inflation: { b: 2.78, d: 0.248 }
-    interest: { b: 0, d: 0.05 }
-    gdp: { b: 2.78, d: 0.248 }
+    infl: { b: 2.78, d: 0.248 }
+    mrr: { b: 0, d: 0.05 }
+    gdpg: { b: 2.78, d: 0.248 }
     cot: { b: 0, d: 0.05 }
 }
 
@@ -43,10 +43,10 @@ normalizeLinear = (value, params) ->
 # Input: cot6, cot36, params {f}
 # Output: normalized score
 normalizeCOT = (cot6, cot36, params) ->
-    f = params.f ? 1.0
+    { f, e } = params
     c6 = 0.02 * cot6
     c36 = 0.02 * cot36
-    return f * (c6 * c36 * c36)
+    return f * (c6 * Math.pow(c36, e))
 
 ############################################################
 # Diff curve: cubic with linear component
@@ -100,9 +100,9 @@ export coeffsToNeutralSensitivity = (a, b) ->
 ############################################################
 # Calculate full scoring breakdown for a currency pair
 # Input:
-#   baseData: { hicp, mrr, gdpg, cotIndex6, cotIndex36 }
-#   quoteData: { hicp, mrr, gdpg, cotIndex6, cotIndex36 }
-#   baseParams: { inflation: {a,b,c}, interest: {a,b}, gdp: {a,b,c}, cot: {f} }
+#   baseData: { infl, mrr, gdpg, cot6, cot36 }
+#   quoteData: { infl, mrr, gdpg, cot6, cot36 }
+#   baseParams: { infl: {a,b,c}, mrr: {a,b}, gdpg: {a,b,c}, cot: {f} }
 #   quoteParams: same structure
 #   globalDiffParams: optional override for diff curves
 # Output: full breakdown object
@@ -116,10 +116,10 @@ export calculatePairScore = (baseData, quoteData, baseParams, quoteParams, globa
     }
 
     # Inflation
-    result.base.infNorm = normalizeQuadratic(baseData.hicp, baseParams.inflation)
-    result.quote.infNorm = normalizeQuadratic(quoteData.hicp, quoteParams.inflation)
-    result.diff.inf = result.base.infNorm - result.quote.infNorm
-    result.scores.inf = diffCurve(result.diff.inf, globalDiffParams.inflation)
+    result.base.infNorm = normalizeQuadratic(baseData.infl, baseParams.inflation)
+    result.quote.infNorm = normalizeQuadratic(quoteData.infl, quoteParams.inflation)
+    result.diff.infl = result.base.infNorm - result.quote.infNorm
+    result.scores.infl = diffCurve(result.diff.infl, globalDiffParams.inflation)
 
     # Interest (MRR)
     result.base.mrrNorm = normalizeLinear(baseData.mrr, baseParams.interest)
@@ -128,20 +128,20 @@ export calculatePairScore = (baseData, quoteData, baseParams, quoteParams, globa
     result.scores.mrr = diffCurve(result.diff.mrr, globalDiffParams.interest)
 
     # GDP
-    result.base.gdpNorm = normalizeQuadratic(baseData.gdpg, baseParams.gdp)
-    result.quote.gdpNorm = normalizeQuadratic(quoteData.gdpg, quoteParams.gdp)
-    result.diff.gdp = result.base.gdpNorm - result.quote.gdpNorm
-    result.scores.gdp = diffCurve(result.diff.gdp, globalDiffParams.gdp)
+    result.base.gdpNorm = normalizeQuadratic(baseData.gdpg, baseParams.gdpg)
+    result.quote.gdpNorm = normalizeQuadratic(quoteData.gdpg, quoteParams.gdpg)
+    result.diff.gdpg = result.base.gdpNorm - result.quote.gdpNorm
+    result.scores.gdpg = diffCurve(result.diff.gdpg, globalDiffParams.gdpg)
 
     # COT
-    result.base.cotNorm = normalizeCOT(baseData.cotIndex6, baseData.cotIndex36, baseParams.cot)
-    result.quote.cotNorm = normalizeCOT(quoteData.cotIndex6, quoteData.cotIndex36, quoteParams.cot)
+    result.base.cotNorm = normalizeCOT(baseData.cot6, baseData.cot36, baseParams.cot)
+    result.quote.cotNorm = normalizeCOT(quoteData.cot6, quoteData.cot36, quoteParams.cot)
     result.diff.cot = result.base.cotNorm - result.quote.cotNorm
     result.scores.cot = diffCurve(result.diff.cot, globalDiffParams.cot)
 
     # Final combination with weights
     result.final.st = combineWithWeights(result.scores, weights.st)
-    result.final.mlt = combineWithWeights(result.scores, weights.mlt)
+    result.final.ml = combineWithWeights(result.scores, weights.ml)
     result.final.lt = combineWithWeights(result.scores, weights.lt)
 
     return result
@@ -149,9 +149,9 @@ export calculatePairScore = (baseData, quoteData, baseParams, quoteParams, globa
 ############################################################
 # Combine individual scores with weights
 combineWithWeights = (scores, weights) ->
-    raw = weights.i * scores.inf +
+    raw = weights.i * scores.infl +
           weights.l * scores.mrr +
-          weights.g * scores.gdp +
+          weights.g * scores.gdpg +
           weights.c * scores.cot
     # Clamp to [-30, 30]
     return Math.max(-30, Math.min(30, raw))
@@ -162,7 +162,7 @@ export getWeights = -> weights
 export getDiffParams = -> diffParams
 
 ############################################################
-# Update a single weight: horizon = 'st'|'mlt'|'lt', indicator = 'i'|'l'|'g'|'c'
+# Update a single weight: horizon = 'st'|'ml'|'lt', indicator = 'i'|'l'|'g'|'c'
 export setWeight = (horizon, indicator, value) ->
     return unless weights[horizon]? and weights[horizon][indicator]?
     weights[horizon][indicator] = value
@@ -178,6 +178,6 @@ export setDiffParams = (newParams) ->
 # Default widths for steepness calculation (from scoring-design.md)
 # These are the reference widths when steepness = 1.0
 export defaultWidths = {
-    inflation: 12  # zeroHigh(10) - zeroLow(-2) for EUR
-    gdp: 8         # zeroHigh(6) - zeroLow(-2) for EUR
+    infl: 12  # zeroHigh(10) - zeroLow(-2) for EUR
+    gdpg: 8         # zeroHigh(6) - zeroLow(-2) for EUR
 }

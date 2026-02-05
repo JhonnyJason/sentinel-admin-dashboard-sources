@@ -5,7 +5,6 @@ import * as configmodule from "./configmodule.js"
 import * as contentmodule from "./contentmodule.js"
 import * as currencytrendframemodule from "./currencytrendframemodule.js"
 import * as datamodule from "./datamodule.js"
-import * as economicareasmodule from "./economicareasmodule.js"
 import * as debugmodule from "./debugmodule.js"
 import * as forexscoreframemodule from "./forexscoreframemodule.js"
 import * as messageboxmodule from "./messageboxmodule.js"
@@ -25,7 +24,6 @@ Modules = {
     currencytrendframemodule,
     datamodule,
     debugmodule,
-    economicareasmodule,
     forexscoreframemodule,
     messageboxmodule,
     qrreadermodule,

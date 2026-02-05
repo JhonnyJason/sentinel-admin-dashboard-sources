@@ -129,23 +129,23 @@ class CurrencyPair
     updateScore: =>
         # log "updateScore #{@short}"
         try
-            nInfScoreBase = @baseArea.normalizedInflationScore()
-            nInfScoreQuote = @quoteArea.normalizedInflationScore()
+            nInfScoreBase = @baseArea.inflScore()
+            nInfScoreQuote = @quoteArea.inflScore()
             diff = nInfScoreBase - nInfScoreQuote
             infScore = scoreHelper.inflationDiffCurve(diff)
             
-            nMrrScoreBase = @baseArea.normalizedInterestScore()
-            nMrrScoreQuote = @quoteArea.normalizedInterestScore()
+            nMrrScoreBase = @baseArea.mrrScore()
+            nMrrScoreQuote = @quoteArea.mrrScore()
             diff = nMrrScoreBase - nMrrScoreQuote
             mrrScore = scoreHelper.interestDiffCurve(diff)
 
-            nGdpScoreBase = @baseArea.normalizedGDPScore()
-            nGdpScoreQuote = @quoteArea.normalizedGDPScore()
+            nGdpScoreBase = @baseArea.gdpgScore()
+            nGdpScoreQuote = @quoteArea.gdpgScore()
             diff = nGdpScoreBase - nGdpScoreQuote
             gdpScore = scoreHelper.gdpDiffCurve(diff)
 
-            nCotScoreBase = @baseArea.normalizedCOTScore()
-            nCotScoreQuote = @quoteArea.normalizedCOTScore()
+            nCotScoreBase = @baseArea.cotScore()
+            nCotScoreQuote = @quoteArea.cotScore()
             diff = nCotScoreBase - nCotScoreQuote
             cotScore = scoreHelper.cotDiffCurve(diff)
             if !isNaN(infScore)
