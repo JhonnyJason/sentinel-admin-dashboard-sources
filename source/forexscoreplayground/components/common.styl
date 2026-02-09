@@ -1,0 +1,141 @@
+// Indicator colors (shared across all playground components)
+$infl-color = #4a90d9    // blue
+$mrr-color = #9b59b6     // purple
+$gdp-color = #27ae60     // green
+$cot-color = #f1c40f     // yellow
+
+// Rows 2-5: Normalization and Diff cells
+.norm-cell
+.diff-cell
+    min-height 80px
+    padding 10px
+
+    .cell-header
+        font-size 10pt
+        font-weight bold
+        color #666
+        padding-bottom 8px
+        border-bottom 1px solid #eee
+
+    .norm-content
+    .diff-content
+        display flex
+        flex-direction column
+        gap 2px
+
+    .norm-equation
+    .diff-equation
+        padding 5px 0
+        border-bottom 1px solid #eee
+        font-size 10pt
+        cursor default
+
+    .param-row
+        display flex
+        justify-content space-between
+        align-items center
+        padding 4px 0
+
+    .param-label
+        font-size 9pt
+        color #888
+
+    .param-input
+        border none
+        background alpha(cd-dark-blue, 0.05)
+        padding 3px 6px
+        border-radius 3px
+        width 50px
+        text-align right
+        font-size 10pt
+        font-family inherit
+
+        &::-webkit-inner-spin-button
+        &::-webkit-outer-spin-button
+            -webkit-appearance none
+            margin 0
+        &[type="number"]
+            -moz-appearance textfield
+
+        &:focus
+            outline none
+            box-shadow 0 0 2px cd-dark-blue
+
+    .param-display
+        font-size 10pt
+        font-weight bold
+        padding 3px 6px
+        border-radius 3px
+
+    .raw-value
+        color cd-dark-blue
+        background alpha(cd-dark-blue, 0.08)
+
+    .zero-range
+        font-size 9pt
+        color #666
+
+    .feedback-row
+        border-top 1px dashed #eee
+        margin-top 4px
+        padding-top 6px
+
+    // Norm result: indicator-colored text, no background
+    // Border distinguishes base (bottom) from quote (top)
+    .norm-result
+        margin-top 8px
+        font-weight bold
+        font-size 10pt
+        padding 0 4px
+
+    // Diff equation input values: same styling as norm-result
+    .diff-base-val
+    .diff-quote-val
+        font-weight bold
+        padding 0 4px
+
+    // Diff result: indicator-colored with background tint (computed output)
+    .diff-result
+        font-weight bold
+        padding 2px 4px
+        border-radius 3px
+
+// Base/quote border distinction
+.norm-cell.is-base .norm-result
+    border-top 2px solid
+
+.norm-cell.is-quote .norm-result
+    border-bottom 2px solid
+
+.diff-cell .diff-base-val
+    border-top 2px solid
+
+.diff-cell .diff-quote-val
+    border-bottom 2px solid
+
+// Indicator theming: color + tint per indicator type
+indicator-theme($color)
+    .cell-header
+        color $color
+    .norm-result
+        color darken($color, 20%)
+        border-color $color
+    .diff-base-val
+    .diff-quote-val
+        color darken($color, 20%)
+        border-color $color
+    .diff-result
+        color darken($color, 20%)
+        background alpha($color, 0.15)
+
+.indicator-infl
+    indicator-theme($infl-color)
+
+.indicator-mrr
+    indicator-theme($mrr-color)
+
+.indicator-gdpg
+    indicator-theme($gdp-color)
+
+.indicator-cot
+    indicator-theme($cot-color)

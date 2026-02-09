@@ -55,7 +55,8 @@ Handle: `ResultBoxHandle`
 ### components/quadnorm-el.pug
 Quadratic normalization for Inflation and GDP.
 Params: peak, steepness → derived zeros feedback.
-Handle: `QuadNormHandle`
+Displays full equation: `n(x) = a + b·x + c·x² = result`
+Handle: `QuadNormHandle` (implemented)
 
 ### components/linnorm-el.pug
 Linear normalization for interest rate (MRR).
@@ -81,6 +82,7 @@ forexscoreplayground/
 ├── uihandles.coffee            # Handle instantiation
 ├── MakroDataHandle.coffee
 ├── ResultBoxHandle.coffee
+├── normmath.coffee             # Pure math: param conversions + defaultWidths
 ├── QuadNormHandle.coffee
 ├── LinNormHandle.coffee
 ├── CotNormHandle.coffee
@@ -103,11 +105,13 @@ forexscoreplayground/
 **Complete:**
 - All Pug structures defined
 - Styles for makro-el and result-el
+- `normmath.coffee` - param conversion utilities (extracted from deprecated scoringmodule)
+- `QuadNormHandle` - full implementation (input wiring, refreshUI, equation display)
 
 **In Progress:**
-- Handle class implementations
-- Wiring to data model
+- LinNormHandle, CotNormHandle, DiffHandle implementations
+- Wiring handles into playgroundcontroller
 
 **TODO:**
-- Complete Handle TODOs
+- Complete remaining Handle implementations
 - Remove old render functions from forexscoreplayground.coffee

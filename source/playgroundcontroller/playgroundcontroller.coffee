@@ -75,6 +75,17 @@ export initialize = ->
     # Wire reset listeners only on makro data handle
     baseHandles.makroData.addResetListener(onBaseLiveReset)
     quoteHandles.makroData.addResetListener(onQuoteLiveReset)
+
+    # Wire Other UiHandles directly to generalParamChanged
+    baseHandles.inflNorm.addOnChangeListener(generalParamChanged)
+    baseHandles.mrrNorm.addOnChangeListener(generalParamChanged)
+    baseHandles.gdpgNorm.addOnChangeListener(generalParamChanged)
+    baseHandles.cotNorm.addOnChangeListener(generalParamChanged)
+
+    quoteHandles.inflNorm.addOnChangeListener(generalParamChanged)
+    quoteHandles.mrrNorm.addOnChangeListener(generalParamChanged)
+    quoteHandles.gdpgNorm.addOnChangeListener(generalParamChanged)
+    quoteHandles.cotNorm.addOnChangeListener(generalParamChanged)
     return
 
 ############################################################
@@ -138,6 +149,12 @@ createOriginalUpdateListener = (key) -> ->
     return
 
 ############################################################
+generalParamChanged = ->
+    log "generalParamChanged"
+    if scoringModel? then scoringModel.recalculate()
+    return 
+
+############################################################
 onQuoteLiveUpdate = -> onAreaUpdate(currentQuoteKey)
 onBaseLiveUpdate = -> onAreaUpdate(currentBaseKey)
 
@@ -153,15 +170,6 @@ onAreaUpdate = (areaKey) ->
     # Trigger recalculation
     scoringModel.recalculate()
     return
-
-############################################################
-dataEquals = (a, b) ->
-    return false unless a? and b?
-    return a.infl == b.infl and
-           a.mrr == b.mrr and
-           a.gdpg == b.gdpg and
-           a.cot36 == b.cot36 and
-           a.cot6 == b.cot6
 
 ############################################################
 onQuoteLiveReset = -> resetArea(currentQuoteKey)
