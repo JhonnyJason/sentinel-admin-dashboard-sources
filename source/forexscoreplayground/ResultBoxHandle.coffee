@@ -29,6 +29,8 @@ export class ResultBoxHandle
         @stCotScoreDisplay = resultSt.querySelector(".cot .eq-score")
         @stCotWeightInput = resultSt.querySelector(".cot .weight-input")
 
+        @stEquationResult = resultSt.querySelector(".eq-result")
+
         @stResultFrame = resultSt.querySelector(".scoring-result")
         @stResultDisplay = resultSt.querySelector(".result-score")
         @stTrendDisplay = resultSt.querySelector(".trend-text")
@@ -47,6 +49,8 @@ export class ResultBoxHandle
         @mlCotScoreDisplay = resultMl.querySelector(".cot .eq-score")
         @mlCotWeightInput = resultMl.querySelector(".cot .weight-input")
 
+        @mlEquationResult = resultMl.querySelector(".eq-result")
+
         @mlResultFrame = resultMl.querySelector(".scoring-result")
         @mlResultDisplay = resultMl.querySelector(".result-score")
         @mlTrendDisplay = resultMl.querySelector(".trend-text")
@@ -64,6 +68,8 @@ export class ResultBoxHandle
 
         @ltCotScoreDisplay = resultLt.querySelector(".cot .eq-score")
         @ltCotWeightInput = resultLt.querySelector(".cot .weight-input")
+
+        @ltEquationResult = resultLt.querySelector(".eq-result")
 
         @ltResultFrame = resultLt.querySelector(".scoring-result")
         @ltResultDisplay = resultLt.querySelector(".result-score")
@@ -112,9 +118,12 @@ export class ResultBoxHandle
         @stCotWeightInput.value = params.st.c
         @stCotScoreDisplay.textContent = diffResults.cot.score.toFixed(2)
 
-        score = Math.round(endResults.st.clampedScore)
+        fullScore = endResults.st.clampedScore
+        score = Math.round(fullScore)
         color = sH.getColorForScore(score)
         @stResultFrame.style.backgroundColor = color
+
+        @stEquationResult.textContent = fullScore.toFixed(2)
         @stResultDisplay.textContent = score
         @stTrendDisplay.textContent = sH.getTrendTextForScore(score)
 
@@ -131,9 +140,12 @@ export class ResultBoxHandle
         @mlCotWeightInput.value = params.ml.c
         @mlCotScoreDisplay.textContent = diffResults.cot.score.toFixed(2)
 
-        score = Math.round(endResults.ml.clampedScore)
+        fullScore = endResults.ml.clampedScore
+        score = Math.round(fullScore)
         color = sH.getColorForScore(score)
         @mlResultFrame.style.backgroundColor = color
+
+        @mlEquationResult.textContent = fullScore.toFixed(2)
         @mlResultDisplay.textContent = score
         @mlTrendDisplay.textContent = sH.getTrendTextForScore(score)
 
@@ -150,9 +162,12 @@ export class ResultBoxHandle
         @ltCotWeightInput.value = params.lt.c
         @ltCotScoreDisplay.textContent = diffResults.cot.score.toFixed(2)
 
-        score = Math.round(endResults.lt.clampedScore)
+        fullScore = endResults.lt.clampedScore
+        score = Math.round(fullScore)
         color = sH.getColorForScore(score)
         @ltResultFrame.style.backgroundColor = color
+        
+        @ltEquationResult.textContent = fullScore.toFixed(2)
         @ltResultDisplay.textContent = score
         @ltTrendDisplay.textContent = sH.getTrendTextForScore(score)
         return
