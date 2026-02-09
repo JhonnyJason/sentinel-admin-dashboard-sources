@@ -10,7 +10,11 @@ export class EconomicArea
         @updateListeners = []
         
         @modified = {
-
+            infl: false
+            mrr: false
+            gdpg: false
+            cot36: false
+            cot6: false
         }
 
         @data = {

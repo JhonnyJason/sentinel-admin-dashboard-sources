@@ -156,6 +156,7 @@ export class Combobox
     selectOption: (opt) ->
         log "selectOption: #{opt}"
         @inputEl.value = opt
+        @inputEl.blur()
         @hideDropdown()
         @selectionCallback?(opt)
         return

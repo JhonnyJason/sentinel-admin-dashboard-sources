@@ -101,18 +101,18 @@ export class ResultBoxHandle
 
         ## short term elements
         @stInflWeightInput.value = params.st.i
-        @stInflScoreDisplay.textContent = diffResults.inflScore
+        @stInflScoreDisplay.textContent = diffResults.infl.score.toFixed(2)
 
         @stMrrWeightInput.value = params.st.l
-        @stMrrScoreDisplay.textContent = diffResults.mrrScore
+        @stMrrScoreDisplay.textContent = diffResults.mrr.score.toFixed(2)
 
         @stGdpgWeightInput.value = params.st.g
-        @stGdpgScoreDisplay.textContent = diffResults.gdpgScore
+        @stGdpgScoreDisplay.textContent = diffResults.gdpg.score.toFixed(2)
 
         @stCotWeightInput.value = params.st.c
-        @stCotScoreDisplay.textContent = diffResults.cotScore
+        @stCotScoreDisplay.textContent = diffResults.cot.score.toFixed(2)
 
-        score = Math.round(endResults.st.fullScore)
+        score = Math.round(endResults.st.clampedScore)
         color = sH.getColorForScore(score)
         @stResultFrame.style.backgroundColor = color
         @stResultDisplay.textContent = score
@@ -120,18 +120,18 @@ export class ResultBoxHandle
 
         ## medium longer term elements
         @mlInflWeightInput.value = params.ml.i
-        @mlInflScoreDisplay.textContent = diffResults.inflScore
+        @mlInflScoreDisplay.textContent = diffResults.infl.score.toFixed(2)
 
         @mlMrrWeightInput.value = params.ml.l
-        @mlMrrScoreDisplay.textContent = diffResults.mrrScore
+        @mlMrrScoreDisplay.textContent = diffResults.mrr.score.toFixed(2)
 
         @mlGdpgWeightInput.value = params.ml.g
-        @mlGdpgScoreDisplay.textContent = diffResults.gdpgScore
+        @mlGdpgScoreDisplay.textContent = diffResults.gdpg.score.toFixed(2)
 
         @mlCotWeightInput.value = params.ml.c
-        @mlCotScoreDisplay.textContent = diffResults.cotScore
+        @mlCotScoreDisplay.textContent = diffResults.cot.score.toFixed(2)
 
-        score = Math.round(endResults.ml.fullScore)
+        score = Math.round(endResults.ml.clampedScore)
         color = sH.getColorForScore(score)
         @mlResultFrame.style.backgroundColor = color
         @mlResultDisplay.textContent = score
@@ -139,18 +139,18 @@ export class ResultBoxHandle
 
         ## longer term elements
         @ltInflWeightInput.value = params.lt.i
-        @ltInflScoreDisplay.textContent = diffResults.inflScore
+        @ltInflScoreDisplay.textContent = diffResults.infl.score.toFixed(2)
 
         @ltMrrWeightInput.value = params.lt.l
-        @ltMrrScoreDisplay.textContent = diffResults.mrrScore
+        @ltMrrScoreDisplay.textContent = diffResults.mrr.score.toFixed(2)
 
         @ltGdpgWeightInput.value = params.lt.g
-        @ltGdpgScoreDisplay.textContent = diffResults.gdpgScore
+        @ltGdpgScoreDisplay.textContent = diffResults.gdpg.score.toFixed(2)
 
         @ltCotWeightInput.value = params.lt.c
-        @ltCotScoreDisplay.textContent = diffResults.cotScore
+        @ltCotScoreDisplay.textContent = diffResults.cot.score.toFixed(2)
 
-        score = Math.round(endResults.lt.fullScore)
+        score = Math.round(endResults.lt.clampedScore)
         color = sH.getColorForScore(score)
         @ltResultFrame.style.backgroundColor = color
         @ltResultDisplay.textContent = score

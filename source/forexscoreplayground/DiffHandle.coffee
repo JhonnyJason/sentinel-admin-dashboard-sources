@@ -23,9 +23,9 @@ export class DiffHandle
         return
 
     refreshUI: =>
-        p = @model.getDiffParams(@dKey)
+        p = @model.getDiffParams()[@dKey]
         { baseScore, quoteScore } = @model.getDiffInputs(@dKey)
-        ## TODO fill inputs 
+        ## TODO fill inputs
         return
     
 
