@@ -152,6 +152,18 @@ export class ScoringModel
         @recalculate()
         return
 
+    # Bulk-set diff params (for version control apply). No recalculate.
+    setDiffParams: (p) =>
+        for type in ["infl", "mrr", "gdpg", "cot"]
+            @diffParams[type] = { ...p[type] } if p[type]?
+        return
+
+    # Bulk-set final weights (for version control apply). No recalculate.
+    setFinalWeights: (w) =>
+        for horizon in ["st", "ml", "lt"]
+            @finalWeights[horizon] = { ...w[horizon] } if w[horizon]?
+        return
+
     #endregion
 
     ########################################################

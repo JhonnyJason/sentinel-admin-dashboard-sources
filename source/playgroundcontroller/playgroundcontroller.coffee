@@ -8,6 +8,7 @@ import { createLogFunctions } from "thingy-debug"
 import * as uiHandles from "./uihandles.js"
 import { getAllAreas } from "./economicareasmodule.js"
 import { ScoringModel } from "./ScoringModel.js"
+import * as versionControl from "./forexscoreversion.js"
 
 ############################################################
 # Central orchestrator for the ForexScore Playground
@@ -152,7 +153,8 @@ createOriginalUpdateListener = (key) -> ->
 generalParamChanged = ->
     log "generalParamChanged"
     if scoringModel? then scoringModel.recalculate()
-    return 
+    versionControl.onParamsChanged()
+    return
 
 ############################################################
 onQuoteLiveUpdate = -> onAreaUpdate(currentQuoteKey)
@@ -184,6 +186,36 @@ export resetArea = (areaKey) ->
 
     # Copy original data back to live area (triggers updateListeners)
     live.updateData(original.copyData())
+    return
+
+############################################################
+# Snapshot all current params (area params + global params)
+export snapshotParams = ->
+    snapshot = { areaParams: {}, globalParams: {} }
+    for key, area of liveAreas
+        snapshot.areaParams[key] = area.copyParams()
+    dp = scoringModel.getDiffParams()
+    fw = scoringModel.getFinalWeights()
+    snapshot.globalParams.diffCurves = {
+        infl: { ...dp.infl }, mrr: { ...dp.mrr }
+        gdpg: { ...dp.gdpg }, cot: { ...dp.cot }
+    }
+    snapshot.globalParams.finalWeights = {
+        st: { ...fw.st }, ml: { ...fw.ml }, lt: { ...fw.lt }
+    }
+    return snapshot
+
+############################################################
+# Apply a snapshot: set all area params + global params, trigger refresh
+export applyParams = (snapshot) ->
+    log "applyParams"
+    # Set global params first (no recalc yet)
+    scoringModel.setDiffParams(snapshot.globalParams.diffCurves)
+    scoringModel.setFinalWeights(snapshot.globalParams.finalWeights)
+
+    # Set area params (triggers updateListeners → norm handle refresh + recalculate)
+    for key, areaParams of snapshot.areaParams
+        liveAreas[key]?.setParams(areaParams)
     return
 
 ############################################################

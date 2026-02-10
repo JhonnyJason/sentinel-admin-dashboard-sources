@@ -86,6 +86,16 @@ export class EconomicArea
         return newArea
 
     ########################################################
+    # Bulk-set normalization params and trigger listeners (for version control apply)
+    setParams: (p) =>
+        @params.infl = { ...p.infl }
+        @params.mrr = { ...p.mrr }
+        @params.gdpg = { ...p.gdpg }
+        @params.cot = { ...p.cot }
+        f() for f in @updateListeners
+        return
+
+    ########################################################
     setModifiedAgainst: (other) =>
         @modified.infl = other.data.infl != @data.infl
         @modified.mrr = other.data.mrr != @data.mrr
