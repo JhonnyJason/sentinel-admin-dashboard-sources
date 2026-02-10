@@ -55,7 +55,7 @@ export class EconomicArea
 
     copyParams: => {
         infl: { ...@params.infl }
-        mrr: { ...@params.infl }
+        mrr: { ...@params.mrr }
         gdpg: { ...@params.gdpg }
         cot: { ...@params.cot }
     }

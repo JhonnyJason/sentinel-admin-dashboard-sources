@@ -11,11 +11,21 @@ $cot-color = #f1c40f     // yellow
     padding 10px
 
     .cell-header
+        position: relative
         font-size 10pt
         font-weight bold
         color #666
         padding-bottom 8px
         border-bottom 1px solid #eee
+        box-sizing: border-box
+        // h2
+        //     width 100%
+        svg
+            height 30px
+            width 30px
+            position absolute 
+            left 0
+            top -5px
 
     .norm-content
     .diff-content
@@ -29,7 +39,10 @@ $cot-color = #f1c40f     // yellow
         border-bottom 1px solid #eee
         font-size 10pt
         cursor default
-
+        sup
+            font-size 7pt
+            position relative 
+            top -10px
     .param-row
         display flex
         justify-content space-between

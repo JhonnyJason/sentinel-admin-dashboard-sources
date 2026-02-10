@@ -16,6 +16,7 @@ export class QuadNormHandle
     constructor: (@containerEl,  @dKey) ->
         @onChangeListeners = []
 
+        @headerFlag = @containerEl.querySelector(".header-flag")
         @normTypeDisplay = @containerEl.querySelector(".norm-type-title")
 
         @peakInput = @containerEl.querySelector(".peak-input")
@@ -35,6 +36,7 @@ export class QuadNormHandle
 
     setArea: (area) =>
         @area = area
+        @headerFlag.setAttribute("href", area.iconHref)        
 
         # wire up updates
         area.addUpdateListener(@refreshUI)
@@ -54,8 +56,8 @@ export class QuadNormHandle
         # derive peak/steepness/zeros from stored a,b,c
         derived = coeffsToPeakSteepness(p.a, p.b, p.c, defaultWidths[@dKey])
         if derived?
-            @peakInput.value = derived.peak.toFixed(1)
-            @steepnessInput.value = derived.steepness.toFixed(2)
+            @peakInput.value = Math.round(derived.peak*10)/10
+            @steepnessInput.value = Math.round(derived.steepness*10)/10
             @zeroLowDisplay.textContent = derived.zeroLow.toFixed(1)
             @zeroHighDisplay.textContent = derived.zeroHigh.toFixed(1)
         else
