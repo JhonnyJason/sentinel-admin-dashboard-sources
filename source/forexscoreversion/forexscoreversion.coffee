@@ -31,7 +31,34 @@ export initialize = ->
 
 ############################################################
 #region Event Listeners
-#TODO implement Listener shells
+
+publishClicked = ->
+    log "publishClicked"
+    return
+
+saveClicked = ->
+    log "saveClicked"
+    return
+
+createNewClicked = ->
+    log "createNewClicked"
+    return
+
+createCopyClicked = ->
+    log "createCopyClicked"
+    return
+
+playgroundNameChanged = ->
+    log "playgroundNameChanged"
+    return
+
+playgroundVersionChanged = ->
+    log "playgroundVersionChanged"
+    return
+
+openSelected = ->
+    log "openSelected"
+    return
 
 #endregion
 
