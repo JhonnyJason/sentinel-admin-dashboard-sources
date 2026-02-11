@@ -139,26 +139,26 @@ export class ScoringModel
     #region Mutations
 
     # Update a diff param: type = 'infl'|'mrr'|'gdpg'|'cot', key = 'b'|'d'
+    # No recalculate — caller triggers via paramChanged
     updateDiffParam: (type, key, value) =>
         return unless @diffParams[type]?
         @diffParams[type][key] = value
-        @recalculate()
         return
 
     # Update a final weight: horizon = 'st'|'ml'|'lt', key = 'i'|'l'|'g'|'c'
+    # No recalculate — caller triggers via paramChanged
     updateFinalWeight: (horizon, key, value) =>
         return unless @finalWeights[horizon]?
         @finalWeights[horizon][key] = value
-        @recalculate()
         return
 
-    # Bulk-set diff params (for version control apply). No recalculate.
+    # Bulk-set diff params (for version control apply)
     setDiffParams: (p) =>
         for type in ["infl", "mrr", "gdpg", "cot"]
             @diffParams[type] = { ...p[type] } if p[type]?
         return
 
-    # Bulk-set final weights (for version control apply). No recalculate.
+    # Bulk-set final weights (for version control apply)
     setFinalWeights: (w) =>
         for horizon in ["st", "ml", "lt"]
             @finalWeights[horizon] = { ...w[horizon] } if w[horizon]?

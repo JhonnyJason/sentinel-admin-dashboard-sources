@@ -86,14 +86,15 @@ DOM wiring for the version control bar.
 
 #### Flow A: User edits a parameter
 ```
-NormHandle changes area param → generalParamChanged (playgroundcontroller)
-  → playgroundcontroller calls forexscoreversion.onParamsChanged()
+Any handle changes param → paramChanged (playgroundcontroller)
+  → scoringModel.recalculate()
+  → forexscoreversion.onParamsChanged()
   → forexscoreversion: snapshot = playgroundcontroller.snapshotParams()
   → forexscoreversion: store.updateLiveSnapshot(snapshot)
   → forexscoreversion: updates UI (save button state based on store.isModified())
 ```
-Note: Currently only NormHandle changes are wired to generalParamChanged.
-DiffHandle and WeightHandle will be wired the same way when implemented.
+All param handles (NormHandles, DiffHandle, ResultBoxHandle) are wired to paramChanged.
+ScoringModel mutation methods are silent setters — paramChanged is the single recalc trigger.
 
 #### Flow B: User hits Save
 ```
@@ -110,15 +111,15 @@ forexscoreversion: store.open(name) or store.selectVersion(index)
   → forexscoreversion: updates UI (save disabled, version/experiment labels)
 ```
 
-### Required additions to other modules
+### Snapshot/Apply infrastructure (completed in 6.2)
 
-**EconomicArea** — add `setParams(p)`: bulk-set normalization params, triggers updateListeners
-**ScoringModel** — add `setDiffParams(p)`, `setFinalWeights(w)`: bulk-set global params
+**EconomicArea** — `setParams(p)`: bulk-set normalization params, triggers updateListeners
+**ScoringModel** — `setDiffParams(p)`, `setFinalWeights(w)`: bulk-set global params
 
-**playgroundcontroller** — add:
+**playgroundcontroller:**
 - `snapshotParams()` — reads all liveAreas.copyParams() + scoringModel params → snapshot
 - `applyParams(snapshot)` — writes into all liveAreas + scoringModel, triggers recalc + UI refresh
-- `generalParamChanged` calls `forexscoreversion.onParamsChanged()`
+- `paramChanged` — single recalc entry point, calls `forexscoreversion.onParamsChanged()`
 
 ### Publish flow
 Publish sends a WebSocket command via datamodule. For now we act as if it always succeeds (backend may not understand the command yet, that's fine).

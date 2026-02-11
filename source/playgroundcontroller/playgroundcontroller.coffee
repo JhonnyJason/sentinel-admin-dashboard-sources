@@ -43,22 +43,27 @@ export initialize = ->
         area.addUpdateListener(createOriginalUpdateListener(key))
 
     scoringModel = new ScoringModel()
-
+    
     # Wiring up all uiHandles that need the scoringModel    
     resultBoxHandle = uiHandles.getHandle("resultBoxHandle")
     resultBoxHandle.setModel(scoringModel)
-    
+    resultBoxHandle.addOnChangeListener(paramChanged)
+
     inflDiffHandle = uiHandles.getHandle("inflDiffHandle")
     inflDiffHandle.setModel(scoringModel)
+    inflDiffHandle.addOnChangeListener(paramChanged)
 
     mrrDiffHandle = uiHandles.getHandle("mrrDiffHandle")
     mrrDiffHandle.setModel(scoringModel)
+    mrrDiffHandle.addOnChangeListener(paramChanged)
 
     gdpgDiffHandle = uiHandles.getHandle("gdpgDiffHandle")
     gdpgDiffHandle.setModel(scoringModel)
+    gdpgDiffHandle.addOnChangeListener(paramChanged)
 
     cotDiffHandle = uiHandles.getHandle("cotDiffHandle")
     cotDiffHandle.setModel(scoringModel)
+    cotDiffHandle.addOnChangeListener(paramChanged)
 
     # just sorting the Handles and keeping them handy
     baseHandles.makroData = uiHandles.getHandle("baseAreaHandle")
@@ -77,16 +82,16 @@ export initialize = ->
     baseHandles.makroData.addResetListener(onBaseLiveReset)
     quoteHandles.makroData.addResetListener(onQuoteLiveReset)
 
-    # Wire Other UiHandles directly to generalParamChanged
-    baseHandles.inflNorm.addOnChangeListener(generalParamChanged)
-    baseHandles.mrrNorm.addOnChangeListener(generalParamChanged)
-    baseHandles.gdpgNorm.addOnChangeListener(generalParamChanged)
-    baseHandles.cotNorm.addOnChangeListener(generalParamChanged)
+    # Wire norm handles to paramChanged
+    baseHandles.inflNorm.addOnChangeListener(paramChanged)
+    baseHandles.mrrNorm.addOnChangeListener(paramChanged)
+    baseHandles.gdpgNorm.addOnChangeListener(paramChanged)
+    baseHandles.cotNorm.addOnChangeListener(paramChanged)
 
-    quoteHandles.inflNorm.addOnChangeListener(generalParamChanged)
-    quoteHandles.mrrNorm.addOnChangeListener(generalParamChanged)
-    quoteHandles.gdpgNorm.addOnChangeListener(generalParamChanged)
-    quoteHandles.cotNorm.addOnChangeListener(generalParamChanged)
+    quoteHandles.inflNorm.addOnChangeListener(paramChanged)
+    quoteHandles.mrrNorm.addOnChangeListener(paramChanged)
+    quoteHandles.gdpgNorm.addOnChangeListener(paramChanged)
+    quoteHandles.cotNorm.addOnChangeListener(paramChanged)
     return
 
 ############################################################
@@ -150,8 +155,8 @@ createOriginalUpdateListener = (key) -> ->
     return
 
 ############################################################
-generalParamChanged = ->
-    log "generalParamChanged"
+paramChanged = ->
+    log "paramChanged"
     if scoringModel? then scoringModel.recalculate()
     versionControl.onParamsChanged()
     return

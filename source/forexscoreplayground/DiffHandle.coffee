@@ -11,6 +11,8 @@ import { createLogFunctions } from "thingy-debug"
 ############################################################
 export class DiffHandle
     constructor: (@containerEl, @dKey) ->
+        @onChangeListeners = []
+
         @typeDisplay = @containerEl.querySelector(".diff-type-title")
         @bInput = @containerEl.querySelector(".b-input")
         @dInput = @containerEl.querySelector(".d-input")
@@ -46,6 +48,17 @@ export class DiffHandle
         @resultDisplay.textContent = if isNaN(r.score) then "--" else r.score.toFixed(2)
         return
 
+    addOnChangeListener: (fun) =>
+        if typeof fun != "function" then throw new Error("OnChangeListener is not a function!")
+        @onChangeListeners.push(fun)
+        return
+
+    removeOnChangeListener: (fun) =>
+        @onChangeListeners[i] = null for f,i in @onChangeListeners when f == fun
+        @onChangeListeners = @onChangeListeners.filter((el) -> el?)
+        return
+
+
 ############################################################
 #region Utility Functions which we donot want to expose in the class
 # Here I is the specific instance
@@ -54,6 +67,8 @@ onInput = (evnt, I, wKey) ->
     val = parseFloat(evnt.target.value)
     return if isNaN(val)
     I.model.updateDiffParam(I.dKey, wKey, val)
+
+    f() for f in I.onChangeListeners
     return
 
 #endregion

@@ -153,6 +153,5 @@ export class ExperimentStore
 
     #endregion
 
-
 ############################################################
 deepCopy = (obj) -> JSON.parse(JSON.stringify(obj))

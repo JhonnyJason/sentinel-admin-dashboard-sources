@@ -15,7 +15,9 @@ import * as sH from "./scorehelper.js"
 ############################################################
 export class ResultBoxHandle
     constructor: (@containerEl) ->
-        ## short term score 
+        @onChangeListeners = []
+
+        ## short term score     
         # resultSt should be available through implicit DOM connect
         @stInflScoreDisplay = resultSt.querySelector(".infl .eq-score")
         @stInflWeightInput = resultSt.querySelector(".infl .weight-input")
@@ -172,6 +174,16 @@ export class ResultBoxHandle
         @ltTrendDisplay.textContent = sH.getTrendTextForScore(score)
         return
     
+    addOnChangeListener: (fun) =>
+        if typeof fun != "function" then throw new Error("OnChangeListener is not a function!")
+        @onChangeListeners.push(fun)
+        return
+
+    removeOnChangeListener: (fun) =>
+        @onChangeListeners[i] = null for f,i in @onChangeListeners when f == fun
+        @onChangeListeners = @onChangeListeners.filter((el) -> el?)
+        return
+
 ############################################################
 #region Utility Functions which we donot want to expose in the class
 # Here I is the specific instance
@@ -183,6 +195,8 @@ onInput = (evnt, I, tKey, wKey) ->
 
     #replaces scoring.setWeight(tKey, wKey, val)
     I.model.updateFinalWeight(tKey, wKey, val)
+    
+    f() for f in I.onChangeListeners
     return
 
 
