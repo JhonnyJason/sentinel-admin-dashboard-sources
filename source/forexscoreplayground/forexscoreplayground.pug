@@ -1,15 +1,20 @@
 //- forexscoreplayground structure
-//- Main grid: 3 columns x 5 rows
+//- Main grid: 3 columns x 6 rows
 #playground-grid
-    //- Row 1: Area data + Results
+
+    //- Row 1: Focus pair selection + Results (top)
+    #focuspair-cell.grid-cell
+        include ../focuspairselection/focuspairselection.pug
+    #results-area.grid-cell
+        include components/result-el.pug
+
+    //- Row 2: Area data (results-area spans into this row)
     #base-area.economic-area.grid-cell
         include components/makro-el.pug
     #quote-area.economic-area.grid-cell
         include components/makro-el.pug
-    #results-area.grid-cell
-        include components/result-el.pug
 
-    //- Row 2: Inflation normalization + diff
+    //- Row 3: Inflation normalization + diff
     #infl-norm-base.norm-cell.grid-cell.indicator-infl.is-base
         include components/quadnorm-el.pug
     #infl-norm-quote.norm-cell.grid-cell.indicator-infl.is-quote
@@ -17,7 +22,7 @@
     #infl-diff.diff-cell.grid-cell.indicator-infl
         include components/cubdiff-el.pug
 
-    //- Row 3: Interest (MRR) normalization + diff
+    //- Row 4: Interest (MRR) normalization + diff
     #mrr-norm-base.norm-cell.grid-cell.indicator-mrr.is-base
         include components/linnorm-el.pug
     #mrr-norm-quote.norm-cell.grid-cell.indicator-mrr.is-quote
@@ -25,7 +30,7 @@
     #mrr-diff.diff-cell.grid-cell.indicator-mrr
         include components/cubdiff-el.pug
 
-    //- Row 4: GDP normalization + diff
+    //- Row 5: GDP normalization + diff
     #gdpg-norm-base.norm-cell.grid-cell.indicator-gdpg.is-base
         include components/quadnorm-el.pug
     #gdpg-norm-quote.norm-cell.grid-cell.indicator-gdpg.is-quote
@@ -33,7 +38,7 @@
     #gdpg-diff.diff-cell.grid-cell.indicator-gdpg
         include components/cubdiff-el.pug
 
-    //- Row 5: COT normalization + diff
+    //- Row 6: COT normalization + diff
     #cot-norm-base.norm-cell.grid-cell.indicator-cot.is-base
         include components/cotnorm-el.pug
     #cot-norm-quote.norm-cell.grid-cell.indicator-cot.is-quote

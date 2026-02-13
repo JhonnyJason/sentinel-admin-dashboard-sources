@@ -1,17 +1,14 @@
 // forexscoreversion styles
 #forexscore-version-row
-    width 100%
-    min-height 20px
-    background-color rgba(0, 0, 0, 0.2)
     display flex
     align-items center
-    gap 10px
-    padding 8px 12px
     box-sizing border-box
+    margin-bottom 50px
+    justify-content: space-between
 
 #forexscore-version-row input,
 #forexscore-version-row select
-    padding 8px 10px
+    padding 10px
     border-radius 3px
     border solid 1px cd-dark-blue
     font-size 12pt
@@ -21,13 +18,54 @@
 #forexscore-version-row input:focus,
 #forexscore-version-row select:focus
     outline none
+    border solid 1px cd-dark-blue
     box-shadow 0 0 3px 0 cd-dark-blue
 
 #forexscore-version-row .click-button
-    padding 8px 14px
-    border-radius 3px
-    border solid 1px cd-dark-blue
+    padding 10px
+    border-radius 7px
+    border solid 2px #fff
     font-size 12pt
+    box-shadow 0 0 3px 0 cd-dark-blue
     background cd-dark-blue
     color #fff
     white-space nowrap
+    // height 40px
+    // line-height: 40px
+
+.group
+    display flex
+    align-items center
+    gap 10px
+
+#publish-button
+#save-button
+    width 120px
+    box-sizing: border-box
+
+#create-copy-button
+#create-new-button
+    width 180px
+    box-sizing: border-box
+
+// #forexscore-version-naming
+//     display flex
+//     flex-direction: column
+
+// #playground-name-input
+//     font-size 12pt
+
+
+
+// #forexscore-version-naming
+//     input#playground-name-input(placeholder="Name der Spielwiese")
+//     select#playground-version-select
+
+// button#publish-button.click-button Publish 
+// button#save-button.click-button Speichern 
+
+// button#create-new-button.click-button Neue Spielwiese
+// button#create-copy-button.click-button Spielwiese kopieren 
+// select#open-select
+//     option(value="" disabled selected) Spielwiese öffnen
+
