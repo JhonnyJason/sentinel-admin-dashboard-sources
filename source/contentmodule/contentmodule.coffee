@@ -15,6 +15,11 @@ export setUsermanagementState = ->
     content.className = "usermanagement"
     return
 
+export setSpeciallinkState = ->
+    log "setSpeciallinkState"
+    content.className = "speciallink"
+    return
+
 export hide = ->
     log "hide"
     content.className = "hidden"

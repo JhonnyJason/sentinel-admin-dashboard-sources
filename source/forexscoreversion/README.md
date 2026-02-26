@@ -124,6 +124,29 @@ forexscoreversion: store.open(name) or store.selectVersion(index)
 ### Publish flow
 Publish sends a WebSocket command via datamodule. For now we act as if it always succeeds (backend may not understand the command yet, that's fine).
 
+### Default Snapshot
+Hardcoded in `ExperimentStore.coffee` as `defaultSnapshot()`. Contains all area params
+(from economicareasmodule init values) and global params (ScoringModel constructor defaults).
+Used when creating a "new" experiment (not a copy). Having this hardcoded means we don't
+depend on the playground being initialized to create the first experiment.
+
+### ExperimentStore persistence boundary
+ExperimentStore is the persistence boundary — `save()` and `publish()` are async and call
+`datamodule.saveParams()` / `datamodule.publishParams()` internally. The coordinator
+(forexscoreversion.coffee) calls `await store.save()` and only proceeds on success.
+This way the full async flow is in place even though datamodule currently returns immediately.
+
+### refreshUI pattern
+`forexscoreversion.coffee` has a single `refreshUI()` function that reads store state and
+updates all UI elements: name input, version select, open select, save/publish button states.
+Every action (create, save, publish, open, selectVersion, rename, onParamsChanged) ends with
+`refreshUI()`.
+
+### downSync: initial bootstrap
+`downSyncExperimentStore(null)` = backend has no stored experiments. We create "Experiment 1"
+with `defaultSnapshot()` as v0 and apply it to the playground. Later: non-null means
+deserialize and restore full store state.
+
 ## Storage
 In-memory only. No localStorage. Experiments are lost on page refresh. Backend persistence is a future task.
 

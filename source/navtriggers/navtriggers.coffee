@@ -24,3 +24,7 @@ export toForexscore = ->
 export toUsermanagement = ->
     log "toUsermanagement"
     return nav.toBase("usermanagement")
+
+export toSpeciallink = ->
+    log "toSpeciallink"
+    return nav.toBase("speciallink")

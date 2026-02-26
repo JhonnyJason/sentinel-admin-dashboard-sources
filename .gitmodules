@@ -7,3 +7,6 @@
 [submodule "source/messageboxmodule"]
 	path = source/messageboxmodule
 	url = git@github.com:JhonnyJason/pwa-sources-messageboxmodule.git
+[submodule "source/forexscoreplayground/scoringdesign"]
+	path = source/forexscoreplayground/scoringdesign
+	url = git@github.com:JhonnyJason/scoring-design.git

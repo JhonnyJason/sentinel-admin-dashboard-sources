@@ -6,38 +6,23 @@
         span Normierung 
         span.norm-type-title
 .norm-content
-    .norm-equation
-        span.eq-label n = 
-        span.coeff.coeff-f --
-        span.eq-op &middot;
-        span.raw-value.c6-value --
-        span.eq-op  &middot; (
-        span.raw-value.c36-value --
-        sup
-            span.coeff.coeff-e --
-        span.eq-label )  = 
+    .hint
+        p Die Normierung bringt den Wert in den Bereich [0 - 2]. 
+
+    .norm-display
+        span norm(  
+        span.raw-value.cot6-value --
+        span , 
+        span.raw-value.cot36-value --
+        span  ) =  
         span.norm-result --
+
+
     .param-row
-        span.param-label Faktor f
-        input.param-input.f-input(type="number" step="0.1" min="0.5" max="2.0")
+        span.param-label Neutraler COT
+        span.param-value-wrap
+            input.param-input.n-input(type="number" step="1" min="0" max="100")
+            span.param-unit  %
     .param-row
-        span.param-label Exponent e
-        input.param-input.e-input(type="number" step="0.01" min="1.0" max="2.0")
-    .param-row.feedback-row
-        span.param-label COT Faktor (6m)
-        span.param-display.cot-factors
-            span f(
-            span.cot6-raw --
-            span ) = 0.02&middot;
-            span.cot6-raw -- 
-            span.eq =  
-            span.raw-value.c6-derived --
-    .param-row
-        span.param-label COT Faktor (36m)
-        span.param-display.cot-factors
-            span f(
-            span.cot36-raw --
-            span ) = 0.02&middot;
-            span.cot36-raw -- 
-            span.eq  =  
-            span.raw-value.c36-derived --
+        span.param-label COT36 Gewicht (vs COT6)
+        input.param-input.e-input(type="number" step="0.01" min="1.0" max="3.0")

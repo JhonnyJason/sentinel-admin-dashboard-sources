@@ -59,12 +59,12 @@ Extended to include parameters alongside makro data.
 - `eurozone`, `usa`, `japan`, `uk`, `canada`, `australia`, `switzerland`, `newzealand`
 
 ### Area Params Structure
-| Category | Params | Formula |
-|----------|--------|---------|
-| `inflation` | `{ a, b, c }` | `a + b*x + c*x²` (clamped ≥0) |
-| `interest` | `{ a, b }` | `a + b*x` |
-| `gdp` | `{ a, b, c }` | `a + b*x + c*x²` (clamped ≥0) |
-| `cot` | `{ f }` | `f * (c6 * c32²)` where c6/c32 = 0.02 * index |
+| Category | Params |
+|----------|--------|
+| `infl` | `{ a, b, c }` |
+| `mrr` | `{ f, n, c, s }` |
+| `gdpg` | `{ a, b, c }` |
+| `cot` | `{ n, e }` |
 
 ### Global Params Structure
 | Category | Params | Usage |

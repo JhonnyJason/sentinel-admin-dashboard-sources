@@ -33,6 +33,7 @@ indexdomconnect.initialize = () ->
     global.createNewButton = document.getElementById("create-new-button")
     global.sidenav = document.getElementById("sidenav")
     global.usermanagementBtn = document.getElementById("usermanagement-btn")
+    global.speciallinkBtn = document.getElementById("speciallink-btn")
     global.forexscoreBtn = document.getElementById("forexscore-btn")
     global.authframe = document.getElementById("authframe")
     global.pinInput = document.getElementById("pin-input")

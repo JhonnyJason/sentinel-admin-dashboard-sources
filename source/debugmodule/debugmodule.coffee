@@ -9,9 +9,10 @@ export modulesToDebug = {
     # backtesting: true
     # chartfun: true
     # comboboxfun: true
-    datamodule: true
+    # datamodule: true
     # datacache: true
     # economicareasmodule: true
+    # EconomicArea: true
     # fouriermodule: true
     # summaryframemodule: true
     # currencytrendframemodule: true

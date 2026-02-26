@@ -5,7 +5,7 @@ import { createLogFunctions } from "thingy-debug"
 #endregion
 
 ############################################################
-import { peakSteepnessToCoeffs, coeffsToPeakSteepness, defaultWidths } from "./normmath.js"
+import { peakSteepnessToCoeffs, coeffsToPeakSteepness } from "./normmath.js"
 
 ############################################################
 # relevant structure files:
@@ -25,9 +25,6 @@ export class QuadNormHandle
         @zeroLowDisplay = @containerEl.querySelector(".zero-low")
         @zeroHighDisplay = @containerEl.querySelector(".zero-high")
         @rawValueDisplay = @containerEl.querySelector(".raw-value")
-        @coeffADisplay = @containerEl.querySelector(".coeff-a")
-        @coeffBDisplay = @containerEl.querySelector(".coeff-b")
-        @coeffCDisplay = @containerEl.querySelector(".coeff-c")
         @resultDisplay = @containerEl.querySelector(".norm-result")
 
         @peakInput.addEventListener("input", => onParamInput(@))
@@ -54,10 +51,10 @@ export class QuadNormHandle
         outVal = @area.normFun[@dKey]()
 
         # derive peak/steepness/zeros from stored a,b,c
-        derived = coeffsToPeakSteepness(p.a, p.b, p.c, defaultWidths[@dKey])
+        derived = coeffsToPeakSteepness(p.a, p.b, p.c)
         if derived?
             @peakInput.value = Math.round(derived.peak*10)/10
-            @steepnessInput.value = Math.round(derived.steepness*10)/10
+            @steepnessInput.value = Math.round(derived.steepness*100)/100
             @zeroLowDisplay.textContent = derived.zeroLow.toFixed(1)
             @zeroHighDisplay.textContent = derived.zeroHigh.toFixed(1)
         else
@@ -67,9 +64,6 @@ export class QuadNormHandle
             @zeroHighDisplay.textContent = "--"
 
         @rawValueDisplay.textContent = if isNaN(inVal) then "--" else inVal.toFixed(2)
-        @coeffADisplay.textContent = if p.a? then p.a.toFixed(2) else "--"
-        @coeffBDisplay.textContent = if p.b? then p.b.toFixed(2) else "--"
-        @coeffCDisplay.textContent = if p.c? then p.c.toFixed(2) else "--"
         @resultDisplay.textContent = if isNaN(outVal) then "--" else outVal.toFixed(2)
         return
 
@@ -91,7 +85,7 @@ onParamInput = (I) ->
     steepness = parseFloat(I.steepnessInput.value)
     return if isNaN(peak) or isNaN(steepness) or steepness <= 0
 
-    coeffs = peakSteepnessToCoeffs(peak, steepness, defaultWidths[I.dKey])
+    coeffs = peakSteepnessToCoeffs(peak, steepness)
     p = I.area.params[I.dKey]
     p.a = coeffs.a
     p.b = coeffs.b
@@ -102,9 +96,6 @@ onParamInput = (I) ->
     I.zeroHighDisplay.textContent = coeffs.zeroHigh.toFixed(1)
 
     # update equation coefficients and result
-    I.coeffADisplay.textContent = coeffs.a.toFixed(2)
-    I.coeffBDisplay.textContent = coeffs.b.toFixed(2)
-    I.coeffCDisplay.textContent = coeffs.c.toFixed(2)
     outVal = I.area.normFun[I.dKey]()
     I.resultDisplay.textContent = if isNaN(outVal) then "--" else outVal.toFixed(2)
 

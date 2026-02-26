@@ -32,7 +32,7 @@ This keeps file sizes small, logic separated, and structure reusable.
 │ (quadnorm)  │ (quadnorm)  │ (cubdiff)   │
 ├─────────────┼─────────────┼─────────────┤
 │ MRR Norm    │ MRR Norm    │ MRR Diff    │
-│ (linnorm)   │ (linnorm)   │ (cubdiff)   │
+│ (mrrnorm)   │ (mrrnorm)   │ (cubdiff)   │
 ├─────────────┼─────────────┼─────────────┤
 │ GDP Norm    │ GDP Norm    │ GDP Diff    │
 │ (quadnorm)  │ (quadnorm)  │ (cubdiff)   │
@@ -58,10 +58,10 @@ Params: peak, steepness → derived zeros feedback.
 Displays full equation: `n(x) = a + b·x + c·x² = result`
 Handle: `QuadNormHandle` (implemented)
 
-### components/linnorm-el.pug
+### components/mrrnorm-el.pug
 Linear normalization for interest rate (MRR).
-Params: neutralRate, sensitivity.
-Handle: `LinNormHandle`
+Params: floor, neutral-rate, ceiling, punishment.
+Handle: `MrrNormHandle`
 
 ### components/cotnorm-el.pug
 COT normalization with f-factor.
@@ -82,9 +82,9 @@ forexscoreplayground/
 ├── uihandles.coffee            # Handle instantiation
 ├── MakroDataHandle.coffee
 ├── ResultBoxHandle.coffee
-├── normmath.coffee             # Pure math: param conversions + defaultWidths
+├── normmath.coffee             # Pure math: param conversions (peak/steepness ↔ a,b,c)
 ├── QuadNormHandle.coffee
-├── LinNormHandle.coffee
+├── MrrNormHandle.coffee
 ├── CotNormHandle.coffee
 ├── DiffHandle.coffee
 └── components/
@@ -95,7 +95,7 @@ forexscoreplayground/
     ├── result-el.pug + .styl
     ├── result-inner.pug
     ├── quadnorm-el.pug + .styl
-    ├── linnorm-el.pug + .styl
+    ├── mrrnorm-el.pug + .styl
     ├── cotnorm-el.pug + .styl
     └── cubdiff-el.pug + .styl
 ```
@@ -106,10 +106,11 @@ forexscoreplayground/
 - All Pug structures defined
 - Styles for makro-el and result-el
 - `normmath.coffee` - param conversion utilities (extracted from deprecated scoringmodule)
-- `QuadNormHandle` - full implementation (input wiring, refreshUI, equation display)
+- `QuadNormHandle` - full implementation
+- `MrrNormHandle` - full implementation
 
 **In Progress:**
-- LinNormHandle, CotNormHandle, DiffHandle implementations
+- CotNormHandle, DiffHandle implementations
 - Wiring handles into playgroundcontroller
 
 **TODO:**

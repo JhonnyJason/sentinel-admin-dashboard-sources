@@ -1,34 +1,37 @@
 ############################################################
 #region debug
 import { createLogFunctions } from "thingy-debug"
-{log, olog} = createLogFunctions("LinNormHandle")
+{log, olog} = createLogFunctions("MrrNormHandle")
 #endregion
 
 ############################################################
-import { neutralSensitivityToCoeffs, coeffsToNeutralSensitivity } from "./normmath.js"
+import * as nm from "./normmath.js"
 
 ############################################################
 # relevant structure files:
-#     - components/linnorm-el.pug
+#     - components/mrrnorm-el.pug
 
 ############################################################
-export class LinNormHandle
+export class MrrNormHandle
     constructor: (@containerEl, @dKey) ->
         @onChangeListeners = []
 
         @headerFlag = @containerEl.querySelector(".header-flag")
         @normTypeDisplay = @containerEl.querySelector(".norm-type-title")
 
+        @floorInput = @containerEl.querySelector(".floor-input")
         @neutralInput = @containerEl.querySelector(".neutral-input")
-        @sensitivityInput = @containerEl.querySelector(".sensitivity-input")
+        @ceilingInput = @containerEl.querySelector(".ceiling-input")
+        @inflPunishmentInput = @containerEl.querySelector(".infl-punishment-input")
 
         @rawValueDisplay = @containerEl.querySelector(".raw-value")
-        @coeffADisplay = @containerEl.querySelector(".coeff-a")
-        @coeffBDisplay = @containerEl.querySelector(".coeff-b")
         @resultDisplay = @containerEl.querySelector(".norm-result")
 
+        @floorInput.addEventListener("input", => onParamInput(@))
         @neutralInput.addEventListener("input", => onParamInput(@))
-        @sensitivityInput.addEventListener("input", => onParamInput(@))
+        @ceilingInput.addEventListener("input", => onParamInput(@))
+        @inflPunishmentInput.addEventListener("input", => onParamInput(@))
+
         @normTypeDisplay.textContent = @dKey
 
     setArea: (area) =>
@@ -51,13 +54,12 @@ export class LinNormHandle
         outVal = @area.normFun[@dKey]()
 
         # derive neutralRate/sensitivity from stored a,b
-        derived = coeffsToNeutralSensitivity(p.a, p.b)
-        @neutralInput.value = derived.neutralRate
-        @sensitivityInput.value = derived.sensitivity
+        @floorInput.value = p.f
+        @neutralInput.value = p.n
+        @ceilingInput.value = p.c
+        @inflPunishmentInput.value = nm.sToPunishment(p.s)
 
         @rawValueDisplay.textContent = if isNaN(inVal) then "--" else inVal.toFixed(2)
-        @coeffADisplay.textContent = if p.a? then p.a.toFixed(2) else "--"
-        @coeffBDisplay.textContent = if p.b? then p.b.toFixed(2) else "--"
         @resultDisplay.textContent = if isNaN(outVal) then "--" else outVal.toFixed(2)
         return
 
@@ -75,18 +77,19 @@ export class LinNormHandle
 #region Utility Functions which we donot want to expose in the class
 
 onParamInput = (I) ->
-    neutralRate = parseFloat(I.neutralInput.value)
-    sensitivity = parseFloat(I.sensitivityInput.value)
-    return if isNaN(neutralRate) or isNaN(sensitivity)
+    f = parseFloat(I.floorInput.value)
+    n = parseFloat(I.neutralInput.value)
+    c = parseFloat(I.ceilingInput.value)
+    pun = parseFloat(I.inflPunishmentInput.value)
+    return if isNaN(f) or isNaN(n) or isNaN(c) or isNaN(pun)
 
-    coeffs = neutralSensitivityToCoeffs(neutralRate, sensitivity)
     p = I.area.params[I.dKey]
-    p.a = coeffs.a
-    p.b = coeffs.b
+    p.f = f
+    p.n = n
+    p.c = c
+    p.s = nm.punishmentToS(pun)
 
     # update equation coefficients and result
-    I.coeffADisplay.textContent = coeffs.a.toFixed(2)
-    I.coeffBDisplay.textContent = coeffs.b.toFixed(2)
     outVal = I.area.normFun[I.dKey]()
     I.resultDisplay.textContent = if isNaN(outVal) then "--" else outVal.toFixed(2)
 

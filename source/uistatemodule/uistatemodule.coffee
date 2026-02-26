@@ -38,6 +38,14 @@ applyBaseState["usermanagement"] = ->
     header.className = "logged-in"
     return
 
+applyBaseState["speciallink"] = ->
+    content.setSpeciallinkState()
+    sideNav.setSpeciallinkState()
+    authFrame.hide()
+    header.className = "logged-in"
+    return
+
+
 applyBaseState["auth"] = ->
     content.hide()
     sideNav.hide()

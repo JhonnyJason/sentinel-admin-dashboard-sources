@@ -6,13 +6,16 @@
 
 ############################################################
 # Quadratic: peak + steepness → a, b, c coefficients
-# steepness = 1.0 means default width
+# width = BASE_WIDTH / steepness (steepness 1.0 → width 10)
+# k = -8/width² ensures f(peak) = 2, output range [0, 2]
 # Returns { a, b, c, zeroLow, zeroHigh }
-export peakSteepnessToCoeffs = (peak, steepness, defaultWidth) ->
-    width = defaultWidth / steepness
+BASE_WIDTH = 10
+
+export peakSteepnessToCoeffs = (peak, steepness) ->
+    width = BASE_WIDTH / steepness
     zeroLow = peak - width / 2
     zeroHigh = peak + width / 2
-    k = -12 / (width * width)
+    k = -8 / (width * width)
     c = k
     b = -k * (zeroLow + zeroHigh)
     a = k * zeroLow * zeroHigh
@@ -21,21 +24,22 @@ export peakSteepnessToCoeffs = (peak, steepness, defaultWidth) ->
 ############################################################
 # Quadratic: a, b, c coefficients → peak + steepness
 # Returns { peak, steepness, zeroLow, zeroHigh } or null
-export coeffsToPeakSteepness = (a, b, c, defaultWidth) ->
+export coeffsToPeakSteepness = (a, b, c) ->
     return null if c >= 0
-    width = Math.sqrt(-12 / c)
-    steepness = defaultWidth / width
+    width = Math.sqrt(-8 / c)
+    steepness = BASE_WIDTH / width
     peak = -b / (2 * c)
     zeroLow = peak - width / 2
     zeroHigh = peak + width / 2
     return { peak, steepness, zeroLow, zeroHigh }
 
 ############################################################
-# Linear: neutralRate + sensitivity → a, b
-export neutralSensitivityToCoeffs = (neutralRate, sensitivity) ->
-    a = -sensitivity * neutralRate
-    b = sensitivity
-    return { a, b }
+# Linear: inflation Punishment to param s
+#   punishment is 0-100 % scale 
+#   s is in [1 - 2] range  where 1 is max and 2 is min
+export punishmentToS = (punishment) -> (2 - 0.01 * punishment)
+export sToPunishment = (s) -> Math.round((2 - s) * 100)
+
 
 ############################################################
 # Linear: a, b → neutralRate + sensitivity
@@ -44,9 +48,3 @@ export coeffsToNeutralSensitivity = (a, b) ->
     neutralRate = if b != 0 then -a / b else 0
     return { neutralRate, sensitivity }
 
-############################################################
-# Reference widths when steepness = 1.0 (from scoring-design.md)
-export defaultWidths = {
-    infl: 12  # zeroHigh(10) - zeroLow(-2) for EUR
-    gdpg: 8  # zeroHigh(6) - zeroLow(-2) for EUR
-}
