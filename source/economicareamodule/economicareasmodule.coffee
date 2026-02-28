@@ -22,9 +22,9 @@ export initialize = ->
         key: "eurozone"
         currencyName: "Euro"
         currencyShort: "EUR"
-        inflParams: { a: 1.667, b: 0.667, c: -0.083 }
+        inflParams: { a: 1.111, b: 0.444, c: -0.056 }
         mrrParams: { f: -2.2, n: 2.0, c: 5.5, s: 1.2 }
-        gdpgParams: { a: 2.25, b: 0.75, c: -0.188 }
+        gdpgParams: { a: 1.5, b: 0.5, c: -0.125 }
         cotParams: { n: 50, e: 1.6 }
 
     a.usa = new EconomicArea
@@ -33,9 +33,9 @@ export initialize = ->
         key: "usa"
         currencyName: "US-Dollar"
         currencyShort: "USD"
-        inflParams: { a: 1.667, b: 0.667, c: -0.083 }
+        inflParams: { a: 1.111, b: 0.444, c: -0.056 }
         mrrParams: { f: -1.7, n: 2.7, c: 6.0, s: 1.2 }
-        gdpgParams: { a: 2.074, b: 0.741, c: -0.148 }
+        gdpgParams: { a: 1.383, b: 0.494, c: -0.099 }
         cotParams: { n: 50, e: 1.6 }
 
     a.japan = new EconomicArea
@@ -44,9 +44,9 @@ export initialize = ->
         key: "japan"
         currencyName: "Yen"
         currencyShort: "JPY"
-        inflParams: { a: 2.38, b: 0.496, c: -0.099 }
+        inflParams: { a: 1.587, b: 0.331, c: -0.066 }
         mrrParams: { f: -1, n: 0.5, c: 3.5, s: 1.2 }
-        gdpgParams: { a: 2.813, b: 0.375, c: -0.188 }
+        gdpgParams: { a: 1.875, b: 0.25, c: -0.125 }
         cotParams: { n: 50, e: 1.6 }
 
     a.uk = new EconomicArea
@@ -55,9 +55,9 @@ export initialize = ->
         key: "uk"
         currencyName: "Pfund"
         currencyShort: "GBP"
-        inflParams: { a: 1.667, b: 0.667, c: -0.083 }
+        inflParams: { a: 1.111, b: 0.444, c: -0.056 }
         mrrParams: { f: -2, n: 2.5, c: 6.0, s: 1.2 }
-        gdpgParams: { a: 2.25, b: 0.75, c: -0.188 }
+        gdpgParams: { a: 1.5, b: 0.5, c: -0.125 }
         cotParams: { n: 50, e: 1.6 }
 
     a.canada = new EconomicArea
@@ -66,9 +66,9 @@ export initialize = ->
         key: "canada"
         currencyName: "Canada Dollar"
         currencyShort: "CAD"
-        inflParams: { a: 1.667, b: 0.667, c: -0.083 }
+        inflParams: { a: 1.111, b: 0.444, c: -0.056 }
         mrrParams: { f: -2, n: 2.5, c: 6.0, s: 1.2 }
-        gdpgParams: { a: 2.25, b: 0.75, c: -0.188 }
+        gdpgParams: { a: 1.5, b: 0.5, c: -0.125 }
         cotParams: { n: 50, e: 1.6 }
 
     a.australia = new EconomicArea
@@ -77,9 +77,9 @@ export initialize = ->
         key: "australia"
         currencyName: "Australia Dollar"
         currencyShort: "AUD"
-        inflParams: { a: 0.917, b: 0.833, c: -0.083 }
+        inflParams: { a: 0.611, b: 0.556, c: -0.056 }
         mrrParams: { f: -2, n: 2.9, c: 7.0, s: 1.2 }
-        gdpgParams: { a: 1.313, b: 1.125, c: -0.188 }
+        gdpgParams: { a: 0.875, b: 0.75, c: -0.125 }
         cotParams: { n: 50, e: 1.6 }
 
     a.switzerland = new EconomicArea
@@ -88,9 +88,9 @@ export initialize = ->
         key: "switzerland"
         currencyName: "Franken"
         currencyShort: "CHF"
-        inflParams: { a: 2.38, b: 0.496, c: -0.099 }
+        inflParams: { a: 1.587, b: 0.331, c: -0.066 }
         mrrParams: { f: -1, n: 0.8, c: 4.0, s: 1.2 }
-        gdpgParams: { a: 2.813, b: 0.375, c: -0.188 }
+        gdpgParams: { a: 1.875, b: 0.25, c: -0.125 }
         cotParams: { n: 50, e: 1.6 }
 
     a.newzealand = new EconomicArea
@@ -99,9 +99,9 @@ export initialize = ->
         key: "newzealand"
         currencyName: "New Zealand Dollar"
         currencyShort: "NZD"
-        inflParams: { a: 0.917, b: 0.833, c: -0.083 }
+        inflParams: { a: 0.611, b: 0.556, c: -0.056 }
         mrrParams: { f: -2, n: 2.9, c: 7.0, s: 1.2 }
-        gdpgParams: { a: 1.313, b: 1.125, c: -0.188 }
+        gdpgParams: { a: 0.875, b: 0.75, c: -0.125 }
         cotParams: { n: 50, e: 1.6 }
 
     return
