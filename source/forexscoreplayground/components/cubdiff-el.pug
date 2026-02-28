@@ -5,22 +5,23 @@
         span Diff 
         span.diff-type-title
 .diff-content
+
+    .hint
+        p Die effektive Score berechnet sich aus der Differenz der jeweiligen normierten Werte. f( baseNorm - quoteNorm ) = f(diff)
+        p Der Wertebereich des Ergebnisses ist: [-5, 5]
+        p Minimaler kubischer Anteil bedeuted: f(diff) = 2.5 * diff
+        p Maximaler kubischer Anteil bedeuted: f(diff) = 0.625 * diff³ 
+
     .diff-equation
         span.eq-label f(
         span.diff-base-val --
         span.eq-op  -
         span.diff-quote-val --
         span.eq-label ) = 
-        span.coeff.coeff-b --
-        span.eq-op ·x + 
-        span.coeff.coeff-d --
-        span.eq-op ·x
-        sup 3
-        span.eq-label  = 
         span.diff-result --
     .param-row
-        span.param-label b
-        input.param-input.b-input(type="number" step="0.1")
-    .param-row
-        span.param-label d
-        input.param-input.d-input(type="number" step="0.01")
+        span.param-label Kubischer Anteil
+        span.param-value-wrap
+            //- span.param-unit min 
+            input.param-input.amplification-input(type="range" min="0" max="100" step="0.5")
+            //- span.param-unit max

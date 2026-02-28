@@ -5,6 +5,9 @@ import { createLogFunctions } from "thingy-debug"
 #endregion
 
 ############################################################
+import * as nm from "./normmath.js"
+
+############################################################
 # relevant structure files:
 #     - components/cubdiff-el.pug
 
@@ -14,16 +17,12 @@ export class DiffHandle
         @onChangeListeners = []
 
         @typeDisplay = @containerEl.querySelector(".diff-type-title")
-        @bInput = @containerEl.querySelector(".b-input")
-        @dInput = @containerEl.querySelector(".d-input")
-        @coeffBDisplay = @containerEl.querySelector(".coeff-b")
-        @coeffDDisplay = @containerEl.querySelector(".coeff-d")
+        @amplificationInput = @containerEl.querySelector(".amplification-input")
         @baseValDisplay = @containerEl.querySelector(".diff-base-val")
         @quoteValDisplay = @containerEl.querySelector(".diff-quote-val")
         @resultDisplay = @containerEl.querySelector(".diff-result")
 
-        @bInput.addEventListener("input", (e) => onInput(e, @, "b"))
-        @dInput.addEventListener("input", (e) => onInput(e, @, "d"))
+        @amplificationInput.addEventListener("input", => onInput(@))
         @typeDisplay.textContent = @dKey
 
     setModel: (model) =>
@@ -37,12 +36,10 @@ export class DiffHandle
         { baseScore, quoteScore } = @model.getDiffInputs(@dKey)
         r = @model.getDiffResults()[@dKey]
 
-        # Skip input update while user is actively editing (avoids "1." → "1" mid-typing)
-        if document.activeElement != @bInput then @bInput.value = p.b
-        if document.activeElement != @dInput then @dInput.value = p.d
+        ampl = nm.coeffsToAmplification(p.b, p.d)
 
-        @coeffBDisplay.textContent = p.b.toFixed(2)
-        @coeffDDisplay.textContent = p.d.toFixed(3)
+        @amplificationInput.value = ampl
+
         @baseValDisplay.textContent = if isNaN(baseScore) then "--" else baseScore.toFixed(2)
         @quoteValDisplay.textContent = if isNaN(quoteScore) then "--" else quoteScore.toFixed(2)
         @resultDisplay.textContent = if isNaN(r.score) then "--" else r.score.toFixed(2)
@@ -63,11 +60,16 @@ export class DiffHandle
 #region Utility Functions which we donot want to expose in the class
 # Here I is the specific instance
 
-onInput = (evnt, I, wKey) ->
-    val = parseFloat(evnt.target.value)
-    return if isNaN(val)
-    I.model.updateDiffParam(I.dKey, wKey, val)
+onInput = (I) ->
+    ampl = parseFloat(I.amplificationInput.value)
+    return if isNaN(ampl)
 
+    { b, d } =  nm.amplificationToCoeffs(ampl)
+
+    p = I.model.diffParams[I.dKey]
+    p.b = b
+    p.d = d
+    
     f() for f in I.onChangeListeners
     return
 

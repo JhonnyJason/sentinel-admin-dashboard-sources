@@ -1,28 +1,29 @@
 .result-equation
+    span.eq-op  (
     span.eq-term.infl
         //- input.weight-input(type="number" data-horizon="st" data-indicator="i")
-        input.weight-input(type="number" step="0.1")
+        input.weight-input(type="number" min="0" max="99"  step="1")
         span.eq-mult ×
         span.eq-score --
-    span.eq-op +
+    span.eq-op , 
     span.eq-term.mrr
         //- input.weight-input(type="number" data-horizon="st" data-indicator="l")
-        input.weight-input(type="number" step="0.1")
+        input.weight-input(type="number" min="0" max="99" step="1")
         span.eq-mult ×
         span.eq-score --
-    span.eq-op +
+    span.eq-op , 
     span.eq-term.gdpg
         //- input.weight-input(type="number" data-horizon="st" data-indicator="g")
-        input.weight-input(type="number" step="0.1")
+        input.weight-input(type="number" min="0" max="99"  step="1")
         span.eq-mult ×
         span.eq-score --
-    span.eq-op +
+    span.eq-op , 
     span.eq-term.cot
         //- input.weight-input(type="number" data-horizon="st" data-indicator="c")
-        input.weight-input(type="number" step="0.1")
+        input.weight-input(type="number" min="0" max="99"  step="1")
         span.eq-mult ×
         span.eq-score --
-    span.eq-op =
+    span.eq-op ) = 
     span.eq-result --
 .scoring-result
     .inner-frame

@@ -42,6 +42,26 @@ export sToPunishment = (s) -> Math.round((2 - s) * 100)
 
 
 ############################################################
+## Amplification calculations
+##    ampl is [0, 100] 
+##    b and d are the coefficiencs of the cubic polynomial
+##    The input output range is bound by [-2, 2] -> [-5, 5]
+export amplificationToCoeffs = (ampl) ->
+    shape = 0.01 * ampl # push into [0, 1] range
+    d = shape * 0.625
+    b = 2.5 * (1.0 - shape)
+    return { b, d }
+
+export coeffsToAmplification = (b, d) ->
+    shape = d / 0.625
+    shouldB = 2.5 * (1.0 - shape)
+    ## b should fit, if not we cannot do anything here but note it :-(
+    if (shouldB - b) >= 0.001 then console.error("b coeff was not appropriate!")
+    
+    ampl = 100 * shape
+    return ampl
+
+############################################################
 # Linear: a, b → neutralRate + sensitivity
 export coeffsToNeutralSensitivity = (a, b) ->
     sensitivity = b

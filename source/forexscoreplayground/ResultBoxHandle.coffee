@@ -120,12 +120,12 @@ export class ResultBoxHandle
         @stCotWeightInput.value = params.st.c
         @stCotScoreDisplay.textContent = diffResults.cot.score.toFixed(2)
 
-        fullScore = endResults.st.clampedScore
-        score = Math.round(fullScore)
+        rawScore = endResults.st.rawScore
+        score = endResults.st.finalScore
         color = sH.getColorForScore(score)
         @stResultFrame.style.backgroundColor = color
 
-        @stEquationResult.textContent = fullScore.toFixed(2)
+        @stEquationResult.textContent = rawScore.toFixed(2)
         @stResultDisplay.textContent = score
         @stTrendDisplay.textContent = sH.getTrendTextForScore(score)
 
@@ -142,12 +142,12 @@ export class ResultBoxHandle
         @mlCotWeightInput.value = params.ml.c
         @mlCotScoreDisplay.textContent = diffResults.cot.score.toFixed(2)
 
-        fullScore = endResults.ml.clampedScore
-        score = Math.round(fullScore)
+        rawScore = endResults.ml.rawScore
+        score = endResults.ml.finalScore
         color = sH.getColorForScore(score)
         @mlResultFrame.style.backgroundColor = color
 
-        @mlEquationResult.textContent = fullScore.toFixed(2)
+        @mlEquationResult.textContent = rawScore.toFixed(2)
         @mlResultDisplay.textContent = score
         @mlTrendDisplay.textContent = sH.getTrendTextForScore(score)
 
@@ -164,12 +164,12 @@ export class ResultBoxHandle
         @ltCotWeightInput.value = params.lt.c
         @ltCotScoreDisplay.textContent = diffResults.cot.score.toFixed(2)
 
-        fullScore = endResults.lt.clampedScore
-        score = Math.round(fullScore)
+        rawScore = endResults.lt.rawScore
+        score = endResults.lt.finalScore
         color = sH.getColorForScore(score)
         @ltResultFrame.style.backgroundColor = color
         
-        @ltEquationResult.textContent = fullScore.toFixed(2)
+        @ltEquationResult.textContent = rawScore.toFixed(2)
         @ltResultDisplay.textContent = score
         @ltTrendDisplay.textContent = sH.getTrendTextForScore(score)
         return

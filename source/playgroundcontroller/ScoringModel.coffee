@@ -5,6 +5,9 @@ import { createLogFunctions } from "thingy-debug"
 #endregion
 
 ############################################################
+import * as nm from "./normmath.js"
+
+############################################################
 # ScoringModel - Pair-level scoring engine
 #
 # Handles:
@@ -28,25 +31,25 @@ export class ScoringModel
 
         # Diff curve parameters: f(diff) = b * diff + d * diff³
         @diffParams = {
-            infl: { b: 2.78, d: 0.248 }
-            mrr:  { b: 0, d: 0.05 }
-            gdpg: { b: 2.78, d: 0.248 }
-            cot:  { b: 0, d: 0.05 }
+            infl: { b: 1.25, d: 0.313 }
+            mrr:  { b: 1.25, d: 0.313 }
+            gdpg: { b: 1.25, d: 0.313 }
+            cot:  { b: 1.25, d: 0.313 }
         }
 
         # Final combination weights per time horizon
         @finalWeights = {
-            st: { i: 6, l: 9, g: 3, c: 13 }   # short term
-            ml: { i: 7, l: 11, g: 5, c: 7 }   # medium-long term
-            lt: { i: 10, l: 6, g: 9, c: 5 }   # long term
+            st: { i: 14, l: 28, g: 8, c: 51, f: 13  }   # short term
+            ml: { i: 8, l: 8, g: 4, c: 5, f:13 }   # medium-long term
+            lt: { i: 8, l: 5, g: 7, c: 1, f: 13 }   # long term
         }
 
         # Calculated results (populated by recalculate)
         @diffResults = {
-            infl: { baseNorm: 0, quoteNorm: 0, diff: 0, score: 0 }
-            mrr:  { baseNorm: 0, quoteNorm: 0, diff: 0, score: 0 }
-            gdpg: { baseNorm: 0, quoteNorm: 0, diff: 0, score: 0 }
-            cot:  { baseNorm: 0, quoteNorm: 0, diff: 0, score: 0 }
+            infl: { baseNorm: 0, quoteNorm: 0,  score: 0 }
+            mrr:  { baseNorm: 0, quoteNorm: 0,  score: 0 }
+            gdpg: { baseNorm: 0, quoteNorm: 0,  score: 0 }
+            cot:  { baseNorm: 0, quoteNorm: 0,  score: 0 }
         }
 
         @endResults = {
@@ -113,12 +116,18 @@ export class ScoringModel
     # Calculate final weighted score
     # Returns { rawScore, clampedScore }
     calcFinal: (scores, weights) ->
-        raw = weights.i * scores.infl +
-              weights.l * scores.mrr +
-              weights.g * scores.gdpg +
-              weights.c * scores.cot
-        clamped = Math.max(-30, Math.min(30, raw))
-        return { rawScore: raw, clampedScore: clamped }
+        { i, l, g, c, f } = weights
+        { infl, mrr, gdpg, cot } = scores
+
+        weighted = (i * infl) + (l * mrr) + (g * gdpg) + (c * cot)
+        correctionFactor = (1.0 * f) / ( i + l + g + c )
+        rawScore = weighted * correctionFactor
+
+        finalScore = Math.round(rawScore)
+        if finalScore > 30 then finalScore = 30.0
+        if finalScore < -30 then finalScore = -30.0
+
+        return { rawScore, finalScore }
 
     ########################################################
     #region Getters
