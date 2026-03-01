@@ -16,6 +16,13 @@ import * as sH from "./scorehelper.js"
 export class ResultBoxHandle
     constructor: (@containerEl) ->
         @onChangeListeners = []
+        @getDefaultParams = null
+        @getSavedParams = null
+
+        @defaultButton = @containerEl.querySelector(".default-button")
+        @resetButton = @containerEl.querySelector(".reset-button")
+        @defaultButton.addEventListener("click", => applyRef(@, @getDefaultParams))
+        @resetButton.addEventListener("click", => applyRef(@, @getSavedParams))
 
         ## short term score     
         # resultSt should be available through implicit DOM connect
@@ -95,6 +102,11 @@ export class ResultBoxHandle
         @mlCotWeightInput.addEventListener("input", ((evnt) -> onInput(evnt, I, "ml", "c")))
         @ltCotWeightInput.addEventListener("input", ((evnt) -> onInput(evnt, I, "lt", "c")))
 
+    setReferenceGetters: (getDefault, getSaved) =>
+        @getDefaultParams = getDefault
+        @getSavedParams = getSaved
+        return
+
     setModel: (model) =>
         @model = model
         # wire up updates
@@ -172,6 +184,9 @@ export class ResultBoxHandle
         @ltEquationResult.textContent = rawScore.toFixed(2)
         @ltResultDisplay.textContent = score
         @ltTrendDisplay.textContent = sH.getTrendTextForScore(score)
+
+        # Toggle default/reset button visibility
+        toggleRefButtons(@)
         return
     
     addOnChangeListener: (fun) =>
@@ -196,8 +211,29 @@ onInput = (evnt, I, tKey, wKey) ->
     #replaces scoring.setWeight(tKey, wKey, val)
     I.model.updateFinalWeight(tKey, wKey, val)
     
-    f() for f in I.onChangeListeners
+    fn() for fn in I.onChangeListeners
     return
 
+############################################################
+paramsEqual = (a, b) -> JSON.stringify(a) == JSON.stringify(b)
+
+toggleRefButtons = (I) ->
+    w = I.model?.getFinalWeights()
+    return unless w?
+    defP = I.getDefaultParams?()
+    savedP = I.getSavedParams?()
+    I.defaultButton.classList.toggle("visible", defP? and !paramsEqual(w, defP))
+    I.resetButton.classList.toggle("visible", savedP? and !paramsEqual(w, savedP))
+    return
+
+applyRef = (I, getter) ->
+    ref = getter?()
+    return unless ref?
+    for tKey in ["st", "ml", "lt"]
+        continue unless ref[tKey]?
+        for wKey, val of ref[tKey]
+            I.model.finalWeights[tKey][wKey] = val
+    fn() for fn in I.onChangeListeners
+    return
 
 #endregion

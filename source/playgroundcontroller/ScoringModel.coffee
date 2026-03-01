@@ -6,6 +6,7 @@ import { createLogFunctions } from "thingy-debug"
 
 ############################################################
 import * as nm from "./normmath.js"
+import { diffParams, finalWeights } from "./defaultsnapshot.js"
 
 ############################################################
 # ScoringModel - Pair-level scoring engine
@@ -30,19 +31,10 @@ export class ScoringModel
         @quoteArea = null
 
         # Diff curve parameters: f(diff) = b * diff + d * diff³
-        @diffParams = {
-            infl: { b: 1.25, d: 0.313 }
-            mrr:  { b: 1.25, d: 0.313 }
-            gdpg: { b: 1.25, d: 0.313 }
-            cot:  { b: 1.25, d: 0.313 }
-        }
+        @diffParams = deepCopy(diffParams)
 
         # Final combination weights per time horizon
-        @finalWeights = {
-            st: { i: 14, l: 28, g: 8, c: 51, f: 13  }   # short term
-            ml: { i: 8, l: 8, g: 4, c: 5, f:13 }   # medium-long term
-            lt: { i: 8, l: 5, g: 7, c: 1, f: 13 }   # long term
-        }
+        @finalWeights = deepCopy(finalWeights)
 
         # Calculated results (populated by recalculate)
         @diffResults = {
@@ -189,3 +181,6 @@ export class ScoringModel
         return
 
     #endregion
+
+############################################################
+deepCopy = (obj) -> JSON.parse(JSON.stringify(obj))

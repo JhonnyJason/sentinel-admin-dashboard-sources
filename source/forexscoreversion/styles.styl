@@ -40,8 +40,30 @@
 
 #publish-button
 #save-button
+#reset-button
     width 120px
     box-sizing: border-box
+
+#reset-button
+    background cd-danger-red
+    &[hidden]
+        display none
+
+// Disabled state — clearer visual distinction
+#forexscore-version-row .click-button:disabled
+    background #888
+    cursor: default
+    // color #888
+    // box-shadow none
+    // border-color #ccc
+
+// Published state on publish button
+#publish-button.is-published
+    background cd-good-green
+    // cursor: default
+    pointer-events: none
+    // border-color cd-good-green
+    // box-shadow 0 0 3px 0 cd-good-green
 
 #create-copy-button
 #create-new-button

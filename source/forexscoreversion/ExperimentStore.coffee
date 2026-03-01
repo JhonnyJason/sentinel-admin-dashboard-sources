@@ -24,6 +24,39 @@ export class ExperimentStore
         @liveSnapshot = null    # current working state
 
     ########################################################
+    #region Hydration (from backend)
+
+    # Restore full state from backend data
+    # entries: { "Name": [s0, s1, ...], ... }
+    # published: { name, version } | null
+    hydrate: (entries, published) =>
+        @experiments = deepCopy(entries)
+        @published = if published? then { name: published.name, version: published.version } else null
+
+        # Open published experiment if it exists, else first experiment
+        if @published? and @experiments[@published.name]?
+            @current = { name: @published.name, version: @published.version }
+        else
+            names = Object.keys(@experiments)
+            if names.length > 0
+                name = names[0]
+                versions = @experiments[name]
+                @current = { name, version: versions.length - 1 }
+            else
+                @current = null
+
+        if @current?
+            stored = @experiments[@current.name][@current.version]
+            @baseSnapshot = deepCopy(stored)
+            @liveSnapshot = deepCopy(stored)
+        else
+            @baseSnapshot = null
+            @liveSnapshot = null
+        return
+
+    #endregion
+
+    ########################################################
     #region Experiment lifecycle
 
     # Create new experiment with given snapshot as v0

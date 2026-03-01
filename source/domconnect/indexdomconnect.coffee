@@ -28,6 +28,7 @@ indexdomconnect.initialize = () ->
     global.playgroundNameInput = document.getElementById("playground-name-input")
     global.playgroundVersionSelect = document.getElementById("playground-version-select")
     global.publishButton = document.getElementById("publish-button")
+    global.resetButton = document.getElementById("reset-button")
     global.openSelect = document.getElementById("open-select")
     global.createCopyButton = document.getElementById("create-copy-button")
     global.createNewButton = document.getElementById("create-new-button")

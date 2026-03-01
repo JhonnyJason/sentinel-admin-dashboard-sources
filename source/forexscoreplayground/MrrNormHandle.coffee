@@ -15,6 +15,8 @@ import * as nm from "./normmath.js"
 export class MrrNormHandle
     constructor: (@containerEl, @dKey) ->
         @onChangeListeners = []
+        @getDefaultParams = null
+        @getSavedParams = null
 
         @headerFlag = @containerEl.querySelector(".header-flag")
         @normTypeDisplay = @containerEl.querySelector(".norm-type-title")
@@ -27,10 +29,15 @@ export class MrrNormHandle
         @rawValueDisplay = @containerEl.querySelector(".raw-value")
         @resultDisplay = @containerEl.querySelector(".norm-result")
 
+        @defaultButton = @containerEl.querySelector(".default-button")
+        @resetButton = @containerEl.querySelector(".reset-button")
+
         @floorInput.addEventListener("input", => onParamInput(@))
         @neutralInput.addEventListener("input", => onParamInput(@))
         @ceilingInput.addEventListener("input", => onParamInput(@))
         @inflPunishmentInput.addEventListener("input", => onParamInput(@))
+        @defaultButton.addEventListener("click", => applyRef(@, @getDefaultParams))
+        @resetButton.addEventListener("click", => applyRef(@, @getSavedParams))
 
         @normTypeDisplay.textContent = @dKey
 
@@ -41,6 +48,11 @@ export class MrrNormHandle
         # wire up updates
         area.addUpdateListener(@refreshUI)
         @refreshUI()
+        return
+
+    setReferenceGetters: (getDefault, getSaved) =>
+        @getDefaultParams = getDefault
+        @getSavedParams = getSaved
         return
 
     unsubscribe: =>
@@ -61,6 +73,9 @@ export class MrrNormHandle
 
         @rawValueDisplay.textContent = if isNaN(inVal) then "--" else inVal.toFixed(2)
         @resultDisplay.textContent = if isNaN(outVal) then "--" else outVal.toFixed(2)
+
+        # Toggle default/reset button visibility
+        toggleRefButtons(@)
         return
 
     addOnChangeListener: (fun) =>
@@ -93,7 +108,31 @@ onParamInput = (I) ->
     outVal = I.area.normFun[I.dKey]()
     I.resultDisplay.textContent = if isNaN(outVal) then "--" else outVal.toFixed(2)
 
-    f() for f in I.onChangeListeners
+    # update RefButtons visibility
+    toggleRefButtons(I)
+
+    fn() for fn in I.onChangeListeners
+    return
+
+############################################################
+paramsEqual = (a, b) -> JSON.stringify(a) == JSON.stringify(b)
+
+toggleRefButtons = (I) ->
+    p = I.area?.params[I.dKey]
+    return unless p?
+    defP = I.getDefaultParams?()
+    savedP = I.getSavedParams?()
+    I.defaultButton.classList.toggle("visible", defP? and !paramsEqual(p, defP))
+    I.resetButton.classList.toggle("visible", savedP? and !paramsEqual(p, savedP))
+    return
+
+applyRef = (I, getter) ->
+    ref = getter?()
+    return unless ref?
+    p = I.area.params[I.dKey]
+    p[k] = v for k, v of ref
+    fn() for fn in I.onChangeListeners
+    I.refreshUI()
     return
 
 #endregion

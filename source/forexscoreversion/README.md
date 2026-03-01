@@ -36,12 +36,12 @@ No dirty flag — the two snapshots ARE the source of truth.
 ```
 {
   areaParams: {
-    eurozone: { infl: {a,b,c}, mrr: {a,b}, gdpg: {a,b,c}, cot: {f,e} },
+    eurozone: { infl: {a,b,c}, mrr: {f,n,c,s}, gdpg: {a,b,c}, cot: {n,e} },
     usa: { ... }, japan: { ... }, ...
   },
   globalParams: {
     diffCurves: { infl: {b,d}, mrr: {b,d}, gdpg: {b,d}, cot: {b,d} },
-    finalWeights: { st: {i,l,g,c}, ml: {i,l,g,c}, lt: {i,l,g,c} }
+    finalWeights: { st: {i,l,g,c,f}, ml: {i,l,g,c,f}, lt: {i,l,g,c,f} }
   }
 }
 ```
@@ -130,11 +130,11 @@ Hardcoded in `ExperimentStore.coffee` as `defaultSnapshot()`. Contains all area 
 Used when creating a "new" experiment (not a copy). Having this hardcoded means we don't
 depend on the playground being initialized to create the first experiment.
 
-### ExperimentStore persistence boundary
-ExperimentStore is the persistence boundary — `save()` and `publish()` are async and call
-`datamodule.saveParams()` / `datamodule.publishParams()` internally. The coordinator
-(forexscoreversion.coffee) calls `await store.save()` and only proceeds on success.
-This way the full async flow is in place even though datamodule currently returns immediately.
+### Persistence: optimistic local-first
+All actions (save, publish, create, rename) apply locally first, then sync to backend.
+The coordinator calls the store method, refreshes UI, then `await data.<command>()`.
+Backend errors are logged but don't revert local state. In mock mode (`noNetwork`),
+datamodule returns `{ ok: true }` immediately.
 
 ### refreshUI pattern
 `forexscoreversion.coffee` has a single `refreshUI()` function that reads store state and
@@ -143,14 +143,15 @@ Every action (create, save, publish, open, selectVersion, rename, onParamsChange
 `refreshUI()`.
 
 ### downSync: initial bootstrap
-`downSyncExperimentStore(null)` = backend has no stored experiments. We create "Experiment 1"
-with `defaultSnapshot()` as v0 and apply it to the playground. Later: non-null means
-deserialize and restore full store state.
+`downSyncExperimentStore(remoteData)`:
+- `remoteData` has entries → `store.hydrate(entries, published)` restores full state
+- `remoteData` is null → create fresh "Experiment 1" with `defaultSnapshot()` as v0
+Either way, applies current snapshot to playground and refreshes UI.
 
 ## Storage
-In-memory only. No localStorage. Experiments are lost on page refresh. Backend persistence is a future task.
+Backend-persisted via WebSocket commands (see `datamodule/README.md` for contract).
+In mock mode (`noNetwork = true`): in-memory only, experiments are lost on refresh.
 
 ## Not in scope
 - "Show full ranking" - separate task
-- Backend persistence of experiments
 - Multi-user conflict resolution

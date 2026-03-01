@@ -7,10 +7,12 @@ import { createLogFunctions } from "thingy-debug"
 ############################################################
 import * as focusPairSelection from "./focuspairselection.js"
 import * as playground from "./forexscoreplayground.js"
+import * as versioning from "./forexscoreversion.js"
 
 ############################################################
-export initialize = ->
+export initialize = (cfg) ->
     log "initialize"
-    playground.initialize()
-    focusPairSelection.initialize()
+    playground.initialize(cfg)
+    focusPairSelection.initialize(cfg)
+    versioning.initialize(cfg)
     return

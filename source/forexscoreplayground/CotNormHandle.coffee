@@ -12,6 +12,8 @@ import { createLogFunctions } from "thingy-debug"
 export class CotNormHandle
     constructor: (@containerEl, @dKey) ->
         @onChangeListeners = []
+        @getDefaultParams = null
+        @getSavedParams = null
 
         @headerFlag = @containerEl.querySelector(".header-flag")
         @normTypeDisplay = @containerEl.querySelector(".norm-type-title")
@@ -23,8 +25,13 @@ export class CotNormHandle
         @cot36Display = @containerEl.querySelector(".cot36-value")
         @resultDisplay = @containerEl.querySelector(".norm-result")
 
+        @defaultButton = @containerEl.querySelector(".default-button")
+        @resetButton = @containerEl.querySelector(".reset-button")
+
         @nInput.addEventListener("input", => onParamInput(@))
         @eInput.addEventListener("input", => onParamInput(@))
+        @defaultButton.addEventListener("click", => applyRef(@, @getDefaultParams))
+        @resetButton.addEventListener("click", => applyRef(@, @getSavedParams))
         @normTypeDisplay.textContent = @dKey
 
     setArea: (area) =>
@@ -34,6 +41,11 @@ export class CotNormHandle
         # wire up updates
         area.addUpdateListener(@refreshUI)
         @refreshUI()
+        return
+
+    setReferenceGetters: (getDefault, getSaved) =>
+        @getDefaultParams = getDefault
+        @getSavedParams = getSaved
         return
 
     unsubscribe: =>
@@ -57,6 +69,9 @@ export class CotNormHandle
         @cot36Display.textContent = if isNaN(cot36) then "--" else cot36
         
         @resultDisplay.textContent = if isNaN(outVal) then "--" else outVal.toFixed(2)
+
+        # Toggle default/reset button visibility
+        toggleRefButtons(@)
         return
 
     addOnChangeListener: (fun) =>
@@ -85,7 +100,31 @@ onParamInput = (I) ->
     outVal = I.area.normFun[I.dKey]()
     I.resultDisplay.textContent = if isNaN(outVal) then "--" else outVal.toFixed(2)
 
+    # update RefButtons visibility
+    toggleRefButtons(I)
+
     fn() for fn in I.onChangeListeners
+    return
+
+############################################################
+paramsEqual = (a, b) -> JSON.stringify(a) == JSON.stringify(b)
+
+toggleRefButtons = (I) ->
+    p = I.area?.params[I.dKey]
+    return unless p?
+    defP = I.getDefaultParams?()
+    savedP = I.getSavedParams?()
+    I.defaultButton.classList.toggle("visible", defP? and !paramsEqual(p, defP))
+    I.resetButton.classList.toggle("visible", savedP? and !paramsEqual(p, savedP))
+    return
+
+applyRef = (I, getter) ->
+    ref = getter?()
+    return unless ref?
+    p = I.area.params[I.dKey]
+    p[k] = v for k, v of ref
+    fn() for fn in I.onChangeListeners
+    I.refreshUI()
     return
 
 #endregion

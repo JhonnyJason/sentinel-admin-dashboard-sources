@@ -131,6 +131,7 @@ $cot-color = #f1c40f     // yellow
         padding 2px 4px
         border-radius 3px
 
+
 // Base/quote border distinction
 .norm-cell.is-base .norm-result
     border-top 2px solid
@@ -170,3 +171,28 @@ indicator-theme($color)
 
 .indicator-cot
     indicator-theme($cot-color)
+
+// Default/Reset buttons for param-level resets
+.cell-buttons
+    display flex
+    justify-content space-between
+    padding 7px
+    border-top 1px dashed #eee
+
+    .default-button
+    .reset-button
+        padding 3px 8px
+        border-radius 3px
+        font-size 9pt
+        cursor pointer
+        opacity 0
+        pointer-events none
+        transition opacity 0.2s
+        background alpha(cd-dark-blue, 0.1)
+
+        &.visible
+            opacity 1
+            pointer-events auto
+
+        &:hover
+            background alpha(#f90, 0.35)

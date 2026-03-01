@@ -4,53 +4,53 @@
 
 This document defines the data structures for communication between the Admin Dashboard and the Sentinel Backend.
 
-**Data Flow:**
-- `getAllData` - Initial load (when no data present)
-- WebSocket messages - Fine-grained updates during session
-- Admin actions - Parameter changes pushed to server
+**Connection Flow:**
+1. WebSocket connect → `authorizeAdmin <authMessage>`
+2. Server responds `authorizationApproved`
+3. Client sends `getAllMakroData` → server responds `allMakroData`
+4. Client sends `getAllHistory` → server responds `allHistory`
+5. Mutation commands during session (save, publish, create, rename)
+
+**Wire Format:**
+- No-payload: `socket.send("commandName")`
+- With payload: `socket.send("commandName <JSON>")`
+- Responses: JSON with `type` field
 
 ---
 
-## getAllData Response
+## Commands (Client -> Server)
 
-Extended to include parameters alongside makro data.
+| Command | Payload | Response Type |
+|---------|---------|---------------|
+| `getAllMakroData` | -- | `allMakroData` |
+| `getAllHistory` | -- | `allHistory` |
+| `createEntry` | `{ name, snapshot }` | `createEntryResult` |
+| `saveEntry` | `{ name, snapshot }` | `saveEntryResult` |
+| `publishEntry` | `{ name, version }` | `publishEntryResult` |
+| `renameEntry` | `{ oldName, newName }` | `renameEntryResult` |
+
+---
+
+## getAllMakroData Response
+
+Makro data per economic area.
 
 ```json
 {
-  "eurozone": {
-    "infl": 2.1,
-    "inflMeta": { "dataSet": "...", "source": "ECB", "date": "2024-01" },
-    "mrr": 4.5,
-    "mrrMeta": { "dataSet": "...", "source": "ECB", "date": "2024-01-15" },
-    "gdpg": 0.8,
-    "gdpgMeta": { "dataSet": "...", "source": "Eurostat", "date": "2024-Q4" },
-    "cot6": 45.2,
-    "cot36": 62.1,
-    "params": {
-      "inflation": { "a": 1.667, "b": 0.667, "c": -0.083 },
-      "interest": { "a": -2.5, "b": 1.0 },
-      "gdp": { "a": 2.25, "b": 0.75, "c": -0.188 },
-      "cot": { "f": 1.0 }
-    }
-  },
-  "usa": { "...same structure..." },
-  "japan": { "..." },
-  "uk": { "..." },
-  "canada": { "..." },
-  "australia": { "..." },
-  "switzerland": { "..." },
-  "newzealand": { "..." },
-
-  "_params": {
-    "diffCurves": {
-      "inflation": { "b": 1.4, "d": 0.12 },
-      "interest": { "b": 0, "d": 0.04 },
-      "gdp": { "b": 1.4, "d": 0.12 },
-      "cot": { "b": 0, "d": 0.01 }
+  "type": "allMakroData",
+  "payload": {
+    "eurozone": {
+      "infl": 2.1,
+      "inflMeta": { "dataSet": "...", "source": "ECB", "date": "2024-01" },
+      "mrr": 4.5,
+      "mrrMeta": { "dataSet": "...", "source": "ECB", "date": "2024-01-15" },
+      "gdpg": 0.8,
+      "gdpgMeta": { "dataSet": "...", "source": "Eurostat", "date": "2024-Q4" },
+      "cot6": 45.2,
+      "cot36": 62.1
     },
-    "weights": { "i": 6, "l": 9, "g": 3, "c": 13 },
-    "version": "2024-01-15T10:30:00Z",
-    "isPublished": true
+    "usa": { "...same structure..." },
+    "...other areas..."
   }
 }
 ```
@@ -58,170 +58,87 @@ Extended to include parameters alongside makro data.
 ### Area Keys
 - `eurozone`, `usa`, `japan`, `uk`, `canada`, `australia`, `switzerland`, `newzealand`
 
-### Area Params Structure
-| Category | Params |
-|----------|--------|
-| `infl` | `{ a, b, c }` |
-| `mrr` | `{ f, n, c, s }` |
-| `gdpg` | `{ a, b, c }` |
-| `cot` | `{ n, e }` |
-
-### Global Params Structure
-| Category | Params | Usage |
-|----------|--------|-------|
-| `diffCurves.*` | `{ b, d }` | `b*diff + d*diff³` |
-| `weights` | `{ i, l, g, c }` | `i*infScore + l*intScore + g*gdpScore + c*cotScore` |
-
 ---
 
-## WebSocket Update Messages (Server → Client)
+## getAllHistory Response
 
-Fine-grained updates after initial load.
+Full experiment history (all named experiments with version arrays + published state).
 
-### Area Data Update
-Makro values changed (new data from sources).
 ```json
 {
-  "type": "areaData",
-  "key": "eurozone",
-  "data": {
-    "infl": 2.2,
-    "inflMeta": { "dataSet": "...", "source": "ECB", "date": "2024-02" }
-  }
-}
-```
-*Note: Only changed fields included.*
-
-### Area Params Update
-Admin changed normalization params for an area.
-```json
-{
-  "type": "areaParams",
-  "key": "eurozone",
-  "params": {
-    "inflation": { "a": 1.7, "b": 0.65, "c": -0.08 }
-  }
+  "type": "allHistory",
+  "entries": {
+    "Experiment 1": [ { "areaParams": {}, "globalParams": {} } ],
+    "My Setup": [ { "...snapshot v0..." }, { "...snapshot v1..." } ]
+  },
+  "published": { "name": "Experiment 1", "version": 0 }
 }
 ```
 
-### Global Params Update
-Admin changed diff curves or weights.
+- `entries`: map of experiment name -> array of snapshots (index = version)
+- `published`: which experiment+version is currently published, or `null`
+
+### Snapshot Structure
 ```json
 {
-  "type": "globalParams",
-  "params": {
-    "weights": { "i": 7, "l": 8, "g": 4, "c": 12 }
-  }
-}
-```
-
----
-
-## Admin Push Messages (Client → Server)
-
-### Save Experimental (Unpublished)
-Saves current params to history without publishing to users.
-```json
-{
-  "action": "saveParams",
   "areaParams": {
-    "eurozone": { "inflation": { "a": 1.7, "b": 0.65, "c": -0.08 } }
+    "eurozone": { "infl": {}, "mrr": {}, "gdpg": {}, "cot": {} },
+    "...other areas..."
   },
   "globalParams": {
-    "weights": { "i": 7, "l": 8, "g": 4, "c": 12 }
-  },
-  "note": "Testing higher inflation weight"
+    "diffCurves": { "infl": {}, "mrr": {}, "gdpg": {}, "cot": {} },
+    "finalWeights": { "st": {}, "ml": {}, "lt": {} }
+  }
 }
 ```
-*Response:*
-```json
-{ "ok": true, "historyId": "exp-2024-01-15T14:22:00Z" }
-```
-
-### Publish (Checkpoint)
-Saves and publishes params - becomes active for all users.
-```json
-{
-  "action": "publishParams",
-  "areaParams": { "...full or partial..." },
-  "globalParams": { "..." },
-  "note": "Q1 2024 calibration"
-}
-```
-*Response:*
-```json
-{ "ok": true, "historyId": "pub-2024-01-15T14:30:00Z", "version": "2024-01-15T14:30:00Z" }
-```
-
-### Reset to Last Published
-Discards experimental changes, reverts to last checkpoint.
-```json
-{
-  "action": "resetToPublished"
-}
-```
-*Response: Server sends full params via `areaParams` + `globalParams` messages.*
-
-### Get History
-Retrieve recent parameter history.
-```json
-{
-  "action": "getHistory",
-  "limit": 20
-}
-```
-*Response:*
-```json
-{
-  "history": [
-    {
-      "id": "pub-2024-01-15T14:30:00Z",
-      "timestamp": "2024-01-15T14:30:00Z",
-      "type": "published",
-      "note": "Q1 2024 calibration",
-      "params": { "...snapshot..." }
-    },
-    {
-      "id": "exp-2024-01-15T14:22:00Z",
-      "timestamp": "2024-01-15T14:22:00Z",
-      "type": "experimental",
-      "note": "Testing higher inflation weight",
-      "params": { "...snapshot..." }
-    }
-  ]
-}
-```
-
-### Load from History
-Load a specific history entry (for comparison/restore).
-```json
-{
-  "action": "loadFromHistory",
-  "historyId": "exp-2024-01-15T14:22:00Z"
-}
-```
-*Response: Server sends params via update messages (does not publish).*
 
 ---
 
-## Defaults (UI-Only)
+## Mutation Commands
 
-Neutral balanced defaults are calculated and stored in `configmodule.coffee`.
-These are not relevant to the server - used only for local "reset to neutral" in the playground.
+All mutations return `{ type: "<commandName>Result", ok: true }` on success or `{ type: "<commandName>Result", ok: false, message: "..." }` on error.
 
-See `configmodule.coffee` for `neutralAreaParams` and `neutralGlobalParams`.
+### createEntry
+Create a new named experiment with initial snapshot.
+```json
+{ "name": "Experiment 1", "snapshot": { "areaParams": {}, "globalParams": {} } }
+```
+
+### saveEntry
+Append a new version to an existing experiment.
+```json
+{ "name": "Experiment 1", "snapshot": { "areaParams": {}, "globalParams": {} } }
+```
+
+### publishEntry
+Mark a specific experiment+version as published (active for users).
+```json
+{ "name": "Experiment 1", "version": 0 }
+```
+
+### renameEntry
+Rename an existing experiment.
+```json
+{ "oldName": "Experiment 1", "newName": "My Setup" }
+```
 
 ---
 
-## History Entry Types
+## WebSocket Update Messages (Server -> Client)
 
-| Type | Prefix | Description |
-|------|--------|-------------|
-| `experimental` | `exp-` | Saved but not active for users |
-| `published` | `pub-` | Checkpoint, active for all users |
+Fine-grained updates after initial load (future).
 
-Server maintains history with:
-- Timestamp
-- Type (experimental/published)
-- Note (admin description)
-- Full params snapshot
+### Area Data Update
+```json
+{ "type": "areaData", "key": "eurozone", "data": { "infl": 2.2 } }
+```
+
+---
+
+## Mock Mode
+
+When `noNetwork = true`, datamodule skips WebSocket entirely:
+- `loadMockData()` feeds mock area data from configmodule
+- `downSyncExperimentStore(null)` bootstraps a fresh Experiment 1 with defaults
+
+All mutation commands (`createEntry`, `saveEntry`, etc.) return `{ ok: true }` immediately in mock mode.

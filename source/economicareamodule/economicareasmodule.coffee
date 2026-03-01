@@ -6,6 +6,7 @@ import { createLogFunctions } from "thingy-debug"
 
 ############################################################
 import * as focusPairModule from "./focuspairmodule.js"
+import { areaParams } from "./defaultsnapshot.js"
 import { EconomicArea } from "./EconomicArea.js"
 
 ############################################################
@@ -22,10 +23,10 @@ export initialize = ->
         key: "eurozone"
         currencyName: "Euro"
         currencyShort: "EUR"
-        inflParams: { a: 1.111, b: 0.444, c: -0.056 }
-        mrrParams: { f: -2.2, n: 2.0, c: 5.5, s: 1.2 }
-        gdpgParams: { a: 1.5, b: 0.5, c: -0.125 }
-        cotParams: { n: 50, e: 1.6 }
+        inflParams: areaParams["eurozone"].infl
+        mrrParams: areaParams["eurozone"].mrr
+        gdpgParams: areaParams["eurozone"].gdpg
+        cotParams: areaParams["eurozone"].cot
 
     a.usa = new EconomicArea
         iconHref: "#svg-usa-icon"
@@ -33,10 +34,10 @@ export initialize = ->
         key: "usa"
         currencyName: "US-Dollar"
         currencyShort: "USD"
-        inflParams: { a: 1.111, b: 0.444, c: -0.056 }
-        mrrParams: { f: -1.7, n: 2.7, c: 6.0, s: 1.2 }
-        gdpgParams: { a: 1.383, b: 0.494, c: -0.099 }
-        cotParams: { n: 50, e: 1.6 }
+        inflParams: areaParams["usa"].infl
+        mrrParams: areaParams["usa"].mrr
+        gdpgParams: areaParams["usa"].gdpg
+        cotParams: areaParams["usa"].cot
 
     a.japan = new EconomicArea
         iconHref: "#svg-japan-icon"
@@ -44,10 +45,10 @@ export initialize = ->
         key: "japan"
         currencyName: "Yen"
         currencyShort: "JPY"
-        inflParams: { a: 1.587, b: 0.331, c: -0.066 }
-        mrrParams: { f: -1, n: 0.5, c: 3.5, s: 1.2 }
-        gdpgParams: { a: 1.875, b: 0.25, c: -0.125 }
-        cotParams: { n: 50, e: 1.6 }
+        inflParams: areaParams["japan"].infl
+        mrrParams: areaParams["japan"].mrr
+        gdpgParams: areaParams["japan"].gdpg
+        cotParams: areaParams["japan"].cot
 
     a.uk = new EconomicArea
         iconHref: "#svg-uk-icon"
@@ -55,10 +56,10 @@ export initialize = ->
         key: "uk"
         currencyName: "Pfund"
         currencyShort: "GBP"
-        inflParams: { a: 1.111, b: 0.444, c: -0.056 }
-        mrrParams: { f: -2, n: 2.5, c: 6.0, s: 1.2 }
-        gdpgParams: { a: 1.5, b: 0.5, c: -0.125 }
-        cotParams: { n: 50, e: 1.6 }
+        inflParams: areaParams["uk"].infl
+        mrrParams: areaParams["uk"].mrr
+        gdpgParams: areaParams["uk"].gdpg
+        cotParams: areaParams["uk"].cot
 
     a.canada = new EconomicArea
         iconHref: "#svg-canada-icon"
@@ -66,10 +67,10 @@ export initialize = ->
         key: "canada"
         currencyName: "Canada Dollar"
         currencyShort: "CAD"
-        inflParams: { a: 1.111, b: 0.444, c: -0.056 }
-        mrrParams: { f: -2, n: 2.5, c: 6.0, s: 1.2 }
-        gdpgParams: { a: 1.5, b: 0.5, c: -0.125 }
-        cotParams: { n: 50, e: 1.6 }
+        inflParams: areaParams["canada"].infl
+        mrrParams: areaParams["canada"].mrr
+        gdpgParams: areaParams["canada"].gdpg
+        cotParams: areaParams["canada"].cot
 
     a.australia = new EconomicArea
         iconHref: "#svg-australia-icon"
@@ -77,10 +78,10 @@ export initialize = ->
         key: "australia"
         currencyName: "Australia Dollar"
         currencyShort: "AUD"
-        inflParams: { a: 0.611, b: 0.556, c: -0.056 }
-        mrrParams: { f: -2, n: 2.9, c: 7.0, s: 1.2 }
-        gdpgParams: { a: 0.875, b: 0.75, c: -0.125 }
-        cotParams: { n: 50, e: 1.6 }
+        inflParams: areaParams["australia"].infl
+        mrrParams: areaParams["australia"].mrr
+        gdpgParams: areaParams["australia"].gdpg
+        cotParams: areaParams["australia"].cot
 
     a.switzerland = new EconomicArea
         iconHref: "#svg-switzerland-icon"
@@ -88,10 +89,10 @@ export initialize = ->
         key: "switzerland"
         currencyName: "Franken"
         currencyShort: "CHF"
-        inflParams: { a: 1.587, b: 0.331, c: -0.066 }
-        mrrParams: { f: -1, n: 0.8, c: 4.0, s: 1.2 }
-        gdpgParams: { a: 1.875, b: 0.25, c: -0.125 }
-        cotParams: { n: 50, e: 1.6 }
+        inflParams: areaParams["switzerland"].infl
+        mrrParams: areaParams["switzerland"].mrr
+        gdpgParams: areaParams["switzerland"].gdpg
+        cotParams: areaParams["switzerland"].cot
 
     a.newzealand = new EconomicArea
         iconHref: "#svg-newzealand-icon"
@@ -99,10 +100,10 @@ export initialize = ->
         key: "newzealand"
         currencyName: "New Zealand Dollar"
         currencyShort: "NZD"
-        inflParams: { a: 0.611, b: 0.556, c: -0.056 }
-        mrrParams: { f: -2, n: 2.9, c: 7.0, s: 1.2 }
-        gdpgParams: { a: 0.875, b: 0.75, c: -0.125 }
-        cotParams: { n: 50, e: 1.6 }
+        inflParams: areaParams["newzealand"].infl
+        mrrParams: areaParams["newzealand"].mrr
+        gdpgParams: areaParams["newzealand"].gdpg
+        cotParams: areaParams["newzealand"].cot
 
     return
 

@@ -7,6 +7,7 @@ import { createLogFunctions } from "thingy-debug"
 ############################################################
 import * as cfg from "./configmodule.js"
 import * as auth from "./authmodule.js"
+import * as versioning from "./forexscoreversion.js"
 import * as areas from "./economicareasmodule.js"
 
 ############################################################
@@ -19,6 +20,7 @@ socketAuthorized = false
 ############################################################
 socket = null
 noNetwork = false
+pendingRequests = {}  # responseType → { resolve, reject, timer }
 
 ############################################################
 export initialize = (cfg) ->
@@ -56,7 +58,7 @@ export heartbeat = ->
         ## Real action when backend supports our updates
         # Request data if authorized but haven't received yet
         # if socketAuthorized and !dataReceived
-        #     socket.send("getAllData")
+        #     socket.send("getAllMakroData")
         return
 
     if socket.readyState == WebSocket.CLOSED
@@ -77,17 +79,25 @@ receiveData = (evnt) ->
         data = JSON.parse(evnt.data)
         olog data
 
+        # Check pending promise-based requests first
+        if data.type? and pendingRequests[data.type]?
+            pending = pendingRequests[data.type]
+            delete pendingRequests[data.type]
+            clearTimeout(pending.timer)
+            pending.resolve(data)
+            return
+
         # Authorization approved → request all data
         if data.type == "authorizationApproved"
             log "Authorization approved"
             socketAuthorized = true
-            socket.send("getAllData")
+            socket.send("getAllMakroData")
             return
 
-        # All data received → propagate to areas
-        if data.type == "allData" and !dataReceived
-            log "Received allData"
-            processAllData(data.payload)
+        # All makro data received → propagate to areas
+        if data.type == "allMakroData" and !dataReceived
+            log "Received allMakroData"
+            processAllMakroData(data.payload)
             return
 
         # Ignore other messages for now
@@ -96,10 +106,23 @@ receiveData = (evnt) ->
     catch err then console.error(err)
     return
 
-processAllData = (payload) ->
-    log "processAllData"
+processAllMakroData = (payload) ->
+    log "processAllMakroData"
     areas.updateAllAreas(payload)
     dataReceived = true
+    requestAllHistory()
+    return
+
+requestAllHistory = ->
+    log "requestAllHistory"
+    try
+        data = await sendCommand("getAllHistory", null, "allHistory")
+        log "Received allHistory"
+        versioning.downSyncExperimentStore(data)
+    catch err
+        log "getAllHistory failed, bootstrapping with defaults"
+        console.error(err)
+        versioning.downSyncExperimentStore(null)
     return
 
 receiveError = (evnt) ->
@@ -123,50 +146,53 @@ destroySocket = ->
     return
 
 ############################################################
+COMMAND_TIMEOUT_MS = 10000
+
+sendCommand = (command, payload, expectedResponseType) ->
+    new Promise (resolve, reject) ->
+        unless socket? and socket.readyState == WebSocket.OPEN
+            reject(new Error("Socket not connected"))
+            return
+
+        if payload?
+            socket.send("#{command} #{JSON.stringify(payload)}")
+        else
+            socket.send(command)
+
+        timer = setTimeout ->
+            if pendingRequests[expectedResponseType]?
+                delete pendingRequests[expectedResponseType]
+                reject(new Error("Timeout waiting for #{expectedResponseType}"))
+        , COMMAND_TIMEOUT_MS
+
+        pendingRequests[expectedResponseType] = { resolve, reject, timer }
+        return
+
+############################################################
 export startHeartbeat = -> setInterval(heartbeat, cfg.heartbeatMS)
 
 ############################################################
-#region Admin Actions (stubs - to be wired to backend)
+#region Admin Actions
 
-# Save experimental params (unpublished, stored in history)
-export saveParams = (areaParams, globalParams, note = "") ->
-    log "saveParams (stub)"
-    olog { areaParams, globalParams, note }
-    # TODO: send via WebSocket
-    # { action: "saveParams", areaParams, globalParams, note }
-    return { ok: true, historyId: "exp-#{Date.now()}" }
+export createEntry = (name, snapshot) ->
+    log "createEntry: #{name}"
+    if noNetwork then return { ok: true }
+    sendCommand("createEntry", {name, snapshot}, "createEntryResult")
 
-# Publish params (checkpoint, becomes active for all users)
-export publishParams = (areaParams, globalParams, note = "") ->
-    log "publishParams (stub)"
-    olog { areaParams, globalParams, note }
-    # TODO: send via WebSocket
-    # { action: "publishParams", areaParams, globalParams, note }
-    return { ok: true, historyId: "pub-#{Date.now()}", version: new Date().toISOString() }
+export saveEntry = (name, snapshot) ->
+    log "saveEntry: #{name}"
+    if noNetwork then return { ok: true }
+    sendCommand("saveEntry", {name, snapshot}, "saveEntryResult")
 
-# Reset to last published checkpoint
-export resetToPublished = ->
-    log "resetToPublished (stub)"
-    ## TODO implement
-    ## Notice: we donot need backend connection for this one directly 
-    ##    we should have the history, or need to load it if not 
-    ##    from the history we know last published data and may reset it.
-    ##    Important here is the flow to "apply" this state 
-    return 
+export publishEntry = (name, version) ->
+    log "publishEntry: #{name} v#{version}"
+    if noNetwork then return { ok: true }
+    sendCommand("publishEntry", {name, version}, "publishEntryResult")
 
-# Get parameter history
-export getHistory = (limit = 20) ->
-    log "getHistory (stub)"
-    # TODO: send via WebSocket
-    # { action: "getHistory", limit }
-    return { history: [] }
-
-# Load specific history entry
-export loadFromHistory = (historyId) ->
-    log "loadFromHistory (stub): #{historyId}"
-    # TODO: send via WebSocket
-    # { action: "loadFromHistory", historyId }
-    return { ok: true }
+export renameEntry = (oldName, newName) ->
+    log "renameEntry: #{oldName} → #{newName}"
+    if noNetwork then return { ok: true }
+    sendCommand("renameEntry", {oldName, newName}, "renameEntryResult")
 
 #endregion
 
@@ -177,6 +203,7 @@ export loadFromHistory = (historyId) ->
 export loadMockData = ->
     log "loadMockData"
     areas.updateAllAreas(cfg.mockAreaData)
+    versioning.downSyncExperimentStore(null)
     dataReceived = true
     return
 

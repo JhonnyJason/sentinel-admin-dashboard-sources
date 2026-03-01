@@ -9,6 +9,7 @@ import * as uiHandles from "./uihandles.js"
 import { getAllAreas } from "./economicareasmodule.js"
 import { ScoringModel } from "./ScoringModel.js"
 import * as versionControl from "./forexscoreversion.js"
+import { snapshot as defaultSnapshot } from "./defaultsnapshot.js"
 
 ############################################################
 # Central orchestrator for the ForexScore Playground
@@ -48,22 +49,42 @@ export initialize = ->
     resultBoxHandle = uiHandles.getHandle("resultBoxHandle")
     resultBoxHandle.setModel(scoringModel)
     resultBoxHandle.addOnChangeListener(paramChanged)
+    resultBoxHandle.setReferenceGetters(
+        -> defaultSnapshot.globalParams.finalWeights
+        -> versionControl.getStore()?.baseSnapshot?.globalParams?.finalWeights
+    )
 
     inflDiffHandle = uiHandles.getHandle("inflDiffHandle")
     inflDiffHandle.setModel(scoringModel)
     inflDiffHandle.addOnChangeListener(paramChanged)
+    inflDiffHandle.setReferenceGetters(
+        -> defaultSnapshot.globalParams.diffCurves.infl
+        -> versionControl.getStore()?.baseSnapshot?.globalParams?.diffCurves?.infl
+    )
 
     mrrDiffHandle = uiHandles.getHandle("mrrDiffHandle")
     mrrDiffHandle.setModel(scoringModel)
     mrrDiffHandle.addOnChangeListener(paramChanged)
+    mrrDiffHandle.setReferenceGetters(
+        -> defaultSnapshot.globalParams.diffCurves.mrr
+        -> versionControl.getStore()?.baseSnapshot?.globalParams?.diffCurves?.mrr
+    )
 
     gdpgDiffHandle = uiHandles.getHandle("gdpgDiffHandle")
     gdpgDiffHandle.setModel(scoringModel)
     gdpgDiffHandle.addOnChangeListener(paramChanged)
+    gdpgDiffHandle.setReferenceGetters(
+        -> defaultSnapshot.globalParams.diffCurves.gdpg
+        -> versionControl.getStore()?.baseSnapshot?.globalParams?.diffCurves?.gdpg
+    )
 
     cotDiffHandle = uiHandles.getHandle("cotDiffHandle")
     cotDiffHandle.setModel(scoringModel)
     cotDiffHandle.addOnChangeListener(paramChanged)
+    cotDiffHandle.setReferenceGetters(
+        -> defaultSnapshot.globalParams.diffCurves.cot
+        -> versionControl.getStore()?.baseSnapshot?.globalParams?.diffCurves?.cot
+    )
 
     # just sorting the Handles and keeping them handy
     baseHandles.makroData = uiHandles.getHandle("baseAreaHandle")
@@ -109,6 +130,10 @@ export setFocusPair = (baseKey, quoteKey) ->
     currentBaseKey = baseKey
     currentQuoteKey = quoteKey
 
+    # Wire reference getters for norm handles (before setArea which triggers refreshUI)
+    wireNormGetters(baseHandles, baseKey)
+    wireNormGetters(quoteHandles, quoteKey)
+
     # Wire controller listeners FIRST (before setArea adds UI listener)
     # This ensures: controller update → UI update (correct order)
     baseLive.addUpdateListener(onBaseLiveUpdate)
@@ -137,6 +162,26 @@ unwireLiveAreas = ->
         handles.unsubscribe()
     for key, handles of quoteHandles
         handles.unsubscribe()
+    return
+
+############################################################
+wireNormGetters = (handles, areaKey) ->
+    handles.inflNorm.setReferenceGetters(
+        -> defaultSnapshot.areaParams[areaKey]?.infl
+        -> versionControl.getStore()?.baseSnapshot?.areaParams?[areaKey]?.infl
+    )
+    handles.mrrNorm.setReferenceGetters(
+        -> defaultSnapshot.areaParams[areaKey]?.mrr
+        -> versionControl.getStore()?.baseSnapshot?.areaParams?[areaKey]?.mrr
+    )
+    handles.gdpgNorm.setReferenceGetters(
+        -> defaultSnapshot.areaParams[areaKey]?.gdpg
+        -> versionControl.getStore()?.baseSnapshot?.areaParams?[areaKey]?.gdpg
+    )
+    handles.cotNorm.setReferenceGetters(
+        -> defaultSnapshot.areaParams[areaKey]?.cot
+        -> versionControl.getStore()?.baseSnapshot?.areaParams?[areaKey]?.cot
+    )
     return
 
 ############################################################

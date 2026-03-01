@@ -15,6 +15,8 @@ import * as nm from "./normmath.js"
 export class DiffHandle
     constructor: (@containerEl, @dKey) ->
         @onChangeListeners = []
+        @getDefaultParams = null
+        @getSavedParams = null
 
         @typeDisplay = @containerEl.querySelector(".diff-type-title")
         @amplificationInput = @containerEl.querySelector(".amplification-input")
@@ -22,8 +24,18 @@ export class DiffHandle
         @quoteValDisplay = @containerEl.querySelector(".diff-quote-val")
         @resultDisplay = @containerEl.querySelector(".diff-result")
 
+        @defaultButton = @containerEl.querySelector(".default-button")
+        @resetButton = @containerEl.querySelector(".reset-button")
+
         @amplificationInput.addEventListener("input", => onInput(@))
+        @defaultButton.addEventListener("click", => applyRef(@, @getDefaultParams))
+        @resetButton.addEventListener("click", => applyRef(@, @getSavedParams))
         @typeDisplay.textContent = @dKey
+
+    setReferenceGetters: (getDefault, getSaved) =>
+        @getDefaultParams = getDefault
+        @getSavedParams = getSaved
+        return
 
     setModel: (model) =>
         @model = model
@@ -43,6 +55,9 @@ export class DiffHandle
         @baseValDisplay.textContent = if isNaN(baseScore) then "--" else baseScore.toFixed(2)
         @quoteValDisplay.textContent = if isNaN(quoteScore) then "--" else quoteScore.toFixed(2)
         @resultDisplay.textContent = if isNaN(r.score) then "--" else r.score.toFixed(2)
+
+        # Toggle default/reset button visibility
+        toggleRefButtons(@)
         return
 
     addOnChangeListener: (fun) =>
@@ -70,7 +85,27 @@ onInput = (I) ->
     p.b = b
     p.d = d
     
-    f() for f in I.onChangeListeners
+    fn() for fn in I.onChangeListeners
+    return
+
+############################################################
+paramsEqual = (a, b) -> JSON.stringify(a) == JSON.stringify(b)
+
+toggleRefButtons = (I) ->
+    p = I.model?.diffParams[I.dKey]
+    return unless p?
+    defP = I.getDefaultParams?()
+    savedP = I.getSavedParams?()
+    I.defaultButton.classList.toggle("visible", defP? and !paramsEqual(p, defP))
+    I.resetButton.classList.toggle("visible", savedP? and !paramsEqual(p, savedP))
+    return
+
+applyRef = (I, getter) ->
+    ref = getter?()
+    return unless ref?
+    p = I.model.diffParams[I.dKey]
+    p[k] = v for k, v of ref
+    fn() for fn in I.onChangeListeners
     return
 
 #endregion
