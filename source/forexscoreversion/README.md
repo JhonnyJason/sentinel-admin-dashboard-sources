@@ -87,14 +87,14 @@ DOM wiring for the version control bar.
 #### Flow A: User edits a parameter
 ```
 Any handle changes param → paramChanged (playgroundcontroller)
-  → scoringModel.recalculate()
+  → ScoreCombinator.recalculate()
   → forexscoreversion.onParamsChanged()
   → forexscoreversion: snapshot = playgroundcontroller.snapshotParams()
   → forexscoreversion: store.updateLiveSnapshot(snapshot)
   → forexscoreversion: updates UI (save button state based on store.isModified())
 ```
 All param handles (NormHandles, DiffHandle, ResultBoxHandle) are wired to paramChanged.
-ScoringModel mutation methods are silent setters — paramChanged is the single recalc trigger.
+ScoreCombinator mutation methods are silent setters — paramChanged is the single recalc trigger.
 
 #### Flow B: User hits Save
 ```
@@ -114,11 +114,11 @@ forexscoreversion: store.open(name) or store.selectVersion(index)
 ### Snapshot/Apply infrastructure (completed in 6.2)
 
 **EconomicArea** — `setParams(p)`: bulk-set normalization params, triggers updateListeners
-**ScoringModel** — `setDiffParams(p)`, `setFinalWeights(w)`: bulk-set global params
+**ScoreCombinator** — `setDiffParams(p)`, `setFinalWeights(w)`: bulk-set global params
 
 **playgroundcontroller:**
-- `snapshotParams()` — reads all liveAreas.copyParams() + scoringModel params → snapshot
-- `applyParams(snapshot)` — writes into all liveAreas + scoringModel, triggers recalc + UI refresh
+- `snapshotParams()` — reads all liveAreas.copyParams() + ScoreCombinator params → snapshot
+- `applyParams(snapshot)` — writes into all liveAreas + ScoreCombinator, triggers recalc + UI refresh
 - `paramChanged` — single recalc entry point, calls `forexscoreversion.onParamsChanged()`
 
 ### Publish flow
@@ -126,7 +126,7 @@ Publish sends a WebSocket command via datamodule. For now we act as if it always
 
 ### Default Snapshot
 Hardcoded in `ExperimentStore.coffee` as `defaultSnapshot()`. Contains all area params
-(from economicareasmodule init values) and global params (ScoringModel constructor defaults).
+(from economicareasmodule init values) and global params (ScoreCombinator constructor defaults).
 Used when creating a "new" experiment (not a copy). Having this hardcoded means we don't
 depend on the playground being initialized to create the first experiment.
 

@@ -7,21 +7,16 @@ import { createLogFunctions } from "thingy-debug"
 ############################################################
 import * as uiHandles from "./uihandles.js"
 import { getAllAreas } from "./economicareasmodule.js"
-import { ScoringModel } from "./ScoringModel.js"
+import { ScoreCombinator } from "./ScoreCombinator.js"
 import * as versionControl from "./forexscoreversion.js"
 import { snapshot as defaultSnapshot } from "./defaultsnapshot.js"
-
-############################################################
-# Central orchestrator for the ForexScore Playground
-# - Manages original and live copies of EconomicAreas
-# - Holds ScoringModel (diff params + final weights + calculation)
-# - Wires UI handles to data with correct listener ordering
-# - Triggers recalculation on changes
+import * as scoreHelper from "./scorehelper.js"
+import * as display from "./forexscoredisplay.js"
 
 ############################################################
 originalAreas = {}  # untouched backend data
 liveAreas = {}      # clones modified by UI
-scoringModel = null
+scoreCombinator = null
 
 ############################################################
 currentBaseKey = null
@@ -32,7 +27,7 @@ quoteHandles = {}
 baseHandles = {}
 
 ############################################################
-export initialize = ->
+export initialize = (cfg) ->
     log "initialize"
 
     # Clone all areas: originals stay untouched, live copies for UI
@@ -43,11 +38,15 @@ export initialize = ->
         # Listen for backend data changes on originals
         area.addUpdateListener(createOriginalUpdateListener(key))
 
-    scoringModel = new ScoringModel()
-    
-    # Wiring up all uiHandles that need the scoringModel    
+    scoreCombinator = new ScoreCombinator()
+    scoreHelper.setScoreCombinator(scoreCombinator)
+
+    # initialize our display
+    display.initialize(cfg, liveAreas)
+
+    # Wiring up all uiHandles that need the scoreCombinator
     resultBoxHandle = uiHandles.getHandle("resultBoxHandle")
-    resultBoxHandle.setModel(scoringModel)
+    resultBoxHandle.setModel(scoreCombinator)
     resultBoxHandle.addOnChangeListener(paramChanged)
     resultBoxHandle.setReferenceGetters(
         -> defaultSnapshot.globalParams.finalWeights
@@ -55,7 +54,7 @@ export initialize = ->
     )
 
     inflDiffHandle = uiHandles.getHandle("inflDiffHandle")
-    inflDiffHandle.setModel(scoringModel)
+    inflDiffHandle.setModel(scoreCombinator)
     inflDiffHandle.addOnChangeListener(paramChanged)
     inflDiffHandle.setReferenceGetters(
         -> defaultSnapshot.globalParams.diffCurves.infl
@@ -63,7 +62,7 @@ export initialize = ->
     )
 
     mrrDiffHandle = uiHandles.getHandle("mrrDiffHandle")
-    mrrDiffHandle.setModel(scoringModel)
+    mrrDiffHandle.setModel(scoreCombinator)
     mrrDiffHandle.addOnChangeListener(paramChanged)
     mrrDiffHandle.setReferenceGetters(
         -> defaultSnapshot.globalParams.diffCurves.mrr
@@ -71,7 +70,7 @@ export initialize = ->
     )
 
     gdpgDiffHandle = uiHandles.getHandle("gdpgDiffHandle")
-    gdpgDiffHandle.setModel(scoringModel)
+    gdpgDiffHandle.setModel(scoreCombinator)
     gdpgDiffHandle.addOnChangeListener(paramChanged)
     gdpgDiffHandle.setReferenceGetters(
         -> defaultSnapshot.globalParams.diffCurves.gdpg
@@ -79,7 +78,7 @@ export initialize = ->
     )
 
     cotDiffHandle = uiHandles.getHandle("cotDiffHandle")
-    cotDiffHandle.setModel(scoringModel)
+    cotDiffHandle.setModel(scoreCombinator)
     cotDiffHandle.addOnChangeListener(paramChanged)
     cotDiffHandle.setReferenceGetters(
         -> defaultSnapshot.globalParams.diffCurves.cot
@@ -113,40 +112,6 @@ export initialize = ->
     quoteHandles.mrrNorm.addOnChangeListener(paramChanged)
     quoteHandles.gdpgNorm.addOnChangeListener(paramChanged)
     quoteHandles.cotNorm.addOnChangeListener(paramChanged)
-    return
-
-############################################################
-export setFocusPair = (baseKey, quoteKey) ->
-    log "setFocusPair: #{baseKey}/#{quoteKey}"
-    # Disconnet from old Areas
-    baseLive = liveAreas[baseKey]
-    quoteLive = liveAreas[quoteKey]
-
-    unless baseLive and quoteLive
-        log "Unknown area key: #{baseKey} or #{quoteKey}"
-        return
-
-    unwireLiveAreas()
-    currentBaseKey = baseKey
-    currentQuoteKey = quoteKey
-
-    # Wire reference getters for norm handles (before setArea which triggers refreshUI)
-    wireNormGetters(baseHandles, baseKey)
-    wireNormGetters(quoteHandles, quoteKey)
-
-    # Wire controller listeners FIRST (before setArea adds UI listener)
-    # This ensures: controller update → UI update (correct order)
-    baseLive.addUpdateListener(onBaseLiveUpdate)
-    quoteLive.addUpdateListener(onQuoteLiveUpdate)
-
-    # Wire handles to live areas (adds UI listeners second)
-    for key, handles of baseHandles
-        handles.setArea(baseLive)
-    for key, handles of quoteHandles
-        handles.setArea(quoteLive)
-
-    # Wire scoring model to result box
-    scoringModel.setAreas(baseLive, quoteLive)
     return
 
 ############################################################
@@ -202,8 +167,9 @@ createOriginalUpdateListener = (key) -> ->
 ############################################################
 paramChanged = ->
     log "paramChanged"
-    if scoringModel? then scoringModel.recalculate()
+    if scoreCombinator? then scoreCombinator.recalculate()
     versionControl.onParamsChanged()
+    display.scheduleRankingUpdate()
     return
 
 ############################################################
@@ -220,12 +186,52 @@ onAreaUpdate = (areaKey) ->
     live.setModifiedAgainst(original)
 
     # Trigger recalculation
-    scoringModel.recalculate()
+    scoreCombinator.recalculate()
     return
 
 ############################################################
 onQuoteLiveReset = -> resetArea(currentQuoteKey)
 onBaseLiveReset = -> resetArea(currentBaseKey)
+
+############################################################
+#region Exported Functions
+
+############################################################
+export setFocusPair = (baseKey, quoteKey) ->
+    log "setFocusPair: #{baseKey}/#{quoteKey}"
+    # Disconnet from old Areas
+    baseLive = liveAreas[baseKey]
+    quoteLive = liveAreas[quoteKey]
+
+    unless baseLive and quoteLive
+        log "Unknown area key: #{baseKey} or #{quoteKey}"
+        return
+
+    unwireLiveAreas()
+    currentBaseKey = baseKey
+    currentQuoteKey = quoteKey
+
+    # Wire reference getters for norm handles (before setArea which triggers refreshUI)
+    wireNormGetters(baseHandles, baseKey)
+    wireNormGetters(quoteHandles, quoteKey)
+
+    # Wire controller listeners FIRST (before setArea adds UI listener)
+    # This ensures: controller update → UI update (correct order)
+    baseLive.addUpdateListener(onBaseLiveUpdate)
+    quoteLive.addUpdateListener(onQuoteLiveUpdate)
+
+    # Wire handles to live areas (adds UI listeners second)
+    for key, handles of baseHandles
+        handles.setArea(baseLive)
+    for key, handles of quoteHandles
+        handles.setArea(quoteLive)
+
+    # Wire scoring model to result box
+    scoreCombinator.setAreas(baseLive, quoteLive)
+
+    # Ensure display ranking is rendered (needed for initial data load)
+    display.scheduleRankingUpdate()
+    return
 
 ############################################################
 export resetArea = (areaKey) ->
@@ -239,13 +245,12 @@ export resetArea = (areaKey) ->
     return
 
 ############################################################
-# Snapshot all current params (area params + global params)
 export snapshotParams = ->
     snapshot = { areaParams: {}, globalParams: {} }
     for key, area of liveAreas
         snapshot.areaParams[key] = area.copyParams()
-    dp = scoringModel.getDiffParams()
-    fw = scoringModel.getFinalWeights()
+    dp = scoreCombinator.getDiffParams()
+    fw = scoreCombinator.getFinalWeights()
     snapshot.globalParams.diffCurves = {
         infl: { ...dp.infl }, mrr: { ...dp.mrr }
         gdpg: { ...dp.gdpg }, cot: { ...dp.cot }
@@ -255,13 +260,11 @@ export snapshotParams = ->
     }
     return snapshot
 
-############################################################
-# Apply a snapshot: set all area params + global params, trigger refresh
 export applyParams = (snapshot) ->
     log "applyParams"
     # Set global params first (no recalc yet)
-    scoringModel.setDiffParams(snapshot.globalParams.diffCurves)
-    scoringModel.setFinalWeights(snapshot.globalParams.finalWeights)
+    scoreCombinator.setDiffParams(snapshot.globalParams.diffCurves)
+    scoreCombinator.setFinalWeights(snapshot.globalParams.finalWeights)
 
     # Set area params (triggers updateListeners → norm handle refresh + recalculate)
     for key, areaParams of snapshot.areaParams
@@ -269,6 +272,7 @@ export applyParams = (snapshot) ->
     return
 
 ############################################################
-export getWorkingArea = (key) -> liveAreas[key]
-export getScoringModel = -> scoringModel
-export getCurrentPair = -> { base: currentBaseKey, quote: currentQuoteKey }
+export getLiveArea = (key) -> liveAreas[key]
+export getAllLiveAreas = -> liveAreas
+
+#endregion

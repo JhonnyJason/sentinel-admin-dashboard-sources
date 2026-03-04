@@ -134,12 +134,11 @@ export class ResultBoxHandle
 
         rawScore = endResults.st.rawScore
         score = endResults.st.finalScore
-        color = sH.getColorForScore(score)
-        @stResultFrame.style.backgroundColor = color
-
         @stEquationResult.textContent = rawScore.toFixed(2)
         @stResultDisplay.textContent = score
-        @stTrendDisplay.textContent = sH.getTrendTextForScore(score)
+        trend = sH.getTrendForScore(score)
+        @stResultFrame.style.backgroundColor = trend.color
+        @stTrendDisplay.textContent = trend.text
 
         ## medium longer term elements
         @mlInflWeightInput.value = params.ml.i
@@ -156,12 +155,11 @@ export class ResultBoxHandle
 
         rawScore = endResults.ml.rawScore
         score = endResults.ml.finalScore
-        color = sH.getColorForScore(score)
-        @mlResultFrame.style.backgroundColor = color
-
         @mlEquationResult.textContent = rawScore.toFixed(2)
         @mlResultDisplay.textContent = score
-        @mlTrendDisplay.textContent = sH.getTrendTextForScore(score)
+        trend = sH.getTrendForScore(score)
+        @mlResultFrame.style.backgroundColor = trend.color
+        @mlTrendDisplay.textContent = trend.text
 
         ## longer term elements
         @ltInflWeightInput.value = params.lt.i
@@ -178,12 +176,11 @@ export class ResultBoxHandle
 
         rawScore = endResults.lt.rawScore
         score = endResults.lt.finalScore
-        color = sH.getColorForScore(score)
-        @ltResultFrame.style.backgroundColor = color
-        
         @ltEquationResult.textContent = rawScore.toFixed(2)
         @ltResultDisplay.textContent = score
-        @ltTrendDisplay.textContent = sH.getTrendTextForScore(score)
+        trend = sH.getTrendForScore(score)
+        @ltResultFrame.style.backgroundColor = trend.color
+        @ltTrendDisplay.textContent = trend.text
 
         # Toggle default/reset button visibility
         toggleRefButtons(@)

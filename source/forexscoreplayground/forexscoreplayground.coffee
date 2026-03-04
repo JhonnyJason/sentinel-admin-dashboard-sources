@@ -11,11 +11,11 @@ import * as uiHandles from "./uihandles.js"
 import * as controller from "./playgroundcontroller.js"
 
 ############################################################
-export initialize = ->
+export initialize = (cfg) ->
     log "initialize"
     areas.initialize()
     uiHandles.initialize()
-    controller.initialize()
+    controller.initialize(cfg)
     return
 
 ############################################################
@@ -39,11 +39,6 @@ export setFocusPair = (pairLabel) ->
     currentPairLabel = pairLabel
     controller.setFocusPair(baseKey, quoteKey)
     return
-
-############################################################
-export getCurrentPair = ->
-    pair = controller.getCurrentPair()
-    return { ...pair, label: currentPairLabel }
 
 ############################################################
 export refreshCurrentPair = ->

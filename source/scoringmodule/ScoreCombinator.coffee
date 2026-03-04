@@ -1,15 +1,14 @@
 ############################################################
 #region debug
 import { createLogFunctions } from "thingy-debug"
-{log, olog} = createLogFunctions("ScoringModel")
+{log, olog} = createLogFunctions("ScoreCombinator")
 #endregion
 
 ############################################################
-import * as nm from "./normmath.js"
 import { diffParams, finalWeights } from "./defaultsnapshot.js"
 
 ############################################################
-# ScoringModel - Pair-level scoring engine
+# ScoreCombinator
 #
 # Handles:
 # - Diff curve parameters (b, d for each indicator)
@@ -18,13 +17,13 @@ import { diffParams, finalWeights } from "./defaultsnapshot.js"
 # - Update listeners for UI refresh
 #
 # Usage:
-#   model = new ScoringModel()
+#   model = new ScoreCombinator()
 #   model.setAreas(baseArea, quoteArea)
 #   model.addUpdateListener(refreshUI)
 #   # later: model.updateDiffParam("infl", "b", 2.5)
 
 ############################################################
-export class ScoringModel
+export class ScoreCombinator
     constructor: ->
         @updateListeners = []
         @baseArea = null

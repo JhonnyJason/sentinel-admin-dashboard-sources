@@ -5,7 +5,7 @@ Central orchestrator for the ForexScore Playground.
 ## Responsibilities
 
 1. **Working copies of all EconomicAreas** - cloned from originals for user manipulation
-2. **ScoringModel** - diff curve params + final combination weights + calculation
+2. **ScoreCombinator** - diff curve params + final combination weights + calculation
 3. **Update propagation** - notify UI when state changes
 4. **Coordination** with forexscoreversion for history/checkpoints
 
@@ -14,23 +14,21 @@ Central orchestrator for the ForexScore Playground.
 ```
 playgroundcontroller
 ├── originalAreas      # Reference to economicareamodule.getAllAreas()
-├── workingAreas       # { eurozone: EconomicArea, usa: EconomicArea, ... }
+├── liveAreas       # { eurozone: EconomicArea, usa: EconomicArea, ... }
 │                      # Cloned copies - user edits happen here
-├── scoringModel       # ScoringModel instance (see below)
+├── ScoreCombinator       # ScoreCombinator instance (see below)
 └── updateListeners[]  # Notified on any state change
 ```
 
-### Why copy ALL areas?
+### LiveAreas vs OriginalAreas
+While we need a full set to correcly display the any full scoring list, for the purpose of "reseting" to the real original makro-data a separate set which only contains the original makro data is very useful.
 
-Future feature: Display full ranking of all 28 forex pairs with modified parameters.
-Each pair uses two areas (base/quote), so all areas must reflect current working state.
+### ScoreCombinator
 
-### ScoringModel
-
-Handles pair-level scoring (diffs + combination). See `ScoringModel.coffee`.
+Handles pair-level scoring (diffs + combination). Moved to `scoringmodule/ScoreCombinator.coffee`.
 
 ```coffee
-scoringModel = {
+ScoreCombinator = {
     diffParams: {
         infl: { b: 1.0, d: 1.0 }   # cubic diff curve params
         mrr:  { b: 1.0, d: 1.0 }
@@ -63,8 +61,8 @@ workingAreas (user manipulates these)
         │    → EconomicArea.updateData()
         │    → area fires listeners
         │    → playgroundcontroller.onAreaChanged()
-        │    → scoringModel.recalculate()
-        │    → scoringModel fires listeners
+        │    → ScoreCombinator.recalculate()
+        │    → ScoreCombinator fires listeners
         │    → ResultBoxHandle/DiffHandle refresh
         │
         └──► Reset → copyFromOriginal(areaKey)
@@ -76,16 +74,15 @@ workingAreas (user manipulates these)
 ### State Access
 
 ```coffee
-getWorkingArea(key)      # Get working copy of area
-getAllWorkingAreas()     # Get all working areas
-getScoringModel()        # Get ScoringModel instance
+getLiveArea(key)      # Get working copy of area
+getAllLiveAreas()     # Get all working areas
+getScoreCombinator()        # Get ScoreCombinator instance
 ```
 
 ### Focus Pair
 
 ```coffee
 setFocusPair(baseKey, quoteKey)  # Set current pair, triggers recalculation
-getCurrentPair()                  # Get current { base, quote } keys
 ```
 
 ### Reset
@@ -106,9 +103,9 @@ removeUpdateListener(fn)
 
 ### forexscoreplayground
 - Calls `setFocusPair(baseKey, quoteKey)`
-- Gets working areas via `getWorkingArea()`
+- Gets working areas via `getLiveArea()`
 - Passes areas to UI handles
-- Passes scoringModel to ResultBoxHandle/DiffHandle
+- Passes ScoreCombinator to ResultBoxHandle/DiffHandle
 
 ### uihandles / MakroDataHandle
 - Receives EconomicArea instance via `setArea()`
@@ -117,10 +114,10 @@ removeUpdateListener(fn)
 - Area fires listeners → playgroundcontroller recalculates
 
 ### uihandles / ResultBoxHandle / DiffHandle
-- Receives ScoringModel via `setModel()`
+- Receives ScoreCombinator via `setModel()`
 - Displays scoring results
-- On input: calls `scoringModel.updateDiffParam()` or `updateFinalWeight()`
-- ScoringModel fires listeners → handle refreshes
+- On input: calls `ScoreCombinator.updateDiffParam()` or `updateFinalWeight()`
+- ScoreCombinator fires listeners → handle refreshes
 
 ### forexscoreversion
 - Reads current state for saving checkpoints

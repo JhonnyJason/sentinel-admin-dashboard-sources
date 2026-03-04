@@ -14,9 +14,9 @@ export modulesToDebug = {
     # economicareasmodule: true
     # EconomicArea: true
     # fouriermodule: true
-    forexscoreversion: true
-    forexscoreplayground: true
-    QuadNormHandle: true
+    # forexscoreversion: true
+    # forexscoreplayground: true
+    # QuadNormHandle: true
     # summaryframemodule: true
     # currencytrendframemodule: true
     # marketdatamodule: true
@@ -24,6 +24,7 @@ export modulesToDebug = {
     # scimodule: true
     # navtriggers: true
     # scimodule: true
+    # scoringmodule: true
     # scorehelper: true
     # seasonality: true
     # seasonalityframemodule: true

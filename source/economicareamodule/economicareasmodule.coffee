@@ -1,11 +1,11 @@
 ############################################################
-#region debugmakrodatahandle
+#region economicareasmodule
 import { createLogFunctions } from "thingy-debug"
 {log, olog} = createLogFunctions("economicareasmodule")
 #endregion
 
 ############################################################
-import * as focusPairModule from "./focuspairmodule.js"
+import * as playground from "./forexscoreplayground.js"
 import { areaParams } from "./defaultsnapshot.js"
 import { EconomicArea } from "./EconomicArea.js"
 
@@ -124,5 +124,5 @@ export updateAllAreas = (data) ->
         else log "No Economic Area by key: #{key}"
 
     # Loaded CurrentPair needs the update
-    focusPairModule.refreshCurrentPair()
+    playground.refreshCurrentPair()
     return

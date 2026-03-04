@@ -82,7 +82,6 @@ forexscoreplayground/
 ├── uihandles.coffee            # Handle instantiation
 ├── MakroDataHandle.coffee
 ├── ResultBoxHandle.coffee
-├── normmath.coffee             # Pure math: param conversions (peak/steepness ↔ a,b,c)
 ├── QuadNormHandle.coffee
 ├── MrrNormHandle.coffee
 ├── CotNormHandle.coffee
@@ -105,7 +104,6 @@ forexscoreplayground/
 **Complete:**
 - All Pug structures defined
 - Styles for makro-el and result-el
-- `normmath.coffee` - param conversion utilities (extracted from deprecated scoringmodule)
 - `QuadNormHandle` - full implementation
 - `MrrNormHandle` - full implementation
 

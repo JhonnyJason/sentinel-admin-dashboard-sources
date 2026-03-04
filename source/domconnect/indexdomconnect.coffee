@@ -3,6 +3,10 @@ indexdomconnect = {name: "indexdomconnect"}
 ############################################################
 indexdomconnect.initialize = () ->
     global.content = document.getElementById("content")
+    global.forexscoredisplay = document.getElementById("forexscoredisplay")
+    global.shortTermCol = document.getElementById("short-term-col")
+    global.mediumLongTermCol = document.getElementById("medium-long-term-col")
+    global.longTermCol = document.getElementById("long-term-col")
     global.resultsArea = document.getElementById("results-area")
     global.baseArea = document.getElementById("base-area")
     global.quoteArea = document.getElementById("quote-area")
