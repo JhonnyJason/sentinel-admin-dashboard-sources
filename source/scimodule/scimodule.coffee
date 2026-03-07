@@ -18,49 +18,15 @@ import { defaultSymbols } from "./defaultsymbols.js"
 
 ############################################################
 #region Requet URLs
-urlRegister = urlAccessManager+"/register"
-urlLogin = urlAccessManager+"/login"
-urlLoginX = urlAccessManager+"/loginX"
-urlLogout = urlAccessManager+"/logout"
-urlRefreshSession = urlAccessManager+"/refreshSession"
-urlPasswordReset = urlAccessManager+"/requestPasswordReset"
-urlUpdateEmail = urlAccessManager+"/updateEmail"
-urlUpdatePasword = urlAccessManager+"/updatePassword"
-urlDeleteAccount = urlAccessManager+"/deleteAccount"
-
 urlGetData = urlDatahub+"/getEODHLCData"
-urlRegisterAdmin = urlAccessManager+"/registerAdmin"
+urlGetSymbolOptions = urlDatahub+"/getSymbolOptions"
 
+urlRegisterAdmin = urlAccessManager+"/registerAdmin"
+urlGenerateAdminOTC = urlAccessManager+"/generateAdminOTC"
 #endregion
 
 ############################################################
 #region Schema Validators
-validateEmail = createValidator(STRINGEMAIL)
-validateAuthCode = createValidator(STRINGHEX32)
-
-############################################################
-validateLoginArgs = createValidator({
-    email: STRINGEMAIL,
-    passwordSH: STRINGHEX64
-})
-
-validateLoginXArgs = createValidator({
-    email: STRINGEMAIL,
-    passwordSHX: STRINGHEX64
-})
-
-validateUpdateEmailArgs = createValidator({
-    newEmail: STRINGEMAIL
-    email: STRINGEMAIL,
-    passwordSH: STRINGHEX64
-})
-validateUpdatePasswordArgs = createValidator({
-    newPasswordSH: STRINGHEX64
-    email: STRINGEMAIL,
-    passwordSH: STRINGHEX64
-})
-
-
 validateGetDataArgs = createValidator({
     authCode: STRINGHEX32,
     dataKey: NONEMPTYSTRING,
@@ -73,7 +39,6 @@ validateGetSymbolOptionsArgs = createValidator({
     limit: NUMBER
 })
 #endregion
-
 
 ############################################################
 waitMS = (ms) -> await new Promise(((rslv) -> setTimeout((() -> rslv()), ms)))
@@ -107,81 +72,31 @@ request  = (url, args) ->
     return
 
 ############################################################
-export register = (email) ->
-    log "register"
-    # throw new Error("Error on Purpose!") ## TODO remove
-    # return ## TODO remove
-
-    err = validateEmail(email)
-    if err then throw new Error("Invalid Email!")
-    await request(urlRegister, email)
-    return
-
-############################################################
 export registerAdmin = (payload) ->
     log "registerAdmin"
-    await waitMS(3000)
-    # await request(urlRegisterAdmin, payload)
+    # await waitMS(3000)
+    await request(urlRegisterAdmin, payload)
     return
 
 ############################################################
-export login = (email, passwordSH) ->
-    log "login"
-    args = { email, passwordSH }
-    err = validateLoginArgs(args)
-    if err then throw new Error("Invalid Login Arguments!")
-    return await request(urlLogin, args)
-
-export loginX = (email, passwordSHX) ->
-    args = { email, passwordSHX }
-    err = validateLoginXArgs(args)
-    if err then throw new Error("Invalid LoginX Arguments!")
-    return await request(urlLoginX, args)
-
-export refreshSession = (authCode) ->
-    log "refreshSession"
-    err = validateAuthCode(authCode)
-    if err then throw new Error("Invalid authCode!")
-    return await request(urlRefreshSession, authCode)
-
-export logout = (authCode) ->
-    log "logout"
-    err = validateAuthCode(authCode)
-    if err then throw new Error("Invalid authCode!")
-    return await request(urlLogout, authCode)
-
-############################################################
-export requestPasswordReset = (email) ->
-    log "requestPasswordReset"    
-    err = validateEmail(email)
-    if err then throw new Error("Invalid Email!")
-    await request(urlPasswordReset, email)
+export generateAdminOTC = (payload) ->
+    log "generateAdminOTC"
+    # await waitMS(3000)
+    await request(urlGenerateAdminOTC, payload)
     return
-
-export updateEmail = (newEmail, email, passwordSH) ->
-    log "updateEmail"
-    args = { newEmail, email, passwordSH }
-    err = validateUpdateEmailArgs(args)
-    if err then throw new Error("Invalid updateEmail args!")
-    return await request(urlUpdateEmail, args)
-
-export updatePassword = (newPasswordSH, email, passwordSH) ->
-    log "updatePassword"
-    args = { newPasswordSH, email, passwordSH }
-    err = validateUpdatePasswordArgs(args)
-    if err then throw new Error("Invalid updatePassword args!")
-    return await request(urlUpdatePasword, args)
 
 
 ############################################################
 export getEodData = (dataKey, yearsBack) ->
     log "getEodData"    
-    authCode = getAuthCode()
-    args = { authCode, dataKey, yearsBack }
-    err = validateGetDataArgs(args)
-    # if err then log getErrorMessage(err)
-    if err then throw new Error("Invalid getData args!")
-    return await request(urlGetData, args)
+    ## TODO reimplement for Admin
+
+    # authCode = getAuthCode()
+    # args = { authCode, dataKey, yearsBack }
+    # err = validateGetDataArgs(args)
+    # # if err then log getErrorMessage(err)
+    # if err then throw new Error("Invalid getData args!")
+    # return await request(urlGetData, args)
     # resultSchema: {
     #     meta: {
     #         startDate: NONEMPTYSTRING,
@@ -195,13 +110,14 @@ export getEodData = (dataKey, yearsBack) ->
 ############################################################
 export getSymbolOptions = (query, limit) ->
     log "getSymbolOptions"   
-    authCode = getAuthCode()
-    args = { authCode, query, limit }
-    err = validateGetSymbolOptionsArgs(args)
-    # if err then log getErrorMessage(err)
-    if err then throw new Error("Invalid getData args!")
-    # return await request(urlGetSymbolOptions, args)
+    ## TODO reimplement for Admin
+    # authCode = getAuthCode()
+    # args = { authCode, query, limit }
+    # err = validateGetSymbolOptionsArgs(args)
+    # # if err then log getErrorMessage(err)
+    # if err then throw new Error("Invalid getData args!")
+    # # return await request(urlGetSymbolOptions, args)
     
-    ## Sample return
-    return await new Promise (rslv) ->
-        setTimeout((() -> rslv(defaultSymbols)), 500)
+    # ## Sample return
+    # return await new Promise (rslv) ->
+    #     setTimeout((() -> rslv(defaultSymbols)), 500)
