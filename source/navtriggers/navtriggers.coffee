@@ -17,6 +17,10 @@ export toAuth = ->
     log "toAuth"
     return nav.toBase("auth")
 
+export toAccount = ->
+    log "toAccount"
+    return nav.toBase("account")
+
 export toForexscore = ->
     log "toForexscore"
     return nav.toBase("forexscore")

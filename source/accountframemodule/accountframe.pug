@@ -1,0 +1,16 @@
+//- accountframe structure
+#accountframe
+    h1 Account
+        
+    #account-status-key-available Schlüßel verfügbar
+
+    #migration-retrieval-form
+        label email:
+        input#migration-email-input(type="email" placeholder="Deine Email Adresse...")
+        label PIN:
+        input#migration-pin-input(type="text" placeholder="9999" autocomplete="off")
+        button#migration-retrieval-button.click-button Okay
+        
+    form#account-management
+        button#migration-button.click-button Account Migrieren
+        button#deletion-button.click-button Account Löschen

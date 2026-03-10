@@ -25,7 +25,7 @@ pendingRequests = {}  # responseType → { resolve, reject, timer }
 ############################################################
 export initialize = (cfg) ->
     log "initialize"
-    noNetwork = cfg.noNetwork == true
+    noNetwork = (cfg.noNetwork == true)
     if noNetwork then return
 
     createSocket() 
@@ -53,12 +53,13 @@ export heartbeat = ->
     if !socket? then return createSocket()
 
     if socket.readyState == WebSocket.OPEN
-        if !dataReceived then loadMockData() ## act as if we received data
+        ## only used for testing
+        # if !dataReceived then loadMockData() ## act as if we received data
 
         ## Real action when backend supports our updates
         # Request data if authorized but haven't received yet
-        # if socketAuthorized and !dataReceived
-        #     socket.send("getAllMakroData")
+        if socketAuthorized and !dataReceived
+            socket.send("getAllMakroData")
         return
 
     if socket.readyState == WebSocket.CLOSED

@@ -3,13 +3,14 @@ import { addModulesToDebug } from "thingy-debug"
 ############################################################
 export modulesToDebug = {
 
+    accountframemodule: true
     # authmodule: true
     # authframemodule: true
     # appcoremodule: true
     # backtesting: true
     # chartfun: true
     # comboboxfun: true
-    # datamodule: true
+    datamodule: true
     # datacache: true
     # economicareasmodule: true
     # EconomicArea: true
@@ -21,7 +22,7 @@ export modulesToDebug = {
     # currencytrendframemodule: true
     # marketdatamodule: true
     # sampledata: true
-    # scimodule: true
+    scimodule: true
     # navtriggers: true
     # scimodule: true
     # scoringmodule: true
@@ -30,6 +31,7 @@ export modulesToDebug = {
     # seasonalityframemodule: true
     # symboloptions: true
     # uistatemodule: true
+    
 }
 
 addModulesToDebug(modulesToDebug)

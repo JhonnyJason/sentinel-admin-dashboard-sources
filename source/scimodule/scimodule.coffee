@@ -23,6 +23,8 @@ urlGetSymbolOptions = urlDatahub+"/getSymbolOptions"
 
 urlRegisterAdmin = urlAccessManager+"/registerAdmin"
 urlGenerateAdminOTC = urlAccessManager+"/generateAdminOTC"
+urlRemoveAdminAccess = urlAccessManager+"/removeAdminAccess"
+
 #endregion
 
 ############################################################
@@ -46,13 +48,13 @@ waitMS = (ms) -> await new Promise(((rslv) -> setTimeout((() -> rslv()), ms)))
 ############################################################
 request  = (url, args) ->
     log "request"
+    if typeof args == "string" then body = args
+    else body = JSON.stringify(args)
 
-    options =
-        method: 'POST'
-        mode: 'cors'
-    
-        body: JSON.stringify(args)
+    options = {
+        method: 'POST',  mode: 'cors', body,
         headers: {'Content-Type': 'application/json'}
+    }
 
     try response = await fetch(url, options)
     catch err then throw new Error("Network Error: "+err.message)
@@ -74,17 +76,23 @@ request  = (url, args) ->
 ############################################################
 export registerAdmin = (payload) ->
     log "registerAdmin"
-    # await waitMS(3000)
     await request(urlRegisterAdmin, payload)
     return
 
 ############################################################
 export generateAdminOTC = (payload) ->
     log "generateAdminOTC"
-    # await waitMS(3000)
-    await request(urlGenerateAdminOTC, payload)
+    resp = await request(urlGenerateAdminOTC, payload)
+    return resp.url
+
+############################################################
+export removeAdminAccess = (payload) ->
+    log "removeAdminAccess"
+    await request(urlRemoveAdminAccess, payload)
     return
 
+############################################################
+#region Maybe deprecated code?
 
 ############################################################
 export getEodData = (dataKey, yearsBack) ->
@@ -121,3 +129,5 @@ export getSymbolOptions = (query, limit) ->
     # ## Sample return
     # return await new Promise (rslv) ->
     #     setTimeout((() -> rslv(defaultSymbols)), 500)
+
+#endregion

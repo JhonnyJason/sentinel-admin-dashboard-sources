@@ -10,12 +10,18 @@ import * as triggers from "./navtriggers.js"
 ############################################################
 export initialize = ->
     log "initialize"
+    accountBtn.addEventListener("click", triggers.toAccount)
     forexscoreBtn.addEventListener("click", triggers.toForexscore)
     usermanagementBtn.addEventListener("click", triggers.toUsermanagement)
     speciallinkBtn.addEventListener("click", triggers.toSpeciallink)
     return
 
 ############################################################
+export setAccountState = ->
+    log "setAccountState"
+    sidenav.className = "account"
+    return
+
 export setForexscoreState = ->
     log "setForexscoreState"
     sidenav.className = "forexscore"

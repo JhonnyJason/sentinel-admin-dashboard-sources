@@ -88,17 +88,17 @@ export getAuthenticationState = ->
 export getAuthorizationMessage = ->
     log "getAuthorizationPayload"
     if noKey then return ""
-
     await isReady
+
     payload = {}
     payload.randomHex = createSymKey()
     payload.timestamp = validStamp.create()
-    payload.publicKey = cryptoNode.publicKeyHex
+    payload.publicKey = cryptoNode.id
     payload.signature = ""
-    payloadString = JSON.stringify(payload)
-    sig = await cryptoNode.sign(payloadString)
-    payloadString.replace("signature:\"\"", "signature:\"#{sig}\"")
-    return payloadString
+    msg = JSON.stringify(payload)
+    sig = await cryptoNode.sign(msg)
+    msg = msg.replace('"signature":""', '"signature":"'+sig+'"')
+    return msg
 
 ############################################################
 # Called by authframemodule when user confirms PIN during key setup
@@ -114,7 +114,8 @@ export createNewCredentials = (pin) ->
         log "key pair generated"
 
         # Step 3: Register with server
-        timestamp = Date.now().toString()
+        # timestamp = Date.now().toString()
+        timestamp = validStamp.create()
         payload = { publicKey: publicKeyHex, otc: otcValue, secret, timestamp, signature: "" }
         payloadStr = JSON.stringify(payload)
         signature = await createSignature(payloadStr, secretKeyHex)
@@ -190,6 +191,50 @@ export unlockKey = ->
         log "unlockKey failed: #{err.message}"
         msgBox.error("unlockKey failed: #{err.message}")
         throw new Error("unlockKey failed")
+    return
+
+############################################################
+export  migrateCredentials = (name, pin) ->
+    log "migrateCredentials"
+    if noKey then return "https://sentinel-admin.dotv.ee?otc=fakeotcvalue"
+    await isReady
+
+    try 
+        timestamp = validStamp.create()
+        signature = ""
+        publicKey = cryptoNode.id
+
+        payload = { name, pin, publicKey, timestamp, signature }
+
+        bodyString = JSON.stringify(payload)
+        sig = await cryptoNode.sign(bodyString)
+        bodyString = bodyString.replace('"signature":""', '"signature":"'+sig+'"')
+
+        return await sci.generateAdminOTC(bodyString)
+    catch err
+        msgBox.error("migrateCredentials failed: #{err.message}")
+        throw new Error("migrateCredentials failed")
+    return
+
+export deleteCredentials = ->
+    log "deleteCredentials"
+    if noKey then return ""
+    await isReady
+       
+    try 
+        payload = {}
+        payload.action = "removeAccess"
+        payload.timestamp = validStamp.create()
+        payload.publicKey = cryptoNode.id
+        payload.signature = ""
+        bodyString = JSON.stringify(payload)
+        sig = await cryptoNode.sign(payloadString)
+        bodyString.replace('"signature":""', '"signature":"'+sig'"')
+        await sci.removeAdminAccess(bodyString)
+    catch err
+        msgBox.error("deleteCredentials failed: #{err.message}")
+        throw new Error("deleteCredentials failed")
+    
     return
 
 ############################################################

@@ -24,6 +24,13 @@ currentContext = null
 ############################################################
 #region Base State Application Functions
 
+applyBaseState["account"] = ->
+    content.setAccountState()
+    sideNav.setAccountState()
+    authFrame.hide()
+    header.className = "logged-in"
+    return
+
 applyBaseState["forexscore"] = ->
     content.setForexscoreState()
     sideNav.setForexscoreState()

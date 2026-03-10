@@ -1,3 +1,4 @@
+import * as accountframemodule from "./accountframemodule.js"
 import * as appcoremodule from "./appcoremodule.js"
 import * as authframemodule from "./authframemodule.js"
 import * as authmodule from "./authmodule.js"
@@ -16,6 +17,7 @@ import * as usermanagementmodule from "./usermanagementmodule.js"
 import * as utilsmodule from "./utilsmodule.js"
 
 Modules = {
+    accountframemodule,
     appcoremodule,
     authframemodule,
     authmodule,

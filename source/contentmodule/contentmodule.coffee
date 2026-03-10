@@ -5,6 +5,11 @@ import { createLogFunctions } from "thingy-debug"
 #endregion
 
 ############################################################
+export setAccountState = ->
+    log "setAccountState"
+    content.className = "account"
+    return
+
 export setForexscoreState = ->
     log "setForexscoreState"
     content.className = "forexscore"
