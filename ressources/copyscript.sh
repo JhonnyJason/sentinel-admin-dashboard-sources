@@ -17,6 +17,8 @@ cp sources/ressources/video/* output/video/
 
 cp sources/ressources/favicon/* output/
 cp sources/ressources/manifest/* output/
-cp sources/ressources/jsworker/* output/
+# we donot use jsworkers and the 175.js in jsworkers is the dev version
+# the deployment version for 175.js comes from toolset/build/bundles/deploy/175.js
+# cp sources/ressources/jsworker/* output/
 
 echo 0

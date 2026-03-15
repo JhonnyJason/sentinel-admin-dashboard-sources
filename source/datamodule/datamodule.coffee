@@ -11,9 +11,6 @@ import * as versioning from "./forexscoreversion.js"
 import * as areas from "./economicareasmodule.js"
 
 ############################################################
-# Data state
-
-############################################################
 dataReceived = false
 socketAuthorized = false
 
@@ -21,6 +18,9 @@ socketAuthorized = false
 socket = null
 noNetwork = false
 pendingRequests = {}  # responseType → { resolve, reject, timer }
+
+############################################################
+COMMAND_TIMEOUT_MS = 10000
 
 ############################################################
 export initialize = (cfg) ->
@@ -117,8 +117,8 @@ processAllMakroData = (payload) ->
 requestAllHistory = ->
     log "requestAllHistory"
     try
-        data = await sendCommand("getAllHistory", null, "allHistory")
-        log "Received allHistory"
+        data = await sendCommand("getSnapshotData", null, "snapshotData")
+        log "Received snapshotData"
         versioning.downSyncExperimentStore(data)
     catch err
         log "getAllHistory failed, bootstrapping with defaults"
@@ -147,8 +147,6 @@ destroySocket = ->
     return
 
 ############################################################
-COMMAND_TIMEOUT_MS = 10000
-
 sendCommand = (command, payload, expectedResponseType) ->
     new Promise (resolve, reject) ->
         unless socket? and socket.readyState == WebSocket.OPEN
@@ -159,13 +157,18 @@ sendCommand = (command, payload, expectedResponseType) ->
             socket.send("#{command} #{JSON.stringify(payload)}")
         else
             socket.send(command)
-
-        timer = setTimeout ->
+        
+        requestTimedOut = ->
             if pendingRequests[expectedResponseType]?
                 delete pendingRequests[expectedResponseType]
                 reject(new Error("Timeout waiting for #{expectedResponseType}"))
-        , COMMAND_TIMEOUT_MS
+            return
 
+        timer = setTimeout(requestTimedOut, COMMAND_TIMEOUT_MS) 
+
+        # overwriting previous requests is fine if we clear the previous timeout
+        if pendingRequests[expectedResponseType]? 
+            clearTimeout(pendingRequests[expectedResponseType].timer)
         pendingRequests[expectedResponseType] = { resolve, reject, timer }
         return
 
@@ -173,17 +176,16 @@ sendCommand = (command, payload, expectedResponseType) ->
 export startHeartbeat = -> setInterval(heartbeat, cfg.heartbeatMS)
 
 ############################################################
-#region Admin Actions
-
+#region Admin Actionsq
 export createEntry = (name, snapshot) ->
     log "createEntry: #{name}"
     if noNetwork then return { ok: true }
     sendCommand("createEntry", {name, snapshot}, "createEntryResult")
 
-export saveEntry = (name, snapshot) ->
+export saveEntry = (name, version, snapshot) ->
     log "saveEntry: #{name}"
     if noNetwork then return { ok: true }
-    sendCommand("saveEntry", {name, snapshot}, "saveEntryResult")
+    sendCommand("saveEntry", {name, version, snapshot}, "saveEntryResult")
 
 export publishEntry = (name, version) ->
     log "publishEntry: #{name} v#{version}"
