@@ -47,7 +47,7 @@ export heartbeat = ->
 
     if socket.readyState == WebSocket.OPEN
         # Request data if authorized but haven't received yet
-        if socketAuthorized and !dataReceived then requestMakroData()
+        if socketAuthorized and !dataReceived then requestAllData()
         return
 
     if socket.readyState == WebSocket.CLOSED
@@ -80,7 +80,7 @@ receiveData = (evnt) ->
         if data.type == "authorizationApproved"
             log "Authorization approved"
             socketAuthorized = true
-            if !dataReceived then requestMakroData()
+            if !dataReceived then requestAllData()
             return
 
         # Ignore other messages for now
