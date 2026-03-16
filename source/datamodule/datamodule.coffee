@@ -16,7 +16,6 @@ socketAuthorized = false
 
 ############################################################
 socket = null
-noNetwork = false
 pendingRequests = {}  # responseType → { resolve, reject, timer }
 
 ############################################################
@@ -25,9 +24,6 @@ COMMAND_TIMEOUT_MS = 10000
 ############################################################
 export initialize = (cfg) ->
     log "initialize"
-    noNetwork = (cfg.noNetwork == true)
-    if noNetwork then return
-
     createSocket() 
     return
 
@@ -47,19 +43,11 @@ createSocket = ->
 ############################################################
 export heartbeat = ->
     log "heartbeat"
-    if noNetwork and !dataReceived then loadMockData()
-    if noNetwork then return
-
     if !socket? then return createSocket()
 
     if socket.readyState == WebSocket.OPEN
-        ## only used for testing
-        # if !dataReceived then loadMockData() ## act as if we received data
-
-        ## Real action when backend supports our updates
         # Request data if authorized but haven't received yet
-        if socketAuthorized and !dataReceived
-            socket.send("getAllMakroData")
+        if socketAuthorized and !dataReceived then requestMakroData()
         return
 
     if socket.readyState == WebSocket.CLOSED
@@ -85,45 +73,20 @@ receiveData = (evnt) ->
             pending = pendingRequests[data.type]
             delete pendingRequests[data.type]
             clearTimeout(pending.timer)
-            pending.resolve(data)
+            pending.resolve(data.data)
             return
 
         # Authorization approved → request all data
         if data.type == "authorizationApproved"
             log "Authorization approved"
             socketAuthorized = true
-            socket.send("getAllMakroData")
-            return
-
-        # All makro data received → propagate to areas
-        if data.type == "allMakroData" and !dataReceived
-            log "Received allMakroData"
-            processAllMakroData(data.payload)
+            if !dataReceived then requestMakroData()
             return
 
         # Ignore other messages for now
         log "Ignoring message type: #{data.type}"
 
     catch err then console.error(err)
-    return
-
-processAllMakroData = (payload) ->
-    log "processAllMakroData"
-    areas.updateAllAreas(payload)
-    dataReceived = true
-    requestAllHistory()
-    return
-
-requestAllHistory = ->
-    log "requestAllHistory"
-    try
-        data = await sendCommand("getSnapshotData", null, "snapshotData")
-        log "Received snapshotData"
-        versioning.downSyncExperimentStore(data)
-    catch err
-        log "getAllHistory failed, bootstrapping with defaults"
-        console.error(err)
-        versioning.downSyncExperimentStore(null)
     return
 
 receiveError = (evnt) ->
@@ -172,42 +135,55 @@ sendCommand = (command, payload, expectedResponseType) ->
         pendingRequests[expectedResponseType] = { resolve, reject, timer }
         return
 
+requestAllData = ->
+    log "requestAllData"
+    try
+        makroData = await sendCommand("allMakroData", null, "allData")
+        snapshotData = await sendCommand("allSnapshotData", null, "snapshotData")
+        
+        areas.updateAllAreas(makroData)
+        versioning.downSyncExperimentStore(snapshotData)
+
+        dataReceived = true
+    catch err 
+        console.error "@requestAllData failed: "+err.message
+        console.error "Bootstrapping with Mock Data and Defaults..."
+        areas.updateAllAreas(cfg.mockAreaData)
+        versioning.downSyncExperimentStore(null)
+    return
+
 ############################################################
 export startHeartbeat = -> setInterval(heartbeat, cfg.heartbeatMS)
 
 ############################################################
-#region Admin Actionsq
+#region Admin Actions
 export createEntry = (name, snapshot) ->
     log "createEntry: #{name}"
-    if noNetwork then return { ok: true }
     sendCommand("createEntry", {name, snapshot}, "createEntryResult")
 
 export saveEntry = (name, version, snapshot) ->
     log "saveEntry: #{name}"
-    if noNetwork then return { ok: true }
     sendCommand("saveEntry", {name, version, snapshot}, "saveEntryResult")
 
 export publishEntry = (name, version) ->
     log "publishEntry: #{name} v#{version}"
-    if noNetwork then return { ok: true }
     sendCommand("publishEntry", {name, version}, "publishEntryResult")
 
 export renameEntry = (oldName, newName) ->
     log "renameEntry: #{oldName} → #{newName}"
-    if noNetwork then return { ok: true }
     sendCommand("renameEntry", {oldName, newName}, "renameEntryResult")
 
 #endregion
 
-############################################################
-#region Mock Data (for development without backend)
+# ############################################################
+# #region Mock Data (for development without backend)
 
-# Load mock data into economic areas (simulates backend connection)
-export loadMockData = ->
-    log "loadMockData"
-    areas.updateAllAreas(cfg.mockAreaData)
-    versioning.downSyncExperimentStore(null)
-    dataReceived = true
-    return
+# # Load mock data into economic areas (simulates backend connection)
+# export loadMockData = ->
+#     log "loadMockData"
+#     areas.updateAllAreas(cfg.mockAreaData)
+#     versioning.downSyncExperimentStore(null)
+#     dataReceived = true
+#     return
 
-#endregion
+# #endregion
