@@ -11,6 +11,7 @@ import * as versioning from "./forexscoreversion.js"
 import * as areas from "./economicareasmodule.js"
 
 ############################################################
+requestingData = false
 dataReceived = false
 socketAuthorized = false
 
@@ -137,7 +138,9 @@ sendCommand = (command, payload, expectedResponseType) ->
 
 requestAllData = ->
     log "requestAllData"
+    if requestingData then return
     try
+        requestingData = true
         makroData = await sendCommand("getAllMakroData", null, "allData")
         snapshotData = await sendCommand("getSnapshotData", null, "snapshotData")
         
@@ -145,11 +148,12 @@ requestAllData = ->
         versioning.downSyncExperimentStore(snapshotData)
 
         dataReceived = true
-    catch err 
+    catch err
         console.error "@requestAllData failed: "+err.message
         console.error "Bootstrapping with Mock Data and Defaults..."
         areas.updateAllAreas(cfg.mockAreaData)
         versioning.downSyncExperimentStore(null)
+    finally requestingData = false
     return
 
 ############################################################
