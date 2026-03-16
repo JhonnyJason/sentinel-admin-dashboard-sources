@@ -28,6 +28,7 @@ export initialize = (cfg) ->
     createSocket() 
     return
 
+############################################################
 createSocket = ->
     log "createSocket"
     try

@@ -3,7 +3,7 @@ import { addModulesToDebug } from "thingy-debug"
 ############################################################
 export modulesToDebug = {
 
-    accountframemodule: true
+    # accountframemodule: true
     # authmodule: true
     # authframemodule: true
     # appcoremodule: true
@@ -12,8 +12,8 @@ export modulesToDebug = {
     # comboboxfun: true
     datamodule: true
     # datacache: true
-    # economicareasmodule: true
-    # EconomicArea: true
+    economicareasmodule: true
+    EconomicArea: true
     # fouriermodule: true
     # forexscoreversion: true
     # forexscoreplayground: true
@@ -22,7 +22,7 @@ export modulesToDebug = {
     # currencytrendframemodule: true
     # marketdatamodule: true
     # sampledata: true
-    scimodule: true
+    # scimodule: true
     # navtriggers: true
     # scimodule: true
     # scoringmodule: true
