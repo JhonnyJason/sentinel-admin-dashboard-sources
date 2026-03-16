@@ -16,7 +16,7 @@ import { ThingyCryptoNode } from "thingy-crypto-node"
 import * as validStamp from "validatabletimestamp"
 
 ############################################################
-import { pwdSalt } from "./configmodule.js"
+import { admSalt } from "./configmodule.js"
 import * as qrReader from "./qrreadermodule.js"
 import * as sci from "./scimodule.js"
 import * as triggers from "./navtriggers.js"
@@ -106,7 +106,7 @@ export createNewCredentials = (pin) ->
     log "createNewCredentials"
     try
         # Step 1: Recover secret from OTC + PIN + salt
-        secret = await sha256(otcValue + pin + pwdSalt)
+        secret = await sha256(otcValue + pin + admSalt)
         log "secret recovered"
 
         # Step 2: Generate new key pair

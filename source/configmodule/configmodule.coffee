@@ -21,6 +21,7 @@ export urlDatahub = "https://sentinel-datahub.dotv.ee"
 
 ############################################################
 export pwdSalt = "holderradio!...<3)()0981salty"
+export admSalt =  "eo9pbfr567890pl,+-.,ysw35tltwadh"
 export qrScanNoFilter = true
 
 ############################################################
