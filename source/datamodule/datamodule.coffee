@@ -20,7 +20,7 @@ socket = null
 pendingRequests = {}  # responseType → { resolve, reject, timer }
 
 ############################################################
-COMMAND_TIMEOUT_MS = 10000
+COMMAND_TIMEOUT_MS = 40_000 # 40s
 
 ############################################################
 export initialize = (cfg) ->
