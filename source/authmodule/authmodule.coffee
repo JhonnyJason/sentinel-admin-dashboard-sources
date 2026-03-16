@@ -91,7 +91,7 @@ export getAuthorizationMessage = ->
     await isReady
 
     payload = {}
-    payload.randomHex = createSymKey()
+    payload.randomHex = createSymKey().slice(0,32)
     payload.timestamp = validStamp.create()
     payload.publicKey = cryptoNode.id
     payload.signature = ""
