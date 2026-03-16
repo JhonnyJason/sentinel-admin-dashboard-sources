@@ -41,7 +41,7 @@ migrationFlow = (evnt) ->
     evnt.preventDefault()
     ## Retrieve name + PIN
     { name, pin }  = await retrieveNameAndPin()
-    log name
+    log name # is actually an email  now :-)
     log pin
 
     auth.migrateCredentials(name, pin)

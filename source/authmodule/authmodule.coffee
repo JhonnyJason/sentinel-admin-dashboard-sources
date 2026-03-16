@@ -194,7 +194,7 @@ export unlockKey = ->
     return
 
 ############################################################
-export  migrateCredentials = (name, pin) ->
+export  migrateCredentials = (email, pin) ->
     log "migrateCredentials"
     if noKey then return "https://sentinel-admin.dotv.ee?otc=fakeotcvalue"
     await isReady
@@ -204,7 +204,7 @@ export  migrateCredentials = (name, pin) ->
         signature = ""
         publicKey = cryptoNode.id
 
-        payload = { name, pin, publicKey, timestamp, signature }
+        payload = { email, pin, publicKey, timestamp, signature }
 
         bodyString = JSON.stringify(payload)
         sig = await cryptoNode.sign(bodyString)
