@@ -138,8 +138,8 @@ sendCommand = (command, payload, expectedResponseType) ->
 requestAllData = ->
     log "requestAllData"
     try
-        makroData = await sendCommand("allMakroData", null, "allData")
-        snapshotData = await sendCommand("allSnapshotData", null, "snapshotData")
+        makroData = await sendCommand("getAllMakroData", null, "allData")
+        snapshotData = await sendCommand("getSnapshotData", null, "snapshotData")
         
         areas.updateAllAreas(makroData)
         versioning.downSyncExperimentStore(snapshotData)
