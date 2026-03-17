@@ -188,13 +188,10 @@ refreshUI = ->
 # remoteData: { entries, published } or null (no history / mock mode)
 export downSyncExperimentStore = (remoteData) ->
     log "downSyncExperimentStore"
-    if remoteData?.entries? and Object.keys(remoteData.entries).length > 0
+    if remoteData?.historicEntries? and Object.keys(remoteData.historicEntries).length > 0
         log "We have data - let's hydrate our data store!"
-        store.hydrate(remoteData.entries, remoteData.published)
+        store.hydrate(remoteData.historicEntries, remoteData.published)
     else
-        log "We donot have data... this should not be true"
-        olog remoteData 
-        return
         store = new ExperimentStore()
         name = store.createNew(defaultSnapshot)
         try await data.createEntry(name, defaultSnapshot)
