@@ -50,8 +50,8 @@ saveClicked = ->
     log "saveClicked"
     return unless store?.hasExperiment()
     snapshot = controller.snapshotParams()
-    { name, version } = store.getCurrent()
     store.save(snapshot)
+    { name, version } = store.getCurrent()
     refreshUI()
     try await data.saveEntry(name, version, snapshot)
     catch err then console.error("saveEntry failed:", err)
