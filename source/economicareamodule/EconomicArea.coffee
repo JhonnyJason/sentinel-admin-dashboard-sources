@@ -116,12 +116,17 @@ export class EconomicArea
     ########################################################
     updateData: (d) =>
         log "updateData"
-        olog d
-        @data.infl = parseFloat(d.infl)
+        infl = d.infl || d.hicp
+        @data.infl = parseFloat(infl)
+        
         @data.mrr = parseFloat(d.mrr)
         @data.gdpg = parseFloat(d.gdpg)
-        @data.cot36 = parseFloat(d.cot36)
-        @data.cot6 = parseFloat(d.cot6)
+
+        cot36 = d.cot36 || d.cotIndex36
+        @data.cot36 = parseFloat(cot36)
+        
+        cot6 = d.cot6 || d.cotIndex6
+        @data.cot6 = parseFloat(cot6)
         f() for f in @updateListeners
         return
 
