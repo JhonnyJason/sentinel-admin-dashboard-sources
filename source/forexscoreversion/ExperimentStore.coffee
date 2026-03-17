@@ -180,7 +180,7 @@ export class ExperimentStore
         existing = @experiments
         i = 1
         loop
-            name = "Experiment #{i}"
+            name = "Spielwiese#{i}"
             return name unless existing[name]?
             i++
 

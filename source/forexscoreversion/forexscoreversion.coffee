@@ -89,7 +89,8 @@ createCopyClicked = ->
 playgroundNameChanged = ->
     log "playgroundNameChanged"
     return unless store?.hasExperiment()
-    newName = playgroundNameInput.value.trim()
+    newName = playgroundNameInput.value.trim().replaceAll(" ","")
+    playgroundNameInput.value = newName
     return unless newName
     oldName = store.getCurrent().name
     return if oldName == newName
