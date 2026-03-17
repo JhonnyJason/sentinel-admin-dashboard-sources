@@ -36,12 +36,16 @@ export class MakroDataHandle
         label.textContent = "COT Index (6m):" # one-time set the lable
         @cot6Input = @containerEl.querySelector(".cot6-data .data-input")
         @cot6Input.setAttribute("step", "1")
+        @cot36Input.setAttribute("min", "0")
+        @cot36Input.setAttribute("max", "0")
 
         # COT Index 36m Row
         label = @containerEl.querySelector(".cot36-data .data-label")
         label.textContent = "COT Index (36m):" # one-time set the lable
         @cot36Input = @containerEl.querySelector(".cot36-data .data-input")
         @cot36Input.setAttribute("step", "1")
+        @cot36Input.setAttribute("min", "0")
+        @cot36Input.setAttribute("max", "0")
 
         # Reset Button
         @resetButton = @containerEl.querySelector(".reset-button")
