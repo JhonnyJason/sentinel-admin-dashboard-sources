@@ -15,7 +15,7 @@ export modulesToDebug = {
     economicareasmodule: true
     EconomicArea: true
     # fouriermodule: true
-    # forexscoreversion: true
+    forexscoreversion: true
     # forexscoreplayground: true
     # QuadNormHandle: true
     # summaryframemodule: true

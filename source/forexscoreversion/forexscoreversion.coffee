@@ -186,6 +186,7 @@ refreshUI = ->
 # Called by the dataModule after getAllHistory response.
 # remoteData: { entries, published } or null (no history / mock mode)
 export downSyncExperimentStore = (remoteData) ->
+    log "downSyncExperimentStore"
     if remoteData?.entries? and Object.keys(remoteData.entries).length > 0
         store.hydrate(remoteData.entries, remoteData.published)
     else

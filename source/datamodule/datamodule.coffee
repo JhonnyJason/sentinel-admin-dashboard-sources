@@ -72,6 +72,7 @@ receiveData = (evnt) ->
 
         # Check pending promise-based requests first
         if data.type? and pendingRequests[data.type]?
+            log "found pending request with type: "+data.type
             pending = pendingRequests[data.type]
             delete pendingRequests[data.type]
             clearTimeout(pending.timer)
@@ -142,9 +143,12 @@ requestAllData = ->
     if requestingData then return
     try
         requestingData = true
-        makroData = await sendCommand("getAllMakroData", null, "allData")
-        snapshotData = await sendCommand("getSnapshotData", null, "snapshotData")
-        
+
+        pM = sendCommand("getAllMakroData", null, "allData")
+        pS = sendCommand("getSnapshotData", null, "snapshotData")
+
+        [ makroData, snapshotData ] = await Promise.all([pM, pS])
+
         areas.updateAllAreas(makroData)
         versioning.downSyncExperimentStore(snapshotData)
 
