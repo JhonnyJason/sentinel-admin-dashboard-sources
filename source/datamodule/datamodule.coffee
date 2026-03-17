@@ -150,7 +150,7 @@ requestAllData = ->
         [ makroData, snapshotData ] = await Promise.all([pM, pS])
 
         areas.updateAllAreas(makroData)
-        versioning.downSyncExperimentStore(snapshotData)
+        await versioning.downSyncExperimentStore(snapshotData)
 
         dataReceived = true
     catch err

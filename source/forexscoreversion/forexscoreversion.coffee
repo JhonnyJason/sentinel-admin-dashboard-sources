@@ -192,14 +192,15 @@ export downSyncExperimentStore = (remoteData) ->
         store.hydrate(remoteData.entries, remoteData.published)
     else
         store = new ExperimentStore()
-        store.createNew(defaultSnapshot)
+        name = store.createNew(defaultSnapshot)
+        try await data.createEntry(name, defaultSnapshot)
+        catch err then console.error("@downsyncExperimentStore: data.createEntry failed:", err)
 
     if store.hasExperiment()
         controller.applyParams(store.getCurrentSnapshot())
     downSynced = true
     refreshUI()
     return
-
 
 ############################################################
 # Called by playgroundcontroller when any parameter changes
