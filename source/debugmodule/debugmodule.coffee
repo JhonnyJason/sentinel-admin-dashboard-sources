@@ -21,6 +21,7 @@ export modulesToDebug = {
     # summaryframemodule: true
     # currencytrendframemodule: true
     # marketdatamodule: true
+    MakroDataHandle: true
     # sampledata: true
     # scimodule: true
     # navtriggers: true

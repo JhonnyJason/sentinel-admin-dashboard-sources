@@ -116,6 +116,7 @@ onInput = (evnt, I, dKey) ->
 
     d = I.area.data # actually we donot need a copy here^^...
     d[dKey] = val
+    olog d
     I.area.updateData(d)
     return
 
