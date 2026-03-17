@@ -80,7 +80,10 @@ export class MakroDataHandle
         return
 
     refreshUI: =>
+        log "refreshUI"
+        log @currencyShort
         d = @area.data # direct access is faster than calling functions
+        olog d
         @inflInput.value = d.infl
         @inflInput.classList.toggle("modified", @area.modified.infl)
         @mrrInput.value = d.mrr
