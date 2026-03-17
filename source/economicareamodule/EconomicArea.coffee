@@ -118,6 +118,7 @@ export class EconomicArea
         log "updateData"
         infl = d.infl || d.hicp
         if isNaN(infl) then log "@#{@currencyShort} inf is NaN!"
+        if !infl then infl = 0
         @data.infl = 0.01 * Math.round(parseFloat(infl) * 100)
         
         if isNaN(d.mrr) then log "@#{@currencyShort} mrr is NaN!"
@@ -128,10 +129,12 @@ export class EconomicArea
 
         cot36 = d.cot36 || d.cotIndex36
         if isNaN(cot36) then log "@#{@currencyShort} cot36 is NaN!"
+        if !cot36 then cot36 = 0
         @data.cot36 = Math.round(parseFloat(cot36))
         
         cot6 = d.cot6 || d.cotIndex6
         if isNaN(cot6) then log "@#{@currencyShort} cot6 is NaN!"
+        if !cot6 then cot6 = 0
         @data.cot6 = Math.round(parseFloat(cot6))
 
         f() for f in @updateListeners
