@@ -115,6 +115,8 @@ export class EconomicArea
 
     ########################################################
     updateData: (d) =>
+        log "updateData"
+        olog d
         @data.infl = parseFloat(d.infl)
         @data.mrr = parseFloat(d.mrr)
         @data.gdpg = parseFloat(d.gdpg)
