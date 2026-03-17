@@ -35,17 +35,17 @@ export class MakroDataHandle
         label = @containerEl.querySelector(".cot6-data .data-label")
         label.textContent = "COT Index (6m):" # one-time set the lable
         @cot6Input = @containerEl.querySelector(".cot6-data .data-input")
-        # @cot6Input.setAttribute("step", "1")
-        # @cot6Input.setAttribute("min", "0")
-        # @cot6Input.setAttribute("max", "0")
+        @cot6Input.setAttribute("step", "1")
+        @cot6Input.setAttribute("min", "0")
+        @cot6Input.setAttribute("max", "100")
 
         # COT Index 36m Row
         label = @containerEl.querySelector(".cot36-data .data-label")
         label.textContent = "COT Index (36m):" # one-time set the lable
         @cot36Input = @containerEl.querySelector(".cot36-data .data-input")
-        # @cot36Input.setAttribute("step", "1")
-        # @cot36Input.setAttribute("min", "0")
-        # @cot36Input.setAttribute("max", "0")
+        @cot36Input.setAttribute("step", "1")
+        @cot36Input.setAttribute("min", "0")
+        @cot36Input.setAttribute("max", "100")
 
         # Reset Button
         @resetButton = @containerEl.querySelector(".reset-button")
@@ -90,9 +90,9 @@ export class MakroDataHandle
         @mrrInput.classList.toggle("modified", @area.modified.mrr)
         @gdpgInput.value = d.gdpg
         @gdpgInput.classList.toggle("modified", @area.modified.gdpg)
-        @cot6Input.value = d.cot6
+        @cot6Input.value = Math.round(d.cot6)
         @cot6Input.classList.toggle("modified", @area.modified.cot6)
-        @cot36Input.value = d.cot36
+        @cot36Input.value = Math.round(d.cot36)
         @cot36Input.classList.toggle("modified", @area.modified.cot36)
 
         @resetButton.classList.toggle("visible", @area.isModified())
