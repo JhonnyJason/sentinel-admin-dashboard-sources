@@ -187,7 +187,7 @@ export unlockKey = ->
         
         
         log "key unlocked successfully"
-        triggers.toHome()
+        await triggers.toHome()
     catch err
         log "unlockKey failed: #{err.message}"
         msgBox.error("unlockKey failed: #{err.message}")
