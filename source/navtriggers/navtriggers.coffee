@@ -15,20 +15,20 @@ export toHome = ->
 ############################################################
 export toAuth = ->
     log "toAuth"
-    return nav.toBase("auth")
+    return nav.toBaseAt("auth", null, 1)
 
 export toAccount = ->
     log "toAccount"
-    return nav.toBase("account")
+    return nav.toBaseAt("account", null, 1)
 
 export toForexscore = ->
     log "toForexscore"
-    return nav.toBase("forexscore")
+    return nav.toBaseAt("forexscore", null, 1)
 
 export toUsermanagement = ->
     log "toUsermanagement"
-    return nav.toBase("usermanagement")
+    return nav.toBaseAt("usermanagement", null, 1)
 
 export toSpeciallink = ->
     log "toSpeciallink"
-    return nav.toBase("speciallink")
+    return nav.toBaseAt("speciallink", null, 1)
