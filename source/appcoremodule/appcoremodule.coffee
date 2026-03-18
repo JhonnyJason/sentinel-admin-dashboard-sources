@@ -57,7 +57,9 @@ setNavState = (navState) ->
     context = navState.context
 
     hasOTC = handleOTCInURL()
-    if hasOTC and baseState != "auth" then return triggers.toAuth()
+    if hasOTC and baseState != "auth" 
+        log 'OTC available but we are not in "auth" state -> toAuth()'
+        return triggers.toAuth()
     
     authState = auth.getAuthenticationState()
     if authState == "keyUnlocked" and baseState == "auth"
@@ -65,7 +67,7 @@ setNavState = (navState) ->
         return triggers.toForexscore()
 
     if authState != "keyUnlocked" and baseState != "auth"
-        log "not authenticated!"
+        log 'Not authenticated and not in "auth" state -> toAuth()'
         return triggers.toAuth()
     
     if baseState == "RootState" then baseState = defaultBaseState
