@@ -227,11 +227,12 @@ export deleteCredentials = ->
         publicKey = cryptoNode.id
         signature = ""
         
-        payload = { action, publicKey, timestamp, signature }
+        cmdObj = { action, publicKey, timestamp, signature }
          
-        bodyString = JSON.stringify(payload)
-        sig = await cryptoNode.sign(bodyString)
-        bodyString = bodyString.replace('"signature":""', '"signature":"'+sig'"')
+        cmdMsg = JSON.stringify(cmdObj)
+        sig = await cryptoNode.sign(cmdMsg)
+        cmdMsg = cmdMsg.replace('"signature":""', '"signature":"'+sig+'"')
+        log "before calling removeAdminAccess..."
         await sci.removeAdminAccess(bodyString)
     catch err
         msgBox.error("deleteCredentials failed: #{err.message}")
