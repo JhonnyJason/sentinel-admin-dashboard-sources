@@ -232,8 +232,7 @@ export deleteCredentials = ->
         cmdMsg = JSON.stringify(cmdObj)
         sig = await cryptoNode.sign(cmdMsg)
         cmdMsg = cmdMsg.replace('"signature":""', '"signature":"'+sig+'"')
-        log "before calling removeAdminAccess..."
-        await sci.removeAdminAccess(bodyString)
+        await sci.removeAdminAccess(cmdMsg)
     catch err
         msgBox.error("deleteCredentials failed: #{err.message}")
         throw new Error("deleteCredentials failed")
