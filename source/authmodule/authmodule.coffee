@@ -234,6 +234,17 @@ export deleteCredentials = ->
         sig = await cryptoNode.sign(cmdMsg)
         cmdMsg = cmdMsg.replace('"signature":""', '"signature":"'+sig+'"')
         await sci.removeAdminAccess(cmdMsg)
+
+        ## Actually delete the credentials and log out
+        otcValue = null
+        keyInfo = null
+        cryptoNode = null
+        setReady = null
+        isReady = new Promise(((rslv) -> setReady = rslv ))
+
+        localStorage.removeItem(KEY_INFO_KEY)
+
+        await triggers.toHome()
     catch err
         msgBox.error("deleteCredentials failed: #{err.message}")
         throw new Error("deleteCredentials failed")
