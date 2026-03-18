@@ -6,7 +6,7 @@ export modulesToDebug = {
     # accountframemodule: true
     authmodule: true
     # authframemodule: true
-    # appcoremodule: true
+    appcoremodule: true
     # backtesting: true
     # chartfun: true
     # comboboxfun: true
@@ -25,7 +25,7 @@ export modulesToDebug = {
     # sampledata: true
     # scimodule: true
     # navtriggers: true
-    scimodule: true
+    # scimodule: true
     # scoringmodule: true
     # scorehelper: true
     # seasonality: true
