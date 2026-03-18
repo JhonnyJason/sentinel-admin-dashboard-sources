@@ -199,7 +199,7 @@ export  migrateCredentials = (email, pin) ->
     if noKey then return "https://sentinel-admin.dotv.ee?otc=fakeotcvalue"
     await isReady
 
-    try 
+    try
         timestamp = validStamp.create()
         signature = ""
         publicKey = cryptoNode.id
@@ -221,15 +221,17 @@ export deleteCredentials = ->
     if noKey then return ""
     await isReady
        
-    try 
-        payload = {}
-        payload.action = "removeAccess"
-        payload.timestamp = validStamp.create()
-        payload.publicKey = cryptoNode.id
-        payload.signature = ""
+    try
+        timestamp = validStamp.create()
+        action = "removeAccess"
+        publicKey = cryptoNode.id
+        signature = ""
+        
+        payload = { action, publicKey, timestamp, signature }
+         
         bodyString = JSON.stringify(payload)
-        sig = await cryptoNode.sign(payloadString)
-        bodyString.replace('"signature":""', '"signature":"'+sig'"')
+        sig = await cryptoNode.sign(bodyString)
+        bodyString = bodyString.replace('"signature":""', '"signature":"'+sig'"')
         await sci.removeAdminAccess(bodyString)
     catch err
         msgBox.error("deleteCredentials failed: #{err.message}")
