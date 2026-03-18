@@ -185,7 +185,6 @@ export unlockKey = ->
 
         throw new Error("Key unlock failed") unless cryptoNode?
         
-        
         log "key unlocked successfully"
         await triggers.toHome()
     catch err

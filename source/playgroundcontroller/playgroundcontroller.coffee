@@ -242,6 +242,9 @@ export resetArea = (areaKey) ->
 
     # Copy original data back to live area (triggers updateListeners)
     live.updateData(original.copyData())
+
+    # Ensure display ranking is rendered (needed for initial data load)
+    display.scheduleRankingUpdate()
     return
 
 ############################################################
@@ -269,6 +272,9 @@ export applyParams = (snapshot) ->
     # Set area params (triggers updateListeners → norm handle refresh + recalculate)
     for key, areaParams of snapshot.areaParams
         liveAreas[key]?.setParams(areaParams)
+
+    # Ensure display ranking is rendered
+    display.scheduleRankingUpdate()
     return
 
 ############################################################
