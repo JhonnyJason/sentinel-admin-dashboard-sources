@@ -148,7 +148,8 @@ export createNewCredentials = (pin) ->
         log "credentials created successfully"
         setReady()
         
-        triggers.toHome()
+        await triggers.toHome()
+        log "should have transitioned to defaultBaseState"
     catch err
         msgBox.error("createNewCredentials failed: #{err.message}")
         throw new Error("createNewCredentials failed")

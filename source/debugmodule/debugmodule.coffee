@@ -24,7 +24,7 @@ export modulesToDebug = {
     # MakroDataHandle: true
     # sampledata: true
     # scimodule: true
-    # navtriggers: true
+    navtriggers: true
     # scimodule: true
     # scoringmodule: true
     # scorehelper: true
