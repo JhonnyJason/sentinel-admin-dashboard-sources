@@ -4,9 +4,9 @@ import { addModulesToDebug } from "thingy-debug"
 export modulesToDebug = {
 
     # accountframemodule: true
-    authmodule: true
+    # authmodule: true
     # authframemodule: true
-    appcoremodule: true
+    # appcoremodule: true
     # backtesting: true
     # chartfun: true
     # comboboxfun: true
@@ -22,14 +22,16 @@ export modulesToDebug = {
     # currencytrendframemodule: true
     # marketdatamodule: true
     # MakroDataHandle: true
+    paymentprovidersmodule: true
     # sampledata: true
     # scimodule: true
-    navtriggers: true
+    # navtriggers: true
     # scimodule: true
     # scoringmodule: true
     # scorehelper: true
     # seasonality: true
     # seasonalityframemodule: true
+    stripeconnectmodule: true
     # symboloptions: true
     # uistatemodule: true
     

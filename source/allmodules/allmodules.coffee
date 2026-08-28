@@ -8,10 +8,12 @@ import * as datamodule from "./datamodule.js"
 import * as debugmodule from "./debugmodule.js"
 import * as forexscoreframemodule from "./forexscoreframemodule.js"
 import * as messageboxmodule from "./messageboxmodule.js"
+import * as paymentprovidersmodule from "./paymentprovidersmodule.js"
 import * as qrreadermodule from "./qrreadermodule.js"
 import * as scimodule from "./scimodule.js"
 import * as sidenavmodule from "./sidenavmodule.js"
 import * as speciallinkframemodule from "./speciallinkframemodule.js"
+import * as stripeconnectmodule from "./stripeconnectmodule.js"
 import * as uistatemodule from "./uistatemodule.js"
 import * as usermanagementmodule from "./usermanagementmodule.js"
 import * as utilsmodule from "./utilsmodule.js"
@@ -27,10 +29,12 @@ Modules = {
     debugmodule,
     forexscoreframemodule,
     messageboxmodule,
+    paymentprovidersmodule,
     qrreadermodule,
     scimodule,
     sidenavmodule,
     speciallinkframemodule,
+    stripeconnectmodule,
     uistatemodule,
     usermanagementmodule,
     utilsmodule,

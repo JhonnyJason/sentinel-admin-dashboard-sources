@@ -11,6 +11,7 @@ import * as triggers from "./navtriggers.js"
 export initialize = ->
     log "initialize"
     accountBtn.addEventListener("click", triggers.toAccount)
+    paymentprovidersBtn.addEventListener("click", triggers.toPaymentproviders)
     forexscoreBtn.addEventListener("click", triggers.toForexscore)
     usermanagementBtn.addEventListener("click", triggers.toUsermanagement)
     speciallinkBtn.addEventListener("click", triggers.toSpeciallink)
@@ -20,6 +21,11 @@ export initialize = ->
 export setAccountState = ->
     log "setAccountState"
     sidenav.className = "account"
+    return
+
+export setPaymentprovidersState = ->
+    log "setPaymentprovidersState"
+    sidenav.className = "paymentproviders"
     return
 
 export setForexscoreState = ->

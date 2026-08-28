@@ -10,6 +10,11 @@ export setAccountState = ->
     content.className = "account"
     return
 
+export setPaymentprovidersState = ->
+    log "setPaymentprovidersState"
+    content.className = "paymentproviders"
+    return
+
 export setForexscoreState = ->
     log "setForexscoreState"
     content.className = "forexscore"

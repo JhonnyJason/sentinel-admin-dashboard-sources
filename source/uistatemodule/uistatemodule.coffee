@@ -31,6 +31,13 @@ applyBaseState["account"] = ->
     header.className = "logged-in"
     return
 
+applyBaseState["paymentproviders"] = ->
+    content.setPaymentprovidersState()
+    sideNav.setPaymentprovidersState()
+    authFrame.hide()
+    header.className = "logged-in"
+    return
+
 applyBaseState["forexscore"] = ->
     content.setForexscoreState()
     sideNav.setForexscoreState()

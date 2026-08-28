@@ -21,6 +21,10 @@ export toAccount = ->
     log "toAccount"
     return nav.toBaseAt("account", null, 1)
 
+export toPaymentproviders = ->
+    log "toPaymentproviders"
+    return nav.toBaseAt("paymentproviders", null, 1)
+
 export toForexscore = ->
     log "toForexscore"
     return nav.toBaseAt("forexscore", null, 1)

@@ -8,7 +8,8 @@ module.exports = {
             "thingy-byte-utils": "^0.0.8",
             "thingy-crypto-node": "^0.0.2",
             "thingy-schema-validate": "^0.0.7",
-            "uplot": "^1.6.32"
+            "uplot": "^1.6.32",
+            "validatabletimestamp": "^0.0.5"
         }
     }
 }

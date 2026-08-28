@@ -1,5 +1,5 @@
 ############################################################
-export appVersion = "v0.0.3"
+export appVersion = "v0.0.4"
 export heartbeatMS = 6_000 # ~12s
 
 ############################################################
@@ -10,14 +10,16 @@ export heartbeatMS = 6_000 # ~12s
 export urlAccessManager = "https://sentinel-access-manager.dotv.ee"
 export urlWebsocketBackend = "https://sentinel-backend.dotv.ee"
 export urlDatahub = "https://sentinel-datahub.dotv.ee"
-
-# export urlWebsocketBackend = "wss://sentinel-backend.dotv.ee/"
+## TODO specify teting URL then specify live URL
+# export urlDotVStripe = "https://" #
 
 # local testing
 # export urlAccessManager = "https://localhost:6999"
 # export urlWebsocketBackend = "http://localhost:3333"
 # export urlWebsocketBackend = "wss://localhost:6999/"
 # export urlWebsocketBackend = "https://localhost:6999/"
+## TODO specify teting URL then specify live URL
+export urlDotVStripe = "http://localhost:3366" #
 
 ############################################################
 export pwdSalt = "holderradio!...<3)()0981salty"
@@ -164,6 +166,9 @@ export mockAreaData =
             gdpg: { a: 1.313, b: 1.125, c: -0.188 }
             cot: { f: 1.0 }
 
+export mockedStripeState = {
+    id: "not-connected"
+}
 # Currency short to area key mapping
 export currencyToArea =
     EUR: "eurozone"
