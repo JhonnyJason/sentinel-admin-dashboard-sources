@@ -1,24 +1,43 @@
+include ../preloader/preloader-mixins.pug
+
 //- usermanagement structure
 #paymentprovidersframe
     //- section#stripe-management.not-connected
     //- section#stripe-management.connected
-    section#stripe-management
+    section#stripe-management.not-stripe-service-response
         h1 Stripe
 
+        #no-connection-message
+            p.error Es konnte <b>keine Verbindung zum Stripe Connect Service</b> aufgebaut werden. 
+            p Versuchen sie es mit einem Browser Refresh und melden Sie den Fehler falls dieser weiterhin bestehn bleibt.         
+            
         #stripe-not-connected-status Kein Konto verbunden
         #stripe-connected-status Stripe Konto verbunden
-        #stripe-connecting-status-not Nicht onboarded
-        #stripe-connecting-status Onboarding gestartet...
-        #stripe-connected-status-onboarded Onboarding abgeschlossen
-        #stripe-connected-verifying Wird verifiziert
-        #stripe-connected-not-verified Verifizierung fehlgeschlagen
-        #stripe-connected-verified Verifiziert
-                
+        #stripe-not-onboarded-status Nicht onboarded
+        #stripe-onboarded-status Onboarding abgeschlossen
+        #stripe-action-required-status Weitere Eingaben benötigt
+        #stripe-verifying-status Wird verifiziert
+        #stripe-blocked-status Verifizierung fehlgeschlagen
+        #stripe-operational-status Verifiziert
+
+        #stripe-new-requirements-status Es gibt neue Compliance Anforderungen
+        
+        #stripe-can-charge-status Zahlungen können akzeptiert werden
+        #stripe-can-not-charge-status Es können keine Zahlungen akzeptiert werden
+        
+        #stripe-can-payout-status Auszahlungen sind möglich
+        #stripe-can-not-payout-status Sie können keine Auzahlungen tätigen
+
+        
+        #stripe-disabled-reason 
+
         form#no-account-form
             input#account-email-input(type="email" placeholder="Email für Account..." autocomplete="email" required)
             button#stripe-connect-button.click-button Stripe Konto Verbinden / Eröffnen
         
         button#stripe-dashboard-button.click-button Zum Stripe Dashboard
-        button#stripe-onboard-button.click-button Stripe Onboarding starten
-        button#stripe-update-button.click-button Stripe Konto Update
-        button#stripe-continue-button.click-button Oboarding fortsetzen
+        button#stripe-onboard-button.click-button Zum Stripe Onboarding
+        button#stripe-update-button.click-button Weitere Eingaben tätigen
+
+        #stripe-request-preloader
+            +preloader("spinner.1", "spinner-1")

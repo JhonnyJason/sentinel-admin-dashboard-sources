@@ -1,8 +1,4 @@
 // usermanagement styles
-cd-positive = #1b2
-cd-negative = #c21
-cd-attention = #ca3
-
 #paymentprovidersframe
     width 100%
     text-align left
@@ -12,6 +8,9 @@ cd-attention = #ca3
     max-width: 600px
     h1
         margin-bottom: 20px
+
+    .error
+        color cd-danger-red
 
     .click-button
         display none
@@ -37,79 +36,197 @@ cd-attention = #ca3
 
     input:focus
         border-bottom solid 1px cd-dark-blue
-
+    
+    #no-connection-message
     #no-account-form
         display none
         .click-button
             display block
 
+#stripe-request-preloader
+    display none
+    margin auto
+    width 50px
+    .preloader
+        width 50px
+        height 50px
+        color #000
+
+#stripe-management.not-stripe-service-response
+    #no-connection-message
+        display block
+
 #account-email-input
     margin-top 50px
 
-#stripe-connected-status
-#stripe-connected-status-onboarded
-#stripe-connected-verified
-#stripe-connecting-status
-#stripe-connected-verifying
-#stripe-connecting-status-not
 #stripe-not-connected-status
-#stripe-connected-not-verified
+#stripe-connected-status
+#stripe-can-charge-status
+#stripe-can-not-charge-status
+#stripe-can-payout-status
+#stripe-can-not-payout-status
+#stripe-not-onboarded-status
+#stripe-onboarded-status
+#stripe-action-required-status
+#stripe-verifying-status
+#stripe-blocked-status
+#stripe-operational-status
+#stripe-new-requirements-status
     display none
     color white
     text-align: center
     padding 12px 0
     border-radius 3px
+    margin-bottom 5px
+
+
+#stripe-new-requirements-status
+#stripe-can-charge-status
+#stripe-can-not-charge-status
+    margin-top 20px
+
+
+#stripe-disabled-reason
+    color cd-danger-red
 
 
 #stripe-connected-status
-#stripe-connected-status-onboarded
-#stripe-connected-verified
+#stripe-onboarded-status
+#stripe-operational-status
+#stripe-can-payout-status
+#stripe-can-charge-status
     background-color cd-positive
 
-#stripe-connecting-status
-#stripe-connected-verifying
+#stripe-verifying-status
+#stripe-new-requirements-status
     background-color cd-attention
 
-#stripe-connecting-status-not
 #stripe-not-connected-status
-#stripe-connected-not-verified
+#stripe-not-onboarded-status
+#stripe-action-required-status
+#stripe-blocked-status
+#stripe-can-not-charge-status
+#stripe-can-not-payout-status
     background-color: cd-negative
 
 #stripe-connect-button
 #stripe-onboard-button
 #stripe-update-button
-#stripe-continue-button
     background-color cd-button-dark
 
 #stripe-dashboard-button
     // background-color cd-flash
     background-color cd-info
     // background-color #228
-    margin-bottom 50px !important
+    margin-bottom 30px !important
 
 
 
 #stripe-management.not-connected
     #no-account-form
-        display block
     #stripe-not-connected-status
         display block
 
-
-// #stripe-management.connecting-not
-
-#stripe-management.connecting
-    #stripe-continue-button
-        display block
-    #stripe-connecting-status
+#stripe-management.needs-onboarding
+    #stripe-connected-status    
+    #stripe-not-onboarded-status
+    #stripe-onboard-button
         display block
 
-#stripe-management.connected
-    #stripe-dashboard-button
-        display block
-    #stripe-update-button
-        display block
+#stripe-management.verifying
     #stripe-connected-status
+    #stripe-onboarded-status
+    #stripe-verifying-status
+    #stripe-dashboard-button
+    #stripe-can-not-charge-status
+    #stripe-can-not-payout-status
+        display block
+
+#stripe-management.verifying.can-charge
+    #stripe-can-charge-status
+        display block
+    #stripe-can-not-charge-status
+        display none
+
+#stripe-management.verifying.can-payout
+    #stripe-can-payout-status
+        display block
+    #stripe-can-not-payout-status
+        display none
+
+#stripe-management.verifying.attention
+     #stripe-new-requirements-status
+        display block
+
+
+#stripe-management.action-required
+    #stripe-connected-status
+    #stripe-onboarded-status
+    #stripe-action-required-status
+    #stripe-update-button
+    #stripe-dashboard-button
+    #stripe-can-not-charge-status
+    #stripe-can-not-payout-status
+        display block
+
+#stripe-management.action-required.can-charge
+    #stripe-can-charge-status
+        display block
+    #stripe-can-not-charge-status
+        display none
+
+#stripe-management.action-required.can-payout
+    #stripe-can-payout-status
+        display block
+    #stripe-can-not-payout-status
+        display none
+
+
+#stripe-management.blocked
+    #stripe-connected-status
+    #stripe-onboarded-status
+    #stripe-blocked-status
+    #stripe-dashboard-button
+    #stripe-can-not-charge-status
+    #stripe-can-not-payout-status
+        display block
+
+#stripe-management.blocked.can-charge
+    #stripe-can-charge-status
+        display block
+    #stripe-can-not-charge-status
+        display none
+
+#stripe-management.blocked.can-payout
+    #stripe-can-payout-status
+        display block
+    #stripe-can-not-payout-status
+        display none
+
+
+#stripe-management.operational
+    #stripe-connected-status
+    #stripe-onboarded-status
+    #stripe-operational-status
+    #stripe-dashboard-button
+    #stripe-can-not-charge-status
+    #stripe-can-not-payout-status
+        display block
+
+#stripe-management.operational.can-charge
+    #stripe-can-charge-status
+        display block
+    #stripe-can-not-charge-status
+        display none
+
+#stripe-management.operational.can-payout
+    #stripe-can-payout-status
+        display block
+    #stripe-can-not-payout-status
+        display none
+
+#stripe-management.operational.attention
+     #stripe-new-requirements-status
         display block
 
 
@@ -117,3 +234,8 @@ cd-attention = #ca3
     filter grayscale(100%)
     opacity 0.5
     pointer-events: none
+
+    #stripe-request-preloader
+        display block
+
+@import '../preloader/styles.styl'

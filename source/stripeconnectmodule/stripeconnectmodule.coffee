@@ -139,6 +139,7 @@ sendCommand = (command, payload, expectedResponseType) ->
 requestState = ->
     log "requestState"
     if currentState? then return
+
     try
         currentState = "requesting..."
         currentState = await sendCommand("getStripeState", null, "requestedStripeState")
@@ -154,9 +155,14 @@ export startHeartbeat = -> setInterval(heartbeat, cfg.heartbeatMS)
 
 ############################################################
 #region Admin Actions
-export getOnboardingLink = () ->
+export getOnboardingLink = ->
     log "getOnboardingLink"
-    return await sendCommand("getOnboardingLink", null, "onboardingLinkRetrieval")
+    resp = await sendCommand("getOnboardingLink", null, "onboardingLinkRetrieval")
+    olog resp
+    if resp.success then return resp.link
+    else console.error(resp.error)
+    return
+
 
 export createAccount = (email) ->
     log "createAccount"

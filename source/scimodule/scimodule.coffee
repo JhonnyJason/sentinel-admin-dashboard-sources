@@ -25,6 +25,9 @@ urlRegisterAdmin = urlAccessManager+"/registerAdmin"
 urlGenerateAdminOTC = urlAccessManager+"/generateAdminOTC"
 urlRemoveAdminAccess = urlAccessManager+"/removeAdminAccess"
 
+urlGetUserList = urlAccessManager+"/getUserList"
+urlGetUser = urlAccessManager+"/getUser"
+
 #endregion
 
 ############################################################
@@ -90,6 +93,17 @@ export removeAdminAccess = (payload) ->
     log "removeAdminAccess"
     await request(urlRemoveAdminAccess, payload)
     return
+
+############################################################
+export getUserList = (payload) ->
+    log "getUserList"
+    userList =  await request(urlGetUserList, payload)
+    return userList
+
+export getUser = (payload) ->
+    log "getUser"
+    userObj = await request(urlGetUser, payload)
+    return userObj
 
 ############################################################
 #region Maybe deprecated code?

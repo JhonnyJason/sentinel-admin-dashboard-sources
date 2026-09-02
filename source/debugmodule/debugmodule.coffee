@@ -22,7 +22,7 @@ export modulesToDebug = {
     # currencytrendframemodule: true
     # marketdatamodule: true
     # MakroDataHandle: true
-    paymentprovidersmodule: true
+    # paymentprovidersmodule: true
     # sampledata: true
     # scimodule: true
     # navtriggers: true
@@ -31,10 +31,11 @@ export modulesToDebug = {
     # scorehelper: true
     # seasonality: true
     # seasonalityframemodule: true
-    stripeconnectmodule: true
+    # stripeconnectmodule: true
     # symboloptions: true
+    tablerendermodule: true
     # uistatemodule: true
-    
+    usermanagementmodule: true
 }
 
 addModulesToDebug(modulesToDebug)

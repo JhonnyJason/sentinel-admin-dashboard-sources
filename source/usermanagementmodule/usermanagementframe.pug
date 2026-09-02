@@ -1,3 +1,34 @@
 //- usermanagement structure
 #usermanagementframe
-    include ../placeholderframemodule/placeholderframe.pug
+
+    #usersummary 
+        #user-registered-count.summary-stats 
+            .stats-label Registrierte Benutzer 
+            .stats-value X
+
+        #users-active-count.summary-stats 
+            .stats-label Aktive Benutzer (2w) 
+            .stats-value X
+
+        #users-subscribed-count.summary-stats 
+            .stats-label Bezahlende Benutzer 
+            .stats-value X
+    #singleuser-head
+        #user-select-container 
+        #selected-user-email Kein Benutzer gewählt
+
+    #singleuser-row
+        template#user-detail-template 
+            .user-detail
+                .user-detail-label  
+                .user-detail-value 
+        #user-details-container 
+        #user-action-buttons-container
+            button#user-delete-button.click-button Benutzer entfernen
+
+
+    h2 Alle Benutzer
+
+    #allusers-table-container
+        table#allusers
+

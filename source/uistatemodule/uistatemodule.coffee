@@ -9,6 +9,7 @@ import { createLogFunctions } from "thingy-debug"
 import * as content from "./contentmodule.js"
 import * as sideNav from "./sidenavmodule.js"
 import * as authFrame from "./authframemodule.js"
+import * as userManagement from "./usermanagementmodule.js"
 
 #endregion
 
@@ -48,6 +49,7 @@ applyBaseState["forexscore"] = ->
 applyBaseState["usermanagement"] = ->
     content.setUsermanagementState()
     sideNav.setUsermanagementState()
+    userManagement.activate()
     authFrame.hide()
     header.className = "logged-in"
     return

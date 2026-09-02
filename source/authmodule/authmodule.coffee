@@ -90,15 +90,27 @@ export getAuthorizationMessage = ->
     if noKey then return ""
     await isReady
 
-    payload = {}
-    payload.randomHex = createSymKey().slice(0,32)
-    payload.timestamp = validStamp.create()
-    payload.publicKey = cryptoNode.id
-    payload.signature = ""
-    msg = JSON.stringify(payload)
-    sig = await cryptoNode.sign(msg)
-    msg = msg.replace('"signature":""', '"signature":"'+sig+'"')
-    return msg
+    randomHex = createSymKey().slice(0,32)
+    return getSignedPayloadString({ randomHex })
+
+export getSignedPayloadString = (obj, keyPair)->
+    if obj.auth? and obj.signature? then throw new Error("cannot have auth + signature in payload obj!")
+
+    if obj.auth?
+        obj.auth.timestamp = validStamp.create()
+        if !keyPair? then obj.auth.publicKey = cryptoNode.id 
+        else obj.auth.publicKey = keyPair.publicKeyHex
+        obj.auth.signature = ""
+    else
+        obj.timestamp = validStamp.create()
+        if !keyPair? then obj.publicKey = cryptoNode.id
+        else obj.publicKey = keyPair.publicKeyHex
+        obj.signature = ""
+
+    str = JSON.stringify(obj)
+    if !keyPair? then sig = await cryptoNode.sign(str)
+    else sig = await createSignature(str, keyPair.secretKeyHex)
+    return str.replace('"signature":""', '"signature":"'+sig+'"')
 
 ############################################################
 # Called by authframemodule when user confirms PIN during key setup
@@ -110,16 +122,11 @@ export createNewCredentials = (pin) ->
         log "secret recovered"
 
         # Step 2: Generate new key pair
-        { secretKeyHex, publicKeyHex } = await createKeyPair()
+        keyPair = await createKeyPair()
         log "key pair generated"
 
         # Step 3: Register with server
-        # timestamp = Date.now().toString()
-        timestamp = validStamp.create()
-        payload = { publicKey: publicKeyHex, otc: otcValue, secret, timestamp, signature: "" }
-        payloadStr = JSON.stringify(payload)
-        signature = await createSignature(payloadStr, secretKeyHex)
-        payload.signature = signature
+        payload = await getSignedPayloadString({ otc: otcValue, secret }, keyPair)
         await sci.registerAdmin(payload)
         log "registered with server"
 
@@ -131,11 +138,11 @@ export createNewCredentials = (pin) ->
         log "key fragment from QR"
 
         # Step 5: Lock the key (XOR with fragment)
-        lockedKey = xorHex(secretKeyHex, keyFragment)
+        lockedKey = xorHex(keyPair.secretKeyHex, keyFragment)
         log "key locked"
 
         # Step 6: Create targetHash for unlock validation
-        targetHash = await sha256(publicKeyHex + salt)
+        targetHash = await sha256(keyPair.publicKeyHex + salt)
 
         # Step 7: Store key-info
         keyInfo = { lockedKey, targetHash, salt, lockType: "qr" }
@@ -143,7 +150,7 @@ export createNewCredentials = (pin) ->
         log "key-info stored"
 
         # Step 8: Keep unlocked key in memory
-        cryptoNode = new ThingyCryptoNode({secretKeyHex, publicKeyHex})
+        cryptoNode = new ThingyCryptoNode(keyPair)
         otcValue = null  # Clear OTC after successful setup
         log "credentials created successfully"
         setReady()
@@ -200,15 +207,7 @@ export  migrateCredentials = (email, pin) ->
     await isReady
 
     try
-        timestamp = validStamp.create()
-        signature = ""
-        publicKey = cryptoNode.id
-
-        payload = { email, pin, publicKey, timestamp, signature }
-
-        bodyString = JSON.stringify(payload)
-        sig = await cryptoNode.sign(bodyString)
-        bodyString = bodyString.replace('"signature":""', '"signature":"'+sig+'"')
+        bodyString = await getSignedPayloadString({ email, pin })
 
         return await sci.generateAdminOTC(bodyString)
     catch err
@@ -222,16 +221,9 @@ export deleteCredentials = ->
     await isReady
        
     try
-        timestamp = validStamp.create()
         action = "removeAccess"
-        publicKey = cryptoNode.id
-        signature = ""
-        
-        cmdObj = { action, publicKey, timestamp, signature }
-         
-        cmdMsg = JSON.stringify(cmdObj)
-        sig = await cryptoNode.sign(cmdMsg)
-        cmdMsg = cmdMsg.replace('"signature":""', '"signature":"'+sig+'"')
+        cmdMsg = await getSignedPayloadString({ action })
+
         await sci.removeAdminAccess(cmdMsg)
 
         ## Actually delete the credentials and log out
