@@ -7,18 +7,45 @@ export heartbeatMS = 6_000 # ~12s
 # export noKeys = true
 
 ############################################################
-export urlAccessManager = "https://sentinel-access-manager.dotv.ee"
-export urlWebsocketBackend = "https://sentinel-backend.dotv.ee"
-export urlDatahub = "https://sentinel-datahub.dotv.ee"
-export urlStripeDashboard = "https://dashboard.stripe.com"
-export urlDotVStripe = "https://stripe-connect.dotv.ee"
+#region URLs
 
-# local testing
-# export urlAccessManager = "https://localhost:6999"
-# export urlWebsocketBackend = "http://localhost:3333"
-# export urlWebsocketBackend = "wss://localhost:6999/"
-# export urlWebsocketBackend = "https://localhost:6999/"
-# export urlDotVStripe = "https://localhost:6336"
+############################################################
+# Access Manager URL
+# url = "https://sentinel-access-manager-dev.dotv.ee"
+url = "https://localhost:6111"
+if window.location.origin == "https://sentinel-admin.dotv.ee/"
+    url = "https://sentinel-access-manager.dotv.ee"
+export urlAccessManager = url
+
+############################################################
+# Backend URL
+# url = "https://sentinel-backend.dotv.ee"
+url = "https://localhost:6112"
+if window.location.origin == "https://sentinel-admin.dotv.ee/"
+    url = "https://sentinel-backend.dotv.ee"
+export urlWebsocketBackend = url
+
+############################################################
+# Datahub URL
+# url = "https://sentinel-datahub.dotv.ee"
+url = "https://localhost:6113"
+if window.location.origin == "https://sentinel-admin.dotv.ee/"
+    url = "https://sentinel-datahub.dotv.ee"
+export urlDatahub = url
+
+############################################################
+# Stripe Connect DotV URL
+# url = "https://stripe-connect-dev.dotv.ee"
+url = "https://localhost:6336"
+if window.location.origin == "https://sentinel-admin.dotv.ee/"
+    url = "https://stripe-connect.dotv.ee"
+export urlDotVStripe = url
+
+############################################################
+export urlStripeDashboard = "https://dashboard.stripe.com"
+
+#endregion
+
 
 ############################################################
 export pwdSalt = "holderradio!...<3)()0981salty"
