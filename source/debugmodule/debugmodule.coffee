@@ -4,7 +4,7 @@ import { addModulesToDebug } from "thingy-debug"
 export modulesToDebug = {
 
     # accountframemodule: true
-    # authmodule: true
+    authmodule: true
     # authframemodule: true
     # appcoremodule: true
     # backtesting: true
@@ -24,18 +24,19 @@ export modulesToDebug = {
     # MakroDataHandle: true
     # paymentprovidersmodule: true
     # sampledata: true
-    # scimodule: true
+    scimodule: true
     # navtriggers: true
     # scimodule: true
     # scoringmodule: true
     # scorehelper: true
     # seasonality: true
     # seasonalityframemodule: true
+    speciallinkframemodule: true
     # stripeconnectmodule: true
     # symboloptions: true
-    tablerendermodule: true
+    # tablerendermodule: true
     # uistatemodule: true
-    usermanagementmodule: true
+    # usermanagementmodule: true
 }
 
 addModulesToDebug(modulesToDebug)

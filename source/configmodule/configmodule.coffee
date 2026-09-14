@@ -1,5 +1,5 @@
 ############################################################
-export appVersion = "v0.0.4"
+export appVersion = "v0.0.5"
 export heartbeatMS = 6_000 # ~12s
 
 ############################################################
@@ -17,6 +17,7 @@ if window.location.origin == "https://sentinel-admin.dotv.ee/"
     url = "https://sentinel-access-manager.dotv.ee"
 export urlAccessManager = url
 
+
 ############################################################
 # Backend URL
 # url = "https://sentinel-backend.dotv.ee"
@@ -24,6 +25,7 @@ url = "https://localhost:6112"
 if window.location.origin == "https://sentinel-admin.dotv.ee/"
     url = "https://sentinel-backend.dotv.ee"
 export urlWebsocketBackend = url
+
 
 ############################################################
 # Datahub URL
@@ -33,6 +35,16 @@ if window.location.origin == "https://sentinel-admin.dotv.ee/"
     url = "https://sentinel-datahub.dotv.ee"
 export urlDatahub = url
 
+
+############################################################
+# Link Guardian URL
+# url = "https://link-guardian.dotv.ee"
+url = "https://localhost:6337"
+if window.location.origin == "https://sentinel-admin.dotv.ee/"
+    url = "https://link-guardian.dotv.ee"
+export urlLinkGuardian = url
+
+
 ############################################################
 # Stripe Connect DotV URL
 # url = "https://stripe-connect-dev.dotv.ee"
@@ -40,6 +52,7 @@ url = "https://localhost:6336"
 if window.location.origin == "https://sentinel-admin.dotv.ee/"
     url = "https://stripe-connect.dotv.ee"
 export urlDotVStripe = url
+
 
 ############################################################
 export urlStripeDashboard = "https://dashboard.stripe.com"

@@ -98,7 +98,7 @@ onUserSelect = (email) ->
 displayUser = (userObj) ->
     log "displayUser"
     olog userObj
-    userDetailsContainer.innerHTML = ""
+    # userDetailsContainer.innerHTML = ""
 
     selectedUserEmail.textContent = userObj.email
     fragment = document.createDocumentFragment()

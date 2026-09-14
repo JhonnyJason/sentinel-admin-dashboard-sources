@@ -1,5 +1,144 @@
 // usermanagement styles
-#usermanagement
+#speciallinkframe
+    padding 25px
+    text-align: left
+    max-width 600px
+    h1
+        margin-bottom 30px
+
+#linkmanagement-top
+    display flex
+    flex-direction row
+    gap 10px
+    justify-content: space-between
     width 100%
-    min-height 20px
-    background-color rgba(0, 0, 0, 0.2)
+    align-items: center
+    margin-bottom 30px
+
+
+    .click-button
+        flex 1 1 auto
+        width 100%
+        max-width: 220px
+        font-size 12pt
+        color #fff
+        background-color cd-dark-blue
+        border solid 2px #fff
+        box-shadow: 0 0 5px #000
+        padding 12px 20px
+        border-radius: 10px
+        margin 20px 0
+
+    input
+        flex 10 1 auto
+        display: block
+        font-size 12pt
+        width 100%
+        max-width 300px
+        border none
+        outline: none
+        padding: 10px 
+        margin-bottom 20px
+        border-bottom solid 1px transparent
+
+    input:focus
+        border-bottom solid 1px cd-light-blue
+
+.linkentry
+    width 100%
+    margin-top 30px
+    box-sizing: border-box
+    padding 25px
+    border-radius: 10px
+    border solid 1px alpha(cd-dark-blue, 0.3)
+
+    .linkentry-title 
+        margin-bottom 20px
+
+    .linkentry-description
+        width 100%
+        margin-bottom: 30px
+
+    .linkentry-stats > *
+        display flex
+        direction: row
+        justify-content: space-between
+        max-width 300px
+        margin-bottom 10px
+        border-bottom solid 1px #99999966
+
+    .linkentry-delete-button
+        width: 150px
+        margin-top 30px
+        margin-left auto
+        display block
+        font-size 12pt
+        color #fff
+        background-color cd-dark-red
+        border solid 2px #fff
+        box-shadow: 0 0 5px #000
+        padding 12px 20px
+        border-radius: 10px
+        filter: grayscale(100%)
+
+    .linkentry-delete-button.really
+        filter: none
+
+
+    textarea
+        display: block
+        font-size 11pt
+        width 100%
+        border none
+        outline: none
+        padding: 10px 
+        margin-bottom 20px
+        border-left solid 2px cd-dark-blue
+        // border-bottom solid 1px transparent
+
+    textarea:focus
+        border-left solid 2px cd-light-blue
+
+    .linkentry-coupon-title    
+        margin-top 50px
+        margin-bottom 20px
+        span
+            margin-left: 10px
+            font-size: 10pt
+            color #888
+
+    .coupon-line
+        display flex
+        justify-content: space-between
+        direction: row
+        justify-content: space-between
+        max-width 300px
+        margin-bottom 10px
+        align-items: center
+        gap 5px
+
+        input.linkentry-percentage-off-input
+            flex 1 1 auto
+            display: block
+            font-size 12pt
+            max-width 50px
+            border none
+            outline: none
+            padding: 2px 
+            border-bottom solid 1px cd-dark-blue
+
+        input.linkentry-percentage-off-input:focus
+            border-bottom solid 1px cd-light-blue
+
+        input.linkentry-percentage-off-input:after
+            content "%"
+            margin-left 2px
+
+        input[type="date"]
+        input[type="date"]:focus
+            padding 2px 5px
+            background-color transparent
+            border solid 1px alpha(cd-dark-blue, 0.3)
+            outline: none
+            border-radius: 2px
+            width fit-content

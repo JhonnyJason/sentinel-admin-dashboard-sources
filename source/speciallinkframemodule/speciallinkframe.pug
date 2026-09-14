@@ -1,3 +1,63 @@
 //- usermanagement structure
 #speciallinkframe
-    include ../placeholderframemodule/placeholderframe.pug
+    h1 Link Management
+    #linkmanagement-top
+        input#link-name-input(type="text" placeholder="Neuer Link..." autocomplete="off")
+        button#add-link-button.click-button(type="button") Link hinzufügen
+
+    //- Hidden template to clone for each new link entry
+    template#linkentry-template
+        li.linkentry
+            h3.linkentry-title
+                //- span.linkentry-title-text
+            textarea.linkentry-description(placeholder="Link Beschreibung...")
+
+            dl.linkentry-stats
+                div.stat-registered
+                    dt Registered users count:
+                    dd.stat-registered-count 0
+                div.stat-access
+                    dt Total Access count:
+                    dd.stat-total-count 0
+                div.stat-bot
+                    dt Estimated bot count:
+                    dd.stat-bot-count 0
+                div.stat-click
+                    dt Estimated click count:
+                    dd.stat-click-count 0
+            h3.linkentry-coupon-title Coupon
+                span.linkentry-coupon-id w9djknd2
+
+            .coupon-line
+                label Rabatt in Prozent: 
+                input.linkentry-percentage-off-input(type="number" min="0" max="100" step="1")
+            .coupon-line
+                label Gültig ab:
+                input.linkentry-valid-from-date(type="date")
+            .coupon-line 
+                label Gültig bis: 
+                input.linkentry-valid-to-date(type="date")
+
+
+            button.linkentry-delete-button.click-button(type="button") Delete
+
+    ul#linkentry-list
+        li.linkentry 
+            h3.linkentry-title https://sentinel.ewag-handelssysteme.de/masterlink
+                //- span.linkentry-title-text
+            textarea.linkentry-description(placeholder="Link Beschreibung...")
+
+            dl.linkentry-stats
+                div.stat-registered
+                    dt Registered users count:
+                    dd.stat-registered-value 15
+                div.stat-access
+                    dt Total Access count:
+                    dd.stat-access-value 120983
+                div.stat-bot
+                    dt Estimated bot count:
+                    dd.stat-bot-value 20331
+                div.stat-click
+                    dt Estimated click count:
+                    dd.stat-click-value 100652
+            button.linkentry-delete-button.click-button(type="button") Delete

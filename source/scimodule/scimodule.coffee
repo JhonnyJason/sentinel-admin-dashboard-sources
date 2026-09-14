@@ -12,7 +12,7 @@ import {
 } from "thingy-schema-validate"
 
 ############################################################
-import { urlAccessManager, urlDatahub } from "./configmodule.js"
+import { urlAccessManager, urlDatahub, urlLinkGuardian } from "./configmodule.js"
 # import { getAuthCode } from "./authmodule.js"
 import { defaultSymbols } from "./defaultsymbols.js"
 
@@ -27,6 +27,15 @@ urlRemoveAdminAccess = urlAccessManager+"/removeAdminAccess"
 
 urlGetUserList = urlAccessManager+"/getUserList"
 urlGetUser = urlAccessManager+"/getUser"
+
+urlGetAllLinks = urlLinkGuardian+"/getAllLinks"
+urlCreateLink = urlLinkGuardian+"/createLink"
+urlDeleteLink = urlLinkGuardian+"/deleteLink"
+
+urlSetDescription = urlLinkGuardian+"/setLinkDescription"
+urlSetPercentOff = urlLinkGuardian+"/setCouponPercentOff"
+urlSetValidFrom = urlLinkGuardian+"/setCouponValidFrom"
+urlSetValidTo = urlLinkGuardian+"/setCouponValidTo"
 
 #endregion
 
@@ -104,6 +113,31 @@ export getUser = (payload) ->
     log "getUser"
     userObj = await request(urlGetUser, payload)
     return userObj
+
+
+############################################################
+export getAllSpecialLinks = (payload) ->
+    allLinks = await request(urlGetAllLinks, payload)
+    return allLinks
+
+export createSpecialLink = (payload) ->
+    return await request(urlCreateLink, payload)
+
+export deleteSpecialLink = (payload) ->
+    return await request(urlDeleteLink, payload)
+
+export setSpecialLinkDescription = (payload) ->
+    return await request(urlSetDescription, payload)
+
+
+export setCouponPercentOff = (payload) ->
+    return await request(urlSetPercentOff, payload)
+
+export setCouponValidFrom = (payload) ->
+    return await request(urlSetValidFrom, payload)
+
+export setCouponValidTo = (payload) ->
+    return await request(urlSetValidTo, payload)
 
 ############################################################
 #region Maybe deprecated code?
