@@ -13,7 +13,7 @@ export heartbeatMS = 6_000 # ~12s
 # Access Manager URL
 # url = "https://sentinel-access-manager-dev.dotv.ee"
 url = "https://localhost:6111"
-if window.location.origin == "https://sentinel-admin.dotv.ee/"
+if window.location.origin == "https://sentinel-admin.dotv.ee"
     url = "https://sentinel-access-manager.dotv.ee"
 export urlAccessManager = url
 
@@ -22,7 +22,7 @@ export urlAccessManager = url
 # Backend URL
 # url = "https://sentinel-backend.dotv.ee"
 url = "https://localhost:6112"
-if window.location.origin == "https://sentinel-admin.dotv.ee/"
+if window.location.origin == "https://sentinel-admin.dotv.ee"
     url = "https://sentinel-backend.dotv.ee"
 export urlWebsocketBackend = url
 
@@ -31,7 +31,7 @@ export urlWebsocketBackend = url
 # Datahub URL
 # url = "https://sentinel-datahub.dotv.ee"
 url = "https://localhost:6113"
-if window.location.origin == "https://sentinel-admin.dotv.ee/"
+if window.location.origin == "https://sentinel-admin.dotv.ee"
     url = "https://sentinel-datahub.dotv.ee"
 export urlDatahub = url
 
@@ -40,7 +40,7 @@ export urlDatahub = url
 # Link Guardian URL
 # url = "https://link-guardian.dotv.ee"
 url = "https://localhost:6337"
-if window.location.origin == "https://sentinel-admin.dotv.ee/"
+if window.location.origin == "https://sentinel-admin.dotv.ee"
     url = "https://link-guardian.dotv.ee"
 export urlLinkGuardian = url
 
@@ -49,7 +49,7 @@ export urlLinkGuardian = url
 # Stripe Connect DotV URL
 # url = "https://stripe-connect-dev.dotv.ee"
 url = "https://localhost:6336"
-if window.location.origin == "https://sentinel-admin.dotv.ee/"
+if window.location.origin == "https://sentinel-admin.dotv.ee"
     url = "https://stripe-connect.dotv.ee"
 export urlDotVStripe = url
 
