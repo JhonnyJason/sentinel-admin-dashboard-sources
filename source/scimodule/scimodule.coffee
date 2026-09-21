@@ -15,6 +15,7 @@ import {
 import { urlAccessManager, urlDatahub, urlLinkGuardian } from "./configmodule.js"
 # import { getAuthCode } from "./authmodule.js"
 import { defaultSymbols } from "./defaultsymbols.js"
+import { noNetwork } from "./configmodule.js"
 
 ############################################################
 #region Requet URLs
@@ -27,6 +28,8 @@ urlRemoveAdminAccess = urlAccessManager+"/removeAdminAccess"
 
 urlGetUserList = urlAccessManager+"/getUserList"
 urlGetUser = urlAccessManager+"/getUser"
+urlUpdateUser = urlAccessManager+"/updateUser"
+urlDeleteUser = urlAccessManager+"/deleteUser"
 
 urlGetAllLinks = urlLinkGuardian+"/getAllLinks"
 urlCreateLink = urlLinkGuardian+"/createLink"
@@ -60,6 +63,8 @@ waitMS = (ms) -> await new Promise(((rslv) -> setTimeout((() -> rslv()), ms)))
 ############################################################
 request  = (url, args) ->
     log "request"
+    if noNetwork then return
+
     if typeof args == "string" then body = args
     else body = JSON.stringify(args)
 
@@ -114,6 +119,15 @@ export getUser = (payload) ->
     userObj = await request(urlGetUser, payload)
     return userObj
 
+export updateUser = (payload) ->
+    log "updateUser"
+    await request(urlUpdateUser, payload)
+    return
+
+export deleteUser = (payload) ->
+    log "deleteUser"
+    await request(urlDeleteUser, payload)
+    return
 
 ############################################################
 export getAllSpecialLinks = (payload) ->

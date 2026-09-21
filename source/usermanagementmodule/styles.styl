@@ -1,3 +1,4 @@
+@import "visibility.styl"
 // usermanagement styles
 #usermanagementframe
     padding 25px
@@ -42,6 +43,10 @@
     #user-select-container
         // min-width 600px
         min-width 420px
+        margin-right auto
+    #deselect-user-button
+        height 30px
+        width 30px
 
 #singleuser-row
     display flex
@@ -50,7 +55,7 @@
     border solid 1px cd-dark-blue
     border-radius: 10px
     box-sizing: border-box
-    min-height 420px
+    // min-height 420px
     width 100%
 
     .click-button
@@ -70,7 +75,7 @@
 
     // display grid
     // grid-template-columns: repeat(auto-fill, minmax(120px, max-content))
-    display flex
+    // display flex
     flex-wrap wrap
 
     align-items: baseline
@@ -97,10 +102,45 @@
             // padding-left 5px
             padding-top 5px
 
+#user-edit-container
+    text-align: left
+    label
+        display inline-block
+        min-width 120px
+    input
+    input:focus
+        font-size 12pt
+        outline none
+        padding 5px
+        background-color transparent
+        border solid 1px
+        border-color alpha(cd-dark-blue, 0.1)
+        border-radius 3px
+    input:focus
+        border-color cd-dark-blue         
+    
+#user-edit-container > *
+    margin-top 10px
+
 #user-action-buttons-container
     flex 0 0 auto
+    max-width 420px
+    margin-top 30px
+    // margin-left auto
+    
+    #user-update-button
+        opacity 0.2
+        pointer-events: none
     #user-delete-button
+        background-color #201
+        margin-top 10px
+    #user-delete-button.unlocked
         background-color #512
+
+#user-action-buttons-container.unsaved-change
+    #user-update-button
+        opacity 1.0
+        pointer-events: all
 
 
 #allusers-table-container

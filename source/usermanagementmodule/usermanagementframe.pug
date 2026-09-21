@@ -15,15 +15,33 @@
             .stats-value X
     #singleuser-head
         #user-select-container 
-        #selected-user-email Kein Benutzer gewählt
+        #selected-user-email 
+        button#deselect-user-button.click-button: svg: use(href="#svg-cross-icon")
+
 
     #singleuser-row
         template#user-detail-template 
             .user-detail
                 .user-detail-label  
-                .user-detail-value 
-        #user-details-container 
+                .user-detail-value
+
+        #no-user-content 
+            #no-user-message Kein Benutzer gewählt
+
+        #user-details-container
+        #user-edit-container
+            #user-edit-badge
+                label(for="user-edit-badge-input") VIP Badge:
+                input#user-edit-badge-input(type="text")
+            #user-edit-freeaccess
+                label(for="user-edit-freeaccess-input") freeAccessUntil:
+                input#user-edit-freeaccess-input(type="date")
+            #user-edit-tester 
+                label(for="user-edit-tester-input") Tester:
+                input#user-edit-tester-input(type="checkbox")
+
         #user-action-buttons-container
+            button#user-update-button.click-button Speichern
             button#user-delete-button.click-button Benutzer entfernen
 
 

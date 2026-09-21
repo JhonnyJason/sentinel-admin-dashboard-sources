@@ -1,3 +1,7 @@
+############################################################
+Error.stackTraceLimit = 0 # we donot need stacktraces :-)
+
+############################################################
 import Modules from "./allmodules"
 import domconnect from "./indexdomconnect"
 domconnect.initialize()

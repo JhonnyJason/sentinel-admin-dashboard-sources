@@ -1,10 +1,13 @@
 ############################################################
-export appVersion = "v0.0.5"
+export appVersion = "v0.0.6"
 export heartbeatMS = 6_000 # ~12s
 
 ############################################################
+## For faster debugging
 # export noNetwork = true
 # export noKeys = true
+export noNetwork = false
+export noKeys = false
 
 ############################################################
 #region URLs

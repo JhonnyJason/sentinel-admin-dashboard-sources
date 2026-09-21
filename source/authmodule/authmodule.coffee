@@ -94,6 +94,8 @@ export getAuthorizationMessage = ->
     return getSignedPayloadString({ randomHex })
 
 export getSignedPayloadString = (obj, keyPair)->
+    if noKey then return ""
+    
     if obj.auth? and obj.signature? then throw new Error("cannot have auth + signature in payload obj!")
 
     if obj.auth?
