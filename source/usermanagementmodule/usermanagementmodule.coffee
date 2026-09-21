@@ -271,7 +271,7 @@ digestSummaryStats = ->
     dateToday = (new Date()).toISOString().slice(0, 10)
     
     date = new Date()
-    date.setDate(date.getDate() - 7)
+    date.setDate(date.getDate() - 14)
     dateActiveLimit = date.toISOString().slice(0, 10)
     olog { dateToday, dateActiveLimit }
 
