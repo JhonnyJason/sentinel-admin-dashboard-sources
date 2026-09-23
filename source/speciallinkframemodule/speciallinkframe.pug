@@ -38,6 +38,16 @@
                 label Gültig bis: 
                 input.linkentry-valid-to-date(type="date")
 
+            h3.linkentry-coupon-title Freier Zugang
+                span (Wenn beides spezifiziert ist gewinnt das "Spätere")
+
+            .coupon-line 
+                label Anzahl Tage: 
+                input.linkentry-free-access-days-input(type="number" min="0" max="365" step="1")
+            .coupon-line 
+                label Datum bis: 
+                input.linkentry-free-access-until-input(type="date")
+
 
             button.linkentry-delete-button.click-button(type="button") Delete
 

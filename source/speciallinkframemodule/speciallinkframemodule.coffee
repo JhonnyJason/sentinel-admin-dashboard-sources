@@ -116,6 +116,30 @@ updateToDate = (name, validTo) ->
     updateLinkList()
     return
 
+
+updateFreeAccessDays = (name, freeAccessDays) ->
+    log "updateFreeAccessDays (#{name}, #{freeAccessDays})"
+    try
+        freeAccessDays = parseInt(freeAccessDays)
+        if isNaN(freeAccessDays) then args = { name }
+        else args = { name, freeAccessDays }
+        payload = await auth.getSignedPayloadString({auth:{}, args})
+        await sci.setFreeAccessDays(payload)
+    catch err then console.error(err)
+    
+    updateLinkList()
+    return
+
+updateFreeAccessUntil = (name, freeAccessUntil) ->
+    log "updateFreeAccessUntil (#{name}, #{freeAccessUntil})"
+    try
+        payload = await auth.getSignedPayloadString({auth:{}, args: {name, freeAccessUntil}})
+        await sci.setFreeAccessUntil(payload)
+    catch err then console.error(err)
+    
+    updateLinkList()
+    return
+
 ############################################################
 updateLinkList = ->
     try
@@ -148,6 +172,8 @@ renderLinkList = ->
         percentageOffInput = linkEl.querySelector(".linkentry-percentage-off-input")
         validFromDateInput = linkEl.querySelector(".linkentry-valid-from-date")
         validToDateInput = linkEl.querySelector(".linkentry-valid-to-date")
+        freeAccessDaysInput = linkEl.querySelector(".linkentry-free-access-days-input")
+        freeAccessUntilInput = linkEl.querySelector(".linkentry-free-access-until-input")
 
         if linkObj.coupon
             couponIdEl.textContent = linkObj.coupon.id || "(Noch kein Coupon erstellt...)"
@@ -157,9 +183,14 @@ renderLinkList = ->
         else
             couponIdEl.textContent = "(Noch kein Coupon erstellt...)"
 
+        freeAccessDaysInput.value = linkObj.freeAccessDays || ""
+        freeAccessUntilInput.value = linkObj.freeAccessUntil || ""
+
         percentageOffInput.addEventListener("change", (() ->  updatePercentageOff(name, this.value)))
         validFromDateInput.addEventListener("change", (() ->  updateFromDate(name, this.value)))
         validToDateInput.addEventListener("change", (() ->  updateToDate(name, this.value)))
+        freeAccessDaysInput.addEventListener("change", (() ->  updateFreeAccessDays(name, this.value)))
+        freeAccessUntilInput.addEventListener("change", (() ->  updateFreeAccessUntil(name, this.value)))
 
         linkEl.querySelector(".linkentry-delete-button").addEventListener("click", (() -> deleteLink(name, this)))
 

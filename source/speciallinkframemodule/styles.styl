@@ -117,6 +117,7 @@
         align-items: center
         gap 5px
 
+        input.linkentry-free-access-days-input
         input.linkentry-percentage-off-input
             flex 1 1 auto
             display: block
@@ -127,12 +128,17 @@
             padding: 2px 
             border-bottom solid 1px cd-dark-blue
 
+        input.linkentry-free-access-days-input:focus
         input.linkentry-percentage-off-input:focus
             border-bottom solid 1px cd-light-blue
 
-        input.linkentry-percentage-off-input:after
-            content "%"
-            margin-left 2px
+        // input.linkentry-percentage-off-input:after
+        //     content "%"
+        //     margin-left 2px
+
+        // input.linkentry-access-free-days-input:after
+        //     content "Tage"
+        //     margin-left 2px
 
         input[type="date"]
         input[type="date"]:focus

@@ -40,6 +40,9 @@ urlSetPercentOff = urlLinkGuardian+"/setCouponPercentOff"
 urlSetValidFrom = urlLinkGuardian+"/setCouponValidFrom"
 urlSetValidTo = urlLinkGuardian+"/setCouponValidTo"
 
+urlSetFreeAccessDays = urlLinkGuardian+"/setFreeAccessDays"
+urlSetFreeAccessUntil = urlLinkGuardian+"/setFreeAccessUntil"
+
 #endregion
 
 ############################################################
@@ -152,6 +155,12 @@ export setCouponValidFrom = (payload) ->
 
 export setCouponValidTo = (payload) ->
     return await request(urlSetValidTo, payload)
+
+export setFreeAccessDays = (payload) ->
+    return await request(urlSetFreeAccessDays, payload)
+
+export setFreeAccessUntil = (payload) ->
+    return await request(urlSetFreeAccessUntil, payload)
 
 ############################################################
 #region Maybe deprecated code?
