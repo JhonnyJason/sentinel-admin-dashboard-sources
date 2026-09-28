@@ -34,10 +34,10 @@ export modulesToDebug = {
     # speciallinkframemodule: true
     # stripeconnectmodule: true
     # symboloptions: true
-    tablerendermodule: true
+    # tablerendermodule: true
     # tableutils: true
     # uistatemodule: true
-    usermanagementmodule: true
+    # usermanagementmodule: true
 }
 
 addModulesToDebug(modulesToDebug)
