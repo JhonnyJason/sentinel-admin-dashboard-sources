@@ -176,8 +176,10 @@ export class TableRenderer
 
         ## Render Table Body
         tbody = document.createElement("tbody")
-
+        @log "rendering displayedData with length: "+@displayedData.length
         for rowObj, rowIdx in @displayedData
+            @log "adding rowObj with index: "+rowIdx
+
             `let lettedRowIdx = rowIdx`
             row = document.createElement("tr")
             tbody.appendChild(row)
@@ -196,6 +198,7 @@ export class TableRenderer
 
                 if typeof render == "function" then render(td, d, ctx)
                 else console.error("Structure Error in column #{colIdx}. 'render' is not a function!")
+            @log "added rowObj with index: "+rowIdx
 
         if @tbody? then @tbody.replaceWith(tbody)
         else @table.appendChild(tbody) 

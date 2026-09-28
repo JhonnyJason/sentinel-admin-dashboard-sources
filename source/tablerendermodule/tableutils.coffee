@@ -149,6 +149,8 @@ export class StringOptionFilter extends FilterBase
         # @rootEl = document.createElement("div") ## probably donot need this here...
         @rootEl = document.createElement("select")
         @allOption = "* Alle *"
+        @chosenOption = "* Alle *"
+        @rootEl.value = "* Alle *"
         @rootEl.addEventListener("change", @selectionChanged)
         return
 

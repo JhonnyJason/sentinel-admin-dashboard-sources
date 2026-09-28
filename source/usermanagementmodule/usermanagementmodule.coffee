@@ -38,8 +38,8 @@ tableStructure = [
     { label: "Badge", key: "details.badge", render: renderString, sort: stringCompare, filter: new StringOptionFilter() }
     { label: "Registrierung", key: "details.registrationDate", render: renderDate, sort: stringCompare, filter: new DateRangeFilter() }
     { label: "Letzter Login", key: "details.lastLoginDate", render: renderDate, sort: stringCompare, filter: new DateRangeFilter() }
-    # { label: "Newsletter", key:"details.wantsNewsletter", render: renderBool, sort: booleanCompare, filter: new BoolOptionFilter() }
-    # { label: "Notify on Update", key:"details.wantsEmailOnUpdate", render: renderBool, sort: booleanCompare, filter: new BoolOptionFilter() }
+    { label: "Newsletter", key:"details.wantsNewsletter", render: renderBool, sort: booleanCompare, filter: new BoolOptionFilter() }
+    { label: "Notify on Update", key:"details.wantsEmailOnUpdate", render: renderBool, sort: booleanCompare, filter: new BoolOptionFilter() }
     { label: "Tester", key:"details.isTester", render: renderBool, sort: booleanCompare, filter: new BoolOptionFilter() }
     { label: "Gratis Zugang bis", key:"details.freeAccessUntil", render: renderDate, sort: stringCompare, filter: new DateRangeFilter() }
     { label: "Abo gültig bis", key:"details.subscribedUntil", render: renderDate, sort: stringCompare, filter: new DateRangeFilter() }
