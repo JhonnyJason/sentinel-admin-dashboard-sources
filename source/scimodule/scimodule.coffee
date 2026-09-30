@@ -37,6 +37,7 @@ urlDeleteLink = urlLinkGuardian+"/deleteLink"
 
 urlSetDescription = urlLinkGuardian+"/setLinkDescription"
 urlSetPercentOff = urlLinkGuardian+"/setCouponPercentOff"
+urlSetProps = urlLinkGuardian+"/setCouponProps"
 urlSetValidFrom = urlLinkGuardian+"/setCouponValidFrom"
 urlSetValidTo = urlLinkGuardian+"/setCouponValidTo"
 
@@ -146,6 +147,9 @@ export deleteSpecialLink = (payload) ->
 export setSpecialLinkDescription = (payload) ->
     return await request(urlSetDescription, payload)
 
+
+export setCouponProps = (payload) ->
+    return await request(urlSetProps, payload)
 
 export setCouponPercentOff = (payload) ->
     return await request(urlSetPercentOff, payload)
