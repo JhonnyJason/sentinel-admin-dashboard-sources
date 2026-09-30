@@ -31,7 +31,7 @@ export modulesToDebug = {
     # scorehelper: true
     # seasonality: true
     # seasonalityframemodule: true
-    speciallinkframemodule: true
+    # speciallinkframemodule: true
     # stripeconnectmodule: true
     # symboloptions: true
     # tablerendermodule: true
